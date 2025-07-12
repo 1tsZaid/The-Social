@@ -1,0 +1,32 @@
+I am making a social media platform that group users according to there location. After the locaiton-based connectivity user a enroled in a community where they can message, post and play game with in that community
+
+font options:
+Nunito
+Inter
+Poppins
+
+color suggestions:
+
+Light Mode Palette:
+Background (#FAFAFA) - Clean, welcoming
+Card/Surface (#FFFFFF) - Clear content areas
+Text Primary (#1F2937) - High readability
+Text Secondary (#6B7280) - Subtle information
+Accent (#8B5CF6) - Gaming elements, highlights
+
+Vibrant Blue (#2563EB) - Trust, connection, reliability
+Warm Orange (#F97316) - Energy, enthusiasm, social warmth
+
+Dark Mode Palette:
+Background (#0F172A) - Deep, comfortable
+Card/Surface (#1E293B) - Elevated content
+Text Primary (#F8FAFC) - Clear visibility
+Text Secondary (#94A3B8) - Secondary information
+Accent (#A855F7) - Interactive elements, notifications
+
+Electric Blue (#3B82F6) - Modern, tech-forward connection
+Sunset Orange (#FB923C) - Warmth in dark environment
+
+=====
+
+#EEAEF6
