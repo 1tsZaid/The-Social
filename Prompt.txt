@@ -1,8 +1,7 @@
 I am making a social media platform that group users according to there location. After the locaiton-based connectivity user a enroled in a community where they can message, post and play game with in that community
 
 font options:
-Nunito
-Inter
+Montserrat
 Poppins
 
 color suggestions:

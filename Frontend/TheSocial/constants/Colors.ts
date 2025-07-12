@@ -1,26 +1,60 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Theme colors for The Social app
+ * Light and dark mode color schemes with comprehensive theming support
  */
-
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    // Background colors
+    background: '#F1F3F4',
+    surface: '#FAFAFA',
+    
+    // Text colors
+    textPrimary: '#202124',
+    textSecondary: '#5F6368',
+    
+    // Accent colors
+    accent: '#FFA500',
+    
+    // Border and divider colors
+    borderDivider: '#BABCBE',
+    
+    // Legacy support (keeping for backward compatibility)
+    text: '#202124',
+    tint: '#FFA500',
+    icon: '#5F6368',
+    tabIconDefault: '#5F6368',
+    tabIconSelected: '#FFA500',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    // Background colors
+    background: '#1A1A1A',
+    surface: '#292929',
+    
+    // Text colors
+    textPrimary: '#FFFFFF',
+    textSecondary: '#B3B3B3',
+    
+    // Accent colors
+    accent: '#FF8000',
+    
+    // Border and divider colors
+    borderDivider: '#444444',
+    
+    // Legacy support (keeping for backward compatibility)
+    text: '#FFFFFF',
+    tint: '#FF8000',
+    icon: '#B3B3B3',
+    tabIconDefault: '#B3B3B3',
+    tabIconSelected: '#FF8000',
   },
+};
+
+// Theme type definitions for better TypeScript support
+export type ThemeColors = typeof Colors.light;
+export type ColorScheme = 'light' | 'dark';
+
+// Helper function to get theme colors
+export const getThemeColors = (colorScheme: ColorScheme): ThemeColors => {
+  return Colors[colorScheme];
 };
