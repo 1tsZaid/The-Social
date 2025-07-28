@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Colors } from '@/constants/Colors';
 
 interface ForgotPasswordLinkProps {
   onPress: () => void;
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
     letterSpacing: -0.01,
-    color: '#2196F3',
+    color: Colors.light.blue,
     textAlign: 'right',
   },
 });

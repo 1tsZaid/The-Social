@@ -8,14 +8,8 @@ import MainButton from '@/components/MainButton';
 import OrDivider from '@/components/OrDivider';
 import SocialLoginButton from '@/components/SocialLoginButton';
 import SignUpLink from '@/components/SignUpLink';
-
-// Placeholder icons for Google and Facebook
-const GoogleIcon = () => (
-  <View style={{ width: 18, height: 18, backgroundColor: '#4285F4', borderRadius: 9 }} />
-);
-const FacebookIcon = () => (
-  <View style={{ width: 18, height: 18, backgroundColor: '#1877F3', borderRadius: 9 }} />
-);
+import GoogleIcon from '@/components/GoogleIcon';
+import FacebookIcon from '@/components/FacebookIcon';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
