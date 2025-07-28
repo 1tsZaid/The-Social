@@ -3,6 +3,16 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+import {
+  Montserrat_400Regular,
+  Montserrat_600SemiBold,
+  Montserrat_800ExtraBold,
+} from '@expo-google-fonts/montserrat';
+import {
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+} from '@expo-google-fonts/poppins';
 
 import {View, Text} from 'react-native';
 
@@ -12,6 +22,12 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'Montserrat-Regular': Montserrat_400Regular,
+    'Montserrat-SemiBold': Montserrat_600SemiBold,
+    'Montserrat-ExtraBold': Montserrat_800ExtraBold,
+    'Poppins-Regular': Poppins_400Regular,
+    'Poppins-Medium': Poppins_500Medium,
+    'Poppins-SemiBold': Poppins_600SemiBold,
   });
 
   if (!loaded) {

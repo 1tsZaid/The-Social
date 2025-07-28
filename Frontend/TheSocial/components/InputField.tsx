@@ -37,8 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontFamily: 'Poppins',
-    fontWeight: '600',
+    fontFamily: 'Poppins-SemiBold',
     fontSize: 12,
     lineHeight: 19,
     letterSpacing: -0.02,
@@ -60,8 +59,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontFamily: 'Poppins',
-    fontWeight: '500',
+    fontFamily: 'Poppins-Medium',
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: -0.01,

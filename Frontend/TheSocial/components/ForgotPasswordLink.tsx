@@ -19,8 +19,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   text: {
-    fontFamily: 'Montserrat',
-    fontWeight: '600',
+    fontFamily: 'Montserrat-SemiBold',
     fontSize: 12,
     lineHeight: 17,
     letterSpacing: -0.01,

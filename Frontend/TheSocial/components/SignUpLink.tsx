@@ -27,16 +27,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F3F4',
   },
   text: {
-    fontFamily: 'Poppins',
-    fontWeight: '500',
+    fontFamily: 'Poppins-Medium',
     fontSize: 12,
     lineHeight: 17,
     letterSpacing: -0.01,
     color: '#6C7278',
   },
   link: {
-    fontFamily: 'Montserrat',
-    fontWeight: '600',
+    fontFamily: 'Montserrat-SemiBold',
     fontSize: 12,
     lineHeight: 17,
     letterSpacing: -0.01,

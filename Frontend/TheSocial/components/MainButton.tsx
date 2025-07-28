@@ -41,8 +41,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   text: {
-    fontFamily: 'Poppins',
-    fontWeight: '600',
+    fontFamily: 'Poppins-SemiBold',
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: -0.01,

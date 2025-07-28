@@ -24,8 +24,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#BABCBE',
   },
   text: {
-    fontFamily: 'Poppins',
-    fontWeight: '400',
+    fontFamily: 'Poppins-Regular',
     fontSize: 12,
     lineHeight: 18,
     letterSpacing: -0.01,
