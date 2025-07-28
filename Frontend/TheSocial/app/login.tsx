@@ -10,6 +10,7 @@ import SocialLoginButton from '@/components/SocialLoginButton';
 import SignUpLink from '@/components/SignUpLink';
 import GoogleIcon from '@/components/GoogleIcon';
 import FacebookIcon from '@/components/FacebookIcon';
+import PasswordVisibilityIcon from '@/components/PasswordVisibilityIcon';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -57,7 +58,10 @@ const LoginScreen = () => {
               placeholder="Password"
               secureTextEntry={!showPassword}
               rightIcon={
-                <View style={{ width: 16, height: 16, backgroundColor: '#ACB5BB', borderRadius: 8 }} />
+                <PasswordVisibilityIcon
+                  showPassword={showPassword}
+                  onPress={() => setShowPassword(!showPassword)}
+                />
               }
             />
             <ForgotPasswordLink onPress={handleForgotPassword} />
