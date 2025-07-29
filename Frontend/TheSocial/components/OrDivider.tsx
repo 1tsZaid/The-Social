@@ -11,12 +11,13 @@ const OrDivider = () => (
 
 const styles = StyleSheet.create({
   container: {
+    maxWidth: 300,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
     width: 380,
     height: 18,
-    marginVertical: 8,
+    marginVertical: 28,
   },
   line: {
     flex: 1,

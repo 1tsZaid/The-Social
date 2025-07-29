@@ -1,31 +1,28 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import Svg, { G, Path } from 'react-native-svg';
+import { Colors } from '@/constants/Colors';
 
 const Logo = () => (
   <View style={styles.container}>
-    <Image
-      source={require('@/assets/images/logo-icon.png')}
-      style={styles.logo}
-      resizeMode="contain"
-    />
+    <Svg viewBox="0 0 500 250" fill="none">
+      <G transform="translate(-500,880) scale(0.3,-0.3)" fill={Colors.light.surface}>
+        <Path d="M3060 2550 l0 -280 25 0 25 0 0 280 0 280 -25 0 -25 0 0 -280z" />
+        <Path d="M2680 2745 c-20 -25 -8 -50 25 -50 21 0 31 5 33 18 4 21 -14 47 -33 47 -7 0 -18 -7 -25 -15z" />
+        <Path d="M1935 2681 c-74 -19 -112 -67 -101 -127 9 -44 44 -70 114 -85 93 -19 122 -30 133 -50 39 -74 -97 -114 -207 -61 -31 14 -36 14 -44 2 -16 -24 -12 -30 33 -50 54 -25 165 -27 213 -4 61 29 81 99 44 147 -21 27 -50 39 -140 57 -30 6 -63 17 -74 25 -23 17 -24 61 -3 83 24 23 114 28 162 8 39 -17 54 -11 55 21 0 25 -128 49 -185 34z" />
+        <Path d="M2272 2629 c-137 -68 -135 -271 3 -347 26 -15 76 -17 373 -20 l342 -3 0 25 c0 14 -7 26 -15 28 -13 2 -11 9 9 37 69 92 29 233 -79 282 -36 17 -70 19 -315 19 -261 0 -277 -1 -318 -21z m393 -45 c-30 -30 -47 -76 -47 -128 -1 -55 11 -86 45 -123 l20 -23 -174 0 c-150 0 -179 3 -209 19 -84 44 -107 149 -48 217 18 20 41 40 52 44 12 5 101 9 199 9 163 1 177 0 162 -15z m213 -14 c64 -39 86 -106 58 -173 -18 -44 -47 -67 -96 -78 -55 -12 -108 3 -145 41 -38 39 -46 119 -17 166 39 61 136 83 200 44z" />
+        <Path d="M1982 2601 c-8 -4 -12 -19 -10 -32 2 -19 9 -24 33 -24 33 0 45 25 25 50 -14 17 -29 19 -48 6z" />
+        <Path d="M1932 2421 c-8 -4 -12 -19 -10 -32 2 -19 9 -24 33 -24 33 0 45 25 25 50 -14 17 -29 19 -48 6z" />
+        <Path d="M3160 2315 c-6 -8 -9 -23 -5 -35 10 -31 59 -24 63 9 6 37 -34 55 -58 26z" />
+      </G>
+    </Svg>
   </View>
 );
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 1,
-    gap: 10,
-    width: 328,
-    height: 77,
-  },
-  logo: {
-    width: 200,
-    height: 75,
+    flex: 1,
   },
 });
 
-export default Logo; 
+export default Logo;

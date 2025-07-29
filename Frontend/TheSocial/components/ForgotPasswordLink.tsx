@@ -14,16 +14,13 @@ const ForgotPasswordLink: React.FC<ForgotPasswordLinkProps> = ({ onPress }) => (
 
 const styles = StyleSheet.create({
   container: {
-    width: 380,
     alignItems: 'flex-end',
-    marginTop: 8,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   text: {
     fontFamily: 'Montserrat-SemiBold',
     fontSize: 12,
     lineHeight: 17,
-    letterSpacing: -0.01,
     color: Colors.light.blue,
     textAlign: 'right',
   },

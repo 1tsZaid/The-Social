@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Shadow } from 'react-native-shadow-2';
 
 interface MainButtonProps {
   title: string;
@@ -9,26 +10,23 @@ interface MainButtonProps {
 }
 
 const MainButton: React.FC<MainButtonProps> = ({ title, onPress, disabled, style }) => (
-  <TouchableOpacity
-    style={[styles.button, style, disabled && { opacity: 0.6 }]}
-    onPress={onPress}
-    disabled={disabled}
-    activeOpacity={0.8}
-  >
-    <Text style={styles.text}>{title}</Text>
-  </TouchableOpacity>
+  <Shadow stretch={true} distance={0} startColor={'#202124'} endColor={'#202124'} offset={[4, 4]}>
+    <TouchableOpacity
+      style={[styles.button, style, disabled && { opacity: 0.6 }]}
+      onPress={onPress}
+      disabled={disabled}
+      activeOpacity={0.8}
+    >
+      <Text style={styles.text}>{title}</Text>
+    </TouchableOpacity>
+  </Shadow>
 );
 
 const styles = StyleSheet.create({
   button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 24,
-    gap: 10,
-    width: 380,
-    height: 48,
+    height: 45,
     backgroundColor: '#FFA500',
     borderColor: '#202124',
     borderWidth: 3,
@@ -38,13 +36,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 0,
     elevation: 4,
-    marginBottom: 8,
   },
   text: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 14,
     lineHeight: 20,
-    letterSpacing: -0.01,
     color: '#202124',
     textAlign: 'center',
   },

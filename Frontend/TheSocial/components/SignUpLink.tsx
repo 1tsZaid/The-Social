@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 6,
-    width: 364,
+    width: "100%",
     height: 17,
     marginTop: 16,
     marginBottom: 8,
@@ -31,14 +31,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 12,
     lineHeight: 17,
-    letterSpacing: -0.01,
     color: '#6C7278',
   },
   link: {
     fontFamily: 'Montserrat-SemiBold',
     fontSize: 12,
     lineHeight: 17,
-    letterSpacing: -0.01,
     color: Colors.light.blue,
   },
 });

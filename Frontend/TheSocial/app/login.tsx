@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import Logo from '@/components/Logo';
 import LoginHeading from '@/components/LoginHeading';
 import InputField from '@/components/InputField';
@@ -38,51 +40,53 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-        <View style={styles.container}>
-          <Logo />
-          <LoginHeading />
-          <View style={styles.inputSection}>
-            <InputField
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Loisbecket@gmail.com"
-              secureTextEntry={false}
-            />
-            <InputField
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Password"
-              secureTextEntry={!showPassword}
-              rightIcon={
-                <PasswordVisibilityIcon
-                  showPassword={showPassword}
-                  onPress={() => setShowPassword(!showPassword)}
-                />
-              }
-            />
-            <ForgotPasswordLink onPress={handleForgotPassword} />
-          </View>
-          <MainButton title="Log in" onPress={handleLogin} />
-          <OrDivider />
-          <View style={styles.socialSection}>
-            <SocialLoginButton
-              title="Continue with Google"
-              icon={<GoogleIcon />}
-              onPress={handleGoogleLogin}
-            />
-            <SocialLoginButton
-              title="Continue with Facebook"
-              icon={<FacebookIcon />}
-              onPress={handleFacebookLogin}
-            />
-          </View>
-          <SignUpLink onPress={handleSignUp} />
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <View style={styles.container}>
+        <Logo />
+        <LoginHeading />
+        <View style={styles.inputSection}>
+          <InputField
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Loisbecket@gmail.com"
+            secureTextEntry={false}
+          />
+          <InputField
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Password"
+            secureTextEntry={!showPassword}
+            rightIcon={
+              <PasswordVisibilityIcon
+                showPassword={showPassword}
+                onPress={() => setShowPassword(!showPassword)}
+              />
+            }
+          />
+          <ForgotPasswordLink onPress={handleForgotPassword} />
         </View>
-      </ScrollView>
+        <View style={styles.mainButtonSection}>
+          <MainButton title="Log in" onPress={handleLogin} />
+        </View>
+        <View style={styles.dividerSection}> 
+          <OrDivider />
+        </View>
+        <View style={styles.socialSection}>
+          <SocialLoginButton
+            title="Continue with Google"
+            icon={<GoogleIcon />}
+            onPress={handleGoogleLogin}
+          />
+          <SocialLoginButton
+            title="Continue with Facebook"
+            icon={<FacebookIcon />}
+            onPress={handleFacebookLogin}
+          />
+        </View>
+        <SignUpLink onPress={handleSignUp} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -90,31 +94,28 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F1F3F4',
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F1F3F4',
+    backgroundColor: "#F1F3F4",
   },
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: 0,
-    gap: 32,
-    marginVertical: 32,
-    width: 380,
-    backgroundColor: '#F1F3F4',
+    flex: 1,
+    justifyContent: "center",
   },
   inputSection: {
-    width: 380,
-    marginBottom: 8,
+    height: 200,
+    width: 300,
+    alignSelf: "center",
+  },
+  mainButtonSection: {
+    width: 300,
+    alignSelf: "center",
+  },
+  dividerSection: {
+    alignSelf: "center",
   },
   socialSection: {
-    width: 380,
-    marginTop: 8,
+    height: 150,
+    width: 300,
+    alignSelf: "center",
   },
 });
 

@@ -10,20 +10,12 @@ const LoginHeading = () => (
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 5,
-    width: 300,
-    height: 64,
-    marginBottom: 32,
+    height: 100,
   },
   heading: {
     fontFamily: 'Montserrat-ExtraBold',
     fontSize: 32,
     lineHeight: 42,
-    letterSpacing: -0.02,
     color: '#1A1C1E',
     textAlign: 'center',
   },
@@ -31,7 +23,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 12,
     lineHeight: 17,
-    letterSpacing: -0.01,
     color: '#6C7278',
     textAlign: 'center',
     marginTop: 5,
