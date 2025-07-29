@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Montserrat-SemiBold',
     fontSize: 12,
-    lineHeight: 17,
+    lineHeight: 16,
     color: Colors.light.blue,
     textAlign: 'right',
   },

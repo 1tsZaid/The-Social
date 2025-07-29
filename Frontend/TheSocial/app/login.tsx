@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Logo from '@/components/Logo';
+import Logo from '@/components/ui/Logo';
 import LoginHeading from '@/components/LoginHeading';
 import InputField from '@/components/InputField';
 import ForgotPasswordLink from '@/components/ForgotPasswordLink';
@@ -10,8 +10,8 @@ import MainButton from '@/components/MainButton';
 import OrDivider from '@/components/OrDivider';
 import SocialLoginButton from '@/components/SocialLoginButton';
 import SignUpLink from '@/components/SignUpLink';
-import GoogleIcon from '@/components/GoogleIcon';
-import FacebookIcon from '@/components/FacebookIcon';
+import GoogleIcon from '@/components/ui/GoogleIcon';
+import FacebookIcon from '@/components/ui/FacebookIcon';
 import PasswordVisibilityIcon from '@/components/PasswordVisibilityIcon';
 
 const LoginScreen = () => {

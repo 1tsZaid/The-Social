@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 12,
-    lineHeight: 19,
+    lineHeight: 16,
     color: '#202124',
     marginBottom: 2,
   },
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
+    lineHeight: 20,
     color: '#1A1C1E',
     paddingVertical: 0,
     paddingHorizontal: 0,

@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 16,
+    lineHeight: 24,
     color: '#1A1C1E',
     textAlign: 'center',
     flex: 1,

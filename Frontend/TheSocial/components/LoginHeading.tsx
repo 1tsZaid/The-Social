@@ -15,14 +15,14 @@ const styles = StyleSheet.create({
   heading: {
     fontFamily: 'Montserrat-ExtraBold',
     fontSize: 32,
-    lineHeight: 42,
+    lineHeight: 40,
     color: '#1A1C1E',
     textAlign: 'center',
   },
   subtitle: {
     fontFamily: 'Poppins-Medium',
     fontSize: 12,
-    lineHeight: 17,
+    lineHeight: 16,
     color: '#6C7278',
     textAlign: 'center',
     marginTop: 5,

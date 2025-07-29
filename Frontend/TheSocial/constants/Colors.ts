@@ -1,8 +1,3 @@
-/**
- * Theme colors for The Social app
- * Light and dark mode color schemes with comprehensive theming support
- */
-
 export const Colors = {
   light: {
     // Background colors

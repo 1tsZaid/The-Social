@@ -30,13 +30,13 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Poppins-Medium',
     fontSize: 12,
-    lineHeight: 17,
+    lineHeight: 16,
     color: '#6C7278',
   },
   link: {
     fontFamily: 'Montserrat-SemiBold',
     fontSize: 12,
-    lineHeight: 17,
+    lineHeight: 16,
     color: Colors.light.blue,
   },
 });

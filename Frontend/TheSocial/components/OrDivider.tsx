@@ -27,8 +27,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Poppins-Regular',
     fontSize: 12,
-    lineHeight: 18,
-    letterSpacing: -0.01,
+    lineHeight: 16,
     color: '#6C7278',
     textAlign: 'center',
     marginHorizontal: 8,
