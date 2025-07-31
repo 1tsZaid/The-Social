@@ -1,17 +1,21 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View, ViewStyle } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+
+import {ThemedText} from '@/components/ThemedText';
+import {ThemedView} from '@/components/ThemedView';
 
 interface SocialLoginButtonProps {
   title: string;
   icon: React.ReactNode;
   onPress: () => void;
-  style?: ViewStyle;
 }
 
-const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({ title, icon, onPress, style }) => (
-  <TouchableOpacity style={[styles.button, style]} onPress={onPress} activeOpacity={0.8}>
-    <View style={styles.icon}>{icon}</View>
-    <Text style={styles.text}>{title}</Text>
+const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({ title, icon, onPress}) => (
+  <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+    <ThemedView style={[styles.button]} backgroundType='surface'>
+      <View style={styles.icon}>{icon}</View>
+      <ThemedText style={styles.text} variant='button' colorType='textPrimary'>{title}</ThemedText>
+    </ThemedView>
   </TouchableOpacity>
 );
 
@@ -25,7 +29,6 @@ const styles = StyleSheet.create({
     gap: 10,
     width: "100%",
     height: 45,
-    backgroundColor: '#FAFAFA',
     borderRadius: 50,
     marginBottom: 15,
   },
@@ -37,10 +40,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#1A1C1E',
     textAlign: 'center',
     flex: 1,
   },

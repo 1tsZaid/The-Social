@@ -43,7 +43,7 @@ export const Typography = {
     lineHeight: 26,
   },
   body: {
-    fontFamily: FontFamily.poppinsRegular,
+    fontFamily: FontFamily.poppinsMedium,
     fontSize: 16,
     lineHeight: 24,
   },
@@ -60,7 +60,7 @@ export const Typography = {
     lineHeight: 24,
   },
   caption: { //subtitle, label, dividertext, link before text
-    fontFamily: FontFamily.poppinsRegular,
+    fontFamily: FontFamily.poppinsMedium,
     fontSize: 12,
     lineHeight: 16,
   },

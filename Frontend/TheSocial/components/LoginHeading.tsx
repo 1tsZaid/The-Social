@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+
+import { ThemedText } from '@/components/ThemedText';
 
 const LoginHeading = () => (
   <View style={styles.container}>
-    <Text style={styles.heading}>WELCOME BACK!</Text>
-    <Text style={styles.subtitle}>Ready to discover who’s around?</Text>
+    <ThemedText style={styles.heading} variant='h1' colorType='textPrimary'>WELCOME BACK!</ThemedText>
+    <ThemedText style={styles.subtitle}>Ready to discover who’s around?</ThemedText>
   </View>
 );
 
@@ -13,10 +15,6 @@ const styles = StyleSheet.create({
     height: 100,
   },
   heading: {
-    fontFamily: 'Montserrat-ExtraBold',
-    fontSize: 32,
-    lineHeight: 40,
-    color: '#1A1C1E',
     textAlign: 'center',
   },
   subtitle: {

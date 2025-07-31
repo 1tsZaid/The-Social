@@ -1,49 +1,53 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, StyleSheet} from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
+
+import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 interface MainButtonProps {
   title: string;
   onPress: () => void;
   disabled?: boolean;
-  style?: ViewStyle;
 }
 
-const MainButton: React.FC<MainButtonProps> = ({ title, onPress, disabled, style }) => (
-  <Shadow stretch={true} distance={0} startColor={'#202124'} endColor={'#202124'} offset={[4, 4]}>
-    <TouchableOpacity
-      style={[styles.button, style, disabled && { opacity: 0.6 }]}
-      onPress={onPress}
-      disabled={disabled}
-      activeOpacity={0.8}
-    >
-      <Text style={styles.text}>{title}</Text>
-    </TouchableOpacity>
-  </Shadow>
-);
+const MainButton: React.FC<MainButtonProps> = ({ title, onPress, disabled}) => {
+  
+  const theme = useColorScheme() ?? 'light';
 
-const styles = StyleSheet.create({
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-    height: 45,
-    backgroundColor: '#FFA500',
-    borderColor: '#202124',
-    borderWidth: 3,
-    borderRadius: 50,
-    shadowColor: '#202124',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    elevation: 4,
-  },
-  text: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#202124',
-    textAlign: 'center',
-  },
-});
+  const backgroundColor = Colors[theme]['accent'];
+  const borderColor = Colors.light.textPrimary;
+
+  let borderShadow = Colors[theme][theme === 'dark' ? 'accent' : "textPrimary"];
+  borderShadow = theme === 'dark' ? (borderShadow+'50') : borderShadow;
+
+  const styles = StyleSheet.create({
+    button: {
+      paddingVertical: 8,
+      paddingHorizontal: 24,
+      height: 45,
+      backgroundColor,
+      borderColor,
+      borderWidth: 3,
+      borderRadius: 50,
+    },
+    text: {
+      textAlign: 'center',
+    },
+  });
+
+  return (
+    <Shadow stretch={true} distance={0} startColor={borderShadow} endColor={borderShadow} offset={[4, 4]}>
+      <TouchableOpacity
+        style={[styles.button, disabled && { opacity: 0.6 }]}
+        onPress={onPress}
+        disabled={disabled}
+      >
+        <ThemedText style={styles.text} variant='button' colorType='textPrimary' lightColor='light' darkColor='dark'>{title}</ThemedText>
+      </TouchableOpacity>
+    </Shadow>
+  )
+};
 
 export default MainButton; 

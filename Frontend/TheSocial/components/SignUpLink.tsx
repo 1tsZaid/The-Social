@@ -1,18 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors } from '@/constants/Colors';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+
+import {ThemedText} from '@/components/ThemedText';
+import {ThemedView} from '@/components/ThemedView';
 
 interface SignUpLinkProps {
   onPress: () => void;
 }
 
 const SignUpLink: React.FC<SignUpLinkProps> = ({ onPress }) => (
-  <View style={styles.container}>
-    <Text style={styles.text}>Don’t have an account? </Text>
+  <ThemedView style={styles.container}>
+    <ThemedText variant='caption'>Don’t have an account? </ThemedText>
     <TouchableOpacity onPress={onPress}>
-      <Text style={styles.link}>Sign Up</Text>
+      <ThemedText variant='link' colorType='blue'>Sign Up</ThemedText>
     </TouchableOpacity>
-  </View>
+  </ThemedView>
 );
 
 const styles = StyleSheet.create({
@@ -25,19 +27,6 @@ const styles = StyleSheet.create({
     height: 17,
     marginTop: 16,
     marginBottom: 8,
-    backgroundColor: '#F1F3F4',
-  },
-  text: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 12,
-    lineHeight: 16,
-    color: '#6C7278',
-  },
-  link: {
-    fontFamily: 'Montserrat-SemiBold',
-    fontSize: 12,
-    lineHeight: 16,
-    color: Colors.light.blue,
   },
 });
 

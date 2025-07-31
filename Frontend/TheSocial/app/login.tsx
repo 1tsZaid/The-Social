@@ -12,7 +12,9 @@ import SocialLoginButton from '@/components/SocialLoginButton';
 import SignUpLink from '@/components/SignUpLink';
 import GoogleIcon from '@/components/ui/GoogleIcon';
 import FacebookIcon from '@/components/ui/FacebookIcon';
-import PasswordVisibilityIcon from '@/components/PasswordVisibilityIcon';
+import PasswordVisibilityIcon from '@/components/ui/PasswordVisibilityIcon';
+
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -30,14 +32,44 @@ const LoginScreen = () => {
   const handleGoogleLogin = () => {
     Alert.alert('Google Login', 'Google login pressed.');
   };
-
+  
   const handleFacebookLogin = () => {
     Alert.alert('Facebook Login', 'Facebook login pressed.');
   };
-
+  
   const handleSignUp = () => {
     Alert.alert('Sign Up', 'Redirect to sign up screen.');
   };
+
+  const backgroundColor = useThemeColor({}, 'background')
+  
+  const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor,
+    },
+    container: {
+      flex: 1,
+      justifyContent: "center",
+    },
+    inputSection: {
+      height: 200,
+      width: 300,
+      alignSelf: "center",
+    },
+    mainButtonSection: {
+      width: 300,
+      alignSelf: "center",
+    },
+    dividerSection: {
+      alignSelf: "center",
+    },
+    socialSection: {
+      height: 150,
+      width: 300,
+      alignSelf: "center",
+    },
+  });
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
@@ -49,7 +81,7 @@ const LoginScreen = () => {
             label="Email"
             value={email}
             onChangeText={setEmail}
-            placeholder="Loisbecket@gmail.com"
+            placeholder="TheSocial@gmail.com"
             secureTextEntry={false}
           />
           <InputField
@@ -90,33 +122,5 @@ const LoginScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#F1F3F4",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  inputSection: {
-    height: 200,
-    width: 300,
-    alignSelf: "center",
-  },
-  mainButtonSection: {
-    width: 300,
-    alignSelf: "center",
-  },
-  dividerSection: {
-    alignSelf: "center",
-  },
-  socialSection: {
-    height: 150,
-    width: 300,
-    alignSelf: "center",
-  },
-});
 
 export default LoginScreen;

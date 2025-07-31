@@ -20,7 +20,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'SpaceMono': require('../assets/fonts/SpaceMono-Regular.ttf'),
     'Montserrat-Regular': Montserrat_400Regular,
     'Montserrat-SemiBold': Montserrat_600SemiBold,
     'Montserrat-ExtraBold': Montserrat_800ExtraBold,

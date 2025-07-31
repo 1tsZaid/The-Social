@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors } from '@/constants/Colors';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+
+import {ThemedText} from '@/components/ThemedText';
 
 interface ForgotPasswordLinkProps {
   onPress: () => void;
@@ -8,7 +9,7 @@ interface ForgotPasswordLinkProps {
 
 const ForgotPasswordLink: React.FC<ForgotPasswordLinkProps> = ({ onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.container}>
-    <Text style={styles.text}>Forgot Password ?</Text>
+    <ThemedText style={styles.text} variant='link' colorType='blue'>Forgot Password ?</ThemedText>
   </TouchableOpacity>
 );
 
@@ -18,10 +19,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   text: {
-    fontFamily: 'Montserrat-SemiBold',
-    fontSize: 12,
-    lineHeight: 16,
-    color: Colors.light.blue,
     textAlign: 'right',
   },
 });

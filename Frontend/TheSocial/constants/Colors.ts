@@ -36,7 +36,7 @@ export const Colors = {
     blue: '#2196F3',
     
     // Border and divider colors
-    borderDivider: '#444444',
+    borderDivider: '#5A5C5E',
     
     // Legacy support (keeping for backward compatibility)
     text: '#FFFFFF',
