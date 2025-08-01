@@ -3,7 +3,7 @@
     "name": "The Social",
     "slug": "TheSocial",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/thesocial-logo.png",
     "scheme": "thesocial",
     "userInterfaceStyle": "automatic",

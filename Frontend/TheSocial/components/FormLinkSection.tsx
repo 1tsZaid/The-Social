@@ -4,15 +4,17 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import {ThemedText} from '@/components/ThemedText';
 import {ThemedView} from '@/components/ThemedView';
 
-interface SignUpLinkProps {
+interface FormLinkSectionProps {
   onPress: () => void;
+  linkText: string;
+  children: string;
 }
 
-const SignUpLink: React.FC<SignUpLinkProps> = ({ onPress }) => (
+const FormLinkSection: React.FC<FormLinkSectionProps> = ({ onPress, linkText, children }) => (
   <ThemedView style={styles.container}>
-    <ThemedText variant='caption'>Don’t have an account? </ThemedText>
+    <ThemedText variant='caption'>{children}</ThemedText>
     <TouchableOpacity onPress={onPress}>
-      <ThemedText variant='link' colorType='blue'>Sign Up</ThemedText>
+      <ThemedText variant='link' colorType='blue'>{linkText}</ThemedText>
     </TouchableOpacity>
   </ThemedView>
 );
@@ -30,4 +32,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpLink; 
+export default FormLinkSection; 
