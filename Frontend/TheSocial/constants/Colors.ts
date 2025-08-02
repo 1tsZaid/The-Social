@@ -12,6 +12,7 @@ export const Colors = {
     accent: '#FFA500',
     blue: '#2196F3',
     red: '#CE2029',
+    gold: '#FFD700',
     
     // Border and divider colors
     borderDivider: '#BABCBE',
@@ -36,6 +37,7 @@ export const Colors = {
     accent: '#FF8000',
     blue: '#2196F3',
     red: '#CE2029',
+    gold: '#FFD700',
     
     // Border and divider colors
     borderDivider: '#5A5C5E',

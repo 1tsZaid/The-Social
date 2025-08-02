@@ -10,6 +10,7 @@ export default function LoginScreen() {
       <Button title="GO to Discover" onPress={() => router.replace('/discover')} />
       <Button title="GO to Profile" onPress={() => router.replace('/profile')} />
       <Button title="GO to Create Community" onPress={() => router.replace('/createCommunity')} />
+      <Button title="GO to Game 1" onPress={() => router.replace('/game1')} />
     </View>
   );
 }
