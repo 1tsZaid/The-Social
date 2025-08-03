@@ -16,6 +16,10 @@ export const Colors = {
     
     // Border and divider colors
     borderDivider: '#BABCBE',
+
+    // Banner Colors
+    bannerBlue: '#2196F3',
+    bannerRed: '#CE2029',
     
     // Legacy support (keeping for backward compatibility)
     text: '#202124',
@@ -41,6 +45,10 @@ export const Colors = {
     
     // Border and divider colors
     borderDivider: '#5A5C5E',
+    
+    // Banner Colors
+    bannerBlue: '#2196F3',
+    bannerRed: '#CE2029',
     
     // Legacy support (keeping for backward compatibility)
     text: '#FFFFFF',
