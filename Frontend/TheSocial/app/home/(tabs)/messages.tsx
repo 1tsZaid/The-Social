@@ -23,38 +23,38 @@ const sampleMessages: Message[] = [
   {
     id: '2',
     senderName: 'Ali Khan',
-    timestamp: '2:00pm',
+    timestamp: '2:10pm',
     message: 'how are you',
   },
   {
     id: '3',
     senderName: 'Ali Khan',
-    timestamp: '2:00pm',
+    timestamp: '2:11pm',
     message: 'how are you',
   },
   // Date separator will be inserted here
   {
     id: '4',
     senderName: 'Ali Khan',
-    timestamp: '2:00pm',
+    timestamp: '1:00pm',
     message: 'how are you',
   },
   {
     id: '5',
     senderName: 'Ali Khan',
-    timestamp: '2:00pm',
+    timestamp: '2:10pm',
     message: 'how are you',
   },
   {
     id: '6',
     senderName: 'Ali Khan',
-    timestamp: '2:00pm',
+    timestamp: '2:11pm',
     message: 'how are you',
   },
   {
     id: '7',
     senderName: 'Ali Khan',
-    timestamp: '2:00pm',
+    timestamp: '3:11pm',
     message: 'how are you',
   },
 ];
