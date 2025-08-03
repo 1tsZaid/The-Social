@@ -13,6 +13,8 @@ export const Colors = {
     blue: '#2196F3',
     red: '#CE2029',
     gold: '#FFD700',
+    bronze: '#CD7F32',
+    silver: '#A5A9B4',
     
     // Border and divider colors
     borderDivider: '#BABCBE',
@@ -42,6 +44,8 @@ export const Colors = {
     blue: '#2196F3',
     red: '#CE2029',
     gold: '#FFD700',
+    bronze: '#CD7F32',
+    silver: '#A5A9B4',
     
     // Border and divider colors
     borderDivider: '#5A5C5E',
