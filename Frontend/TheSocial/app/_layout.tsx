@@ -16,6 +16,7 @@ import {
 } from '@expo-google-fonts/poppins';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -37,7 +38,27 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack 
+          screenOptions={{ 
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen 
+            name="profile" 
+            options={{ 
+              headerShown: true,
+              title: 'Profile',
+              headerBackTitle: 'Back',
+              headerStyle: {
+                backgroundColor: Colors[colorScheme ?? 'light'].surface,
+              },
+              headerTintColor: Colors[colorScheme ?? 'light'].textPrimary,
+              headerTitleStyle: {
+                fontWeight: '600',
+              },
+            }} 
+          />
+        </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
     </SafeAreaProvider>

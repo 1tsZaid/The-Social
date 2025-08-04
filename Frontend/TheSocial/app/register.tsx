@@ -20,7 +20,8 @@ const RegisterScreen = () => {
   const [showRePassword, setShowRePassword] = useState(false);
 
   const handleRegister = () => {
-    Alert.alert('Register', `Email: ${email}\nPassword: ${password}Re-Password: ${rePassword}`);
+    // Alert.alert('Register', `Email: ${email}\nPassword: ${password}Re-Password: ${rePassword}`);
+    router.replace('/home/messages');
   };
   
   const handleLogIn = () => {

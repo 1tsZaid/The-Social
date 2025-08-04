@@ -52,7 +52,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       backgroundColor: surfaceColor,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: -70, // Overlap with banner
+      marginTop: -75, // Overlap with banner
     },
     profileImagePlaceholder: {
       width: 88,

@@ -23,7 +23,8 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
-    Alert.alert('Login', `Email: ${email}\nPassword: ${password}`);
+    // Alert.alert('Login', `Email: ${email}\nPassword: ${password}`);
+    router.replace('/home/messages');
   };
 
   const handleForgotPassword = () => {
