@@ -6,7 +6,6 @@ import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { DrawerActionButton } from './DrawerActionButton';
 import { CommunityItem } from './CommunityItem';
-import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface Community {
   id: string;

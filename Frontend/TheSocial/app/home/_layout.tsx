@@ -1,6 +1,7 @@
 import { Drawer } from 'expo-router/drawer';
 
 import { DrawerContent } from '@/components/DrawerContent';
+import { HomeHeaderDemo } from '@/components/HomeHeaderDemo';
 
 export default function HomeLayout() {
   return (
@@ -13,7 +14,13 @@ export default function HomeLayout() {
         },
       }}
     >
-      <Drawer.Screen name="(tabs)" options={{ title: 'Home' }} />
+      <Drawer.Screen 
+        name="(tabs)" 
+        options={{ 
+          title: 'Home',
+          header: () => <HomeHeaderDemo />
+        }} 
+      />
     </Drawer>
   );
 }
