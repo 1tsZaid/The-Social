@@ -16,6 +16,12 @@ export const Colors = {
     bronze: '#CD7F32',
     silver: '#A5A9B4',
     
+    // Community icon colors
+    communityTeal: '#20B2AA',
+    communityBlue: '#87CEEB',
+    communityBeige: '#F5DEB3',
+    communityGray: '#696969',
+    
     // Border and divider colors
     borderDivider: '#BABCBE',
 
@@ -46,6 +52,12 @@ export const Colors = {
     gold: '#FFD700',
     bronze: '#CD7F32',
     silver: '#A5A9B4',
+    
+    // Community icon colors
+    communityTeal: '#20B2AA',
+    communityBlue: '#87CEEB',
+    communityBeige: '#F5DEB3',
+    communityGray: '#696969',
     
     // Border and divider colors
     borderDivider: '#5A5C5E',
