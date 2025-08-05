@@ -23,32 +23,32 @@ export const SettingsList: React.FC<SettingsListProps> = ({
   return (
     <View style={styles.container}>
       <SettingItem
-        icon="person-outline"
+        icon="person-sharp"
         title="My Account"
         onPress={onMyAccount}
       />
       <SettingItem
-        icon="color-palette-outline"
+        icon="color-palette-sharp"
         title="Appearance"
         onPress={onAppearance}
       />
       <SettingItem
-        icon="shield-checkmark-outline"
+        icon="shield-checkmark-sharp"
         title="Permissions"
         onPress={onPermissions}
       />
       <SettingItem
-        icon="lock-closed-outline"
+        icon="lock-closed-sharp"
         title="Privacy & Safety"
         onPress={onPrivacySafety}
       />
       <SettingItem
-        icon="card-outline"
+        icon="card-sharp"
         title="Billing"
         onPress={onBilling}
       />
       <SettingItem
-        icon="help-circle-outline"
+        icon="help-circle-sharp"
         title="Support"
         onPress={onSupport}
       />

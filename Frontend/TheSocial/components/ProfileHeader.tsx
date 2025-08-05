@@ -23,7 +23,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onEditProfile,
   onNotification,
 }) => {
-  const accentColor = useThemeColor({}, 'accent');
+  const profileBorderColor = useThemeColor({}, 'background');
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
   
@@ -52,7 +52,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       backgroundColor: surfaceColor,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: -75, // Overlap with banner
+      marginTop: -65, // Overlap with banner
     },
     profileImagePlaceholder: {
       width: 88,
@@ -108,7 +108,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       
       <View style={styles.content}>
         <View style={styles.profilePictureContainer}>
-          <View style={[styles.profilePicture, { borderColor: accentColor }]}>
+          <View style={[styles.profilePicture, { borderColor: profileBorderColor }]}>
             {profileImage ? (
               <View style={styles.profileImagePlaceholder}>
                 {/* Image would be rendered here */}
