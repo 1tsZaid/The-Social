@@ -19,7 +19,7 @@ export function SearchInput({
 }: SearchInputProps) {
   const backgroundColor = useThemeColor({}, 'surface');
   const borderColor = useThemeColor({}, 'borderDivider');
-  const textColor = useThemeColor({}, 'borderDivider');
+  const textColor = useThemeColor({}, 'textSecondary');
   const iconColor = useThemeColor({}, 'textSecondary');
 
   return (
@@ -27,7 +27,7 @@ export function SearchInput({
       <TextInput
         style={[styles.input, { color: textColor }]}
         placeholder={placeholder}
-        placeholderTextColor={textColor}
+        placeholderTextColor={borderColor}
         value={value}
         onChangeText={onChangeText}
         onSubmitEditing={onSearch}

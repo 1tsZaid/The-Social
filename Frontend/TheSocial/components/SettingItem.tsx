@@ -18,6 +18,45 @@ export const SettingItem: React.FC<SettingItemProps> = ({
   onPress,
 }) => {
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
+  const iconBackgroundColor = useThemeColor({}, 'background');
+  
+  const styles = StyleSheet.create({
+    container: {
+      marginBottom: 8,
+    },
+    item: {
+      height: 52,
+      borderRadius: 8,
+    },
+    content: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      height: '100%',
+    },
+    icon: {
+      textAlign: 'center',
+      width: 43,
+      height: 43,
+      backgroundColor: iconBackgroundColor,
+      borderRadius: 100,
+      padding: 5,
+      paddingTop: 9,
+      marginRight: 12,
+    },
+    title: {
+      flex: 1,
+    },
+    chevronContainer: {
+      marginLeft: 8,
+      marginBottom: 3,
+    },
+    chevron: {
+      fontSize: 30,
+      fontWeight: '400',
+    },
+  });
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
@@ -46,42 +85,3 @@ export const SettingItem: React.FC<SettingItemProps> = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 8,
-  },
-  item: {
-    height: 52,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    height: '100%',
-  },
-  icon: {
-    marginRight: 12,
-  },
-  title: {
-    flex: 1,
-  },
-  chevronContainer: {
-    marginLeft: 8,
-    marginBottom: 3,
-  },
-  chevron: {
-    fontSize: 30,
-    fontWeight: '400',
-  },
-});

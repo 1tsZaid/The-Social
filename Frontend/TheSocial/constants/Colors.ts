@@ -60,7 +60,7 @@ export const Colors = {
     communityGray: '#696969',
     
     // Border and divider colors
-    borderDivider: '#5A5C5E',
+    borderDivider: '#414345',
     
     // Banner Colors
     bannerBlue: '#2196F3',

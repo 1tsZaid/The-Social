@@ -12,6 +12,36 @@ interface LogoutButtonProps {
 
 export const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
   const redColor = useThemeColor({}, 'red');
+  const iconBackgroundColor = useThemeColor({}, 'background');
+  
+  const styles = StyleSheet.create({
+    container: {
+      paddingHorizontal: 24,
+      marginTop: 32,
+      marginBottom: 16,
+    },
+    button: {
+      height: 52,
+      borderRadius: 8,
+    },
+    content: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      height: '100%',
+    },
+    icon: {
+      textAlign: 'center',
+      width: 43,
+      height: 43,
+      backgroundColor: iconBackgroundColor,
+      borderRadius: 100,
+      padding: 5,
+      paddingTop: 9,
+      marginRight: 12,
+    },
+  });
 
   return (
     <TouchableOpacity onPress={onLogout} style={styles.container}>
@@ -34,25 +64,3 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 24,
-    marginTop: 32,
-    marginBottom: 16,
-  },
-  button: {
-    height: 52,
-    borderRadius: 8,
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    height: '100%',
-  },
-  icon: {
-    marginRight: 12,
-  },
-});

@@ -32,7 +32,7 @@ const OrDivider = () => {
   return (
     <View style={styles.container}>
       <View style={styles.line} />
-      <ThemedText style={styles.text} variant='caption'>Or</ThemedText>
+      <ThemedText style={styles.text} variant='caption' colorType='textSecondary'>Or</ThemedText>
       <View style={styles.line} />
     </View>
   );
