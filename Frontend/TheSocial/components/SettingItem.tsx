@@ -30,18 +30,17 @@ export const SettingItem: React.FC<SettingItemProps> = ({
             style={styles.icon}
           />
           <ThemedText 
-            variant="bodyLarge" 
+            variant="body" 
             colorType="textPrimary"
             style={styles.title}
           >
             {title}
           </ThemedText>
-          <Ionicons 
-            name="chevron-forward" 
-            size={24} 
-            color={textSecondaryColor} 
-            style={styles.chevron}
-          />
+          <View style={styles.chevronContainer}>
+          <ThemedText style={styles.chevron} colorType='textSecondary'>
+            ›
+          </ThemedText>
+        </View>
         </View>
       </ThemedView>
     </TouchableOpacity>
@@ -77,7 +76,12 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
   },
+  chevronContainer: {
+    marginLeft: 8,
+    marginBottom: 3,
+  },
   chevron: {
-    marginLeft: 'auto',
+    fontSize: 30,
+    fontWeight: '400',
   },
 });

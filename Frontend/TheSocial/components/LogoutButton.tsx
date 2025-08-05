@@ -24,7 +24,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
             style={styles.icon}
           />
           <ThemedText 
-            variant="bodyLarge" 
+            variant="body" 
             colorType="red"
           >
             Log Out

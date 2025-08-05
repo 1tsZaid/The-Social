@@ -47,7 +47,7 @@ export function GameListItem({ title, description, icon, onPress }: GameListItem
         </View>
         
         <View style={styles.chevronContainer}>
-          <ThemedText style={styles.chevron}>
+          <ThemedText style={styles.chevron} colorType='textSecondary'>
             ›
           </ThemedText>
         </View>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   chevron: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: '400',
   },
 }); 

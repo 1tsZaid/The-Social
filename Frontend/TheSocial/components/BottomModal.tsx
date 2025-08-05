@@ -32,9 +32,6 @@ export default function BottomModal({ isVisible, onClose, children }: BottomModa
       scrollView: {
         flex: 1,
       },
-      scrollContent: {
-        paddingHorizontal: 16,
-      },
       closeButton: {
         position: 'absolute',
         top: 8,
@@ -77,7 +74,6 @@ export default function BottomModal({ isVisible, onClose, children }: BottomModa
         <View style={styles.dragHandle} />
         <ScrollView 
           style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
           {children}

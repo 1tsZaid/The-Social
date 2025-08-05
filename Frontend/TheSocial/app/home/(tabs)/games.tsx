@@ -7,7 +7,10 @@ import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { GameCard } from '@/components/GameCard';
 import { GameListItem } from '@/components/GameListItem';
 
+import { useModal } from '@/components/ModalContext';
+
 export default function GamesScreen() {
+  const { openModal } = useModal();
   // Mock data for the leaderboard
   const leaderboardPlayers = [
     { name: 'Player Name 1', rank: '1st' },
@@ -31,14 +34,14 @@ export default function GamesScreen() {
   // Mock data for available games
   const availableGames = [
     {
-      title: 'Epic Quest',
-      description: 'Embark on a grand adventure...',
-      icon: '⚔️',
-    },
-    {
       title: 'Space Voyager',
       description: 'Explore distant galaxies...',
       icon: '🚀',
+    },
+    {
+      title: 'Epic Quest',
+      description: 'Embark on a grand adventure...',
+      icon: '⚔️',
     },
     {
       title: 'Firefight Arena',
@@ -50,6 +53,7 @@ export default function GamesScreen() {
   const handleGamePress = (gameTitle: string) => {
     console.log(`Pressed: ${gameTitle}`);
     // Add navigation logic here
+    openModal('game1');
   };
 
   return (
