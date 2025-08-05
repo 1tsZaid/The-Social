@@ -17,6 +17,22 @@ import {
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
+import { ModalProvider, useModal } from '@/components/ModalContext';
+import BottomModal from '@/components/BottomModal';
+import CreateCommunityScreen from './createCommunity';
+import DiscoverScreen from './discover';
+import GameScreen from './game1';
+
+function ModalRoot() {
+  const { modal, closeModal } = useModal();
+  return (
+    <BottomModal isVisible={!!modal} onClose={closeModal}>
+      {modal === 'createCommunity' && <CreateCommunityScreen />}
+      {modal === 'discover' && <DiscoverScreen />}
+      {modal === 'game1' && <GameScreen />}
+    </BottomModal>
+  );
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -38,27 +54,31 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack 
-          screenOptions={{ 
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen 
-            name="profile" 
-            options={{ 
-              headerShown: true,
-              title: 'Profile',
-              headerBackTitle: 'Back',
-              headerStyle: {
-                backgroundColor: Colors[colorScheme ?? 'light'].surface,
-              },
-              headerTintColor: Colors[colorScheme ?? 'light'].textPrimary,
-              headerTitleStyle: {
-                fontWeight: '600',
-              },
-            }} 
-          />
-        </Stack>
+        <ModalProvider>
+          <Stack 
+            screenOptions={{ 
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen 
+              name="profile" 
+              options={{ 
+                headerShown: true,
+                title: 'Profile',
+                headerBackTitle: 'Back',
+                headerStyle: {
+                  backgroundColor: Colors[colorScheme ?? 'light'].surface,
+                },
+                headerTintColor: Colors[colorScheme ?? 'light'].textPrimary,
+                headerTitleStyle: {
+                  fontWeight: '600',
+                },
+              }} 
+            />
+            
+          </Stack>
+          <ModalRoot />
+        </ModalProvider>
         <StatusBar style="auto" />
       </ThemeProvider>
     </SafeAreaProvider>

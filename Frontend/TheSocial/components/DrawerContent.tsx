@@ -6,6 +6,7 @@ import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { DrawerActionButton } from './DrawerActionButton';
 import { CommunityItem } from './CommunityItem';
+import { useModal } from '@/components/ModalContext';
 
 interface Community {
   id: string;
@@ -57,14 +58,15 @@ const mockCommunities: Community[] = [
 ];
 
 export function DrawerContent() {
+  const { openModal } = useModal();
   const [selectedCommunityId, setSelectedCommunityId] = useState('1');
 
   const handleCreateCommunity = () => {
-    router.push('/createCommunity');
+    openModal('createCommunity');
   };
 
   const handleDiscoverCommunity = () => {
-    router.push('/discover');
+    openModal('discover');
   };
 
   const handleCommunityPress = (communityId: string) => {

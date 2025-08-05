@@ -9,7 +9,7 @@ interface HamburgerIconProps {
 }
 
 export function HamburgerIcon({ onPress, size = 25 }: HamburgerIconProps) {
-  const iconColor = useThemeColor({}, 'textPrimary');
+  const iconColor = useThemeColor({}, 'textSecondary');
 
   return (
     <TouchableOpacity
@@ -33,12 +33,12 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   iconContainer: {
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     paddingVertical: 2,
   },
   line: {
-    height: 2,
+    height: 3,
     borderRadius: 1,
   },
 }); 

@@ -47,14 +47,13 @@ export function MessageInput({
     },
     textInput: {
       flex: 1,
-      height: 46,
+      height: 44,
       borderWidth: 1,
       borderColor,
       borderRadius: 50,
-      paddingHorizontal: 20,
-      paddingVertical: 12,
+      paddingHorizontal: 14,
       color,
-      ...Typography,
+      ...Typography.bodySmall,
     },
     sendButton: {
       width: 40,

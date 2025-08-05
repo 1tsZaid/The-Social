@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
   },
   avatarsContainer: {
     flex: 1,

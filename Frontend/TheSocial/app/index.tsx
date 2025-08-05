@@ -7,12 +7,12 @@ export default function LoginScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <Text>Login Screen</Text>
       <Button title="GO to Login" onPress={() => router.replace('/login')} />
-      <Button title="GO to Discover" onPress={() => router.replace('/discover')} />
-      <Button title="GO to Profile" onPress={() => router.replace('/profile')} />
-      <Button title="GO to Create Community" onPress={() => router.replace('/home/(tabs)/createCommunity')} />
-      <Button title="GO to Game 1" onPress={() => router.replace('/game1')} />
       <Button title="GO to Messaging" onPress={() => router.replace('/home/(tabs)/messages')} />
       <Button title="GO to feed" onPress={() => router.replace('/home/(tabs)/feed')} />
+      <Button title="GO to Profile" onPress={() => router.replace('/profile')} />
+      <Button title="GO to Discover" onPress={() => router.push('/discover')} />
+      <Button title="GO to Create Community" onPress={() => router.push('/createCommunity')} />
+      <Button title="GO to Game 1" onPress={() => router.push('/game1')} />
     </View>
   );
 }
