@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { HapticTab } from '@/components/HapticTab';
@@ -12,6 +12,24 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
+
+  const iconColor = useThemeColor({}, 'textPrimary');
+  const color = useThemeColor({}, 'textSecondary');
+  const accentBackgroundColor = useThemeColor({}, 'accent') + '50';
+
+  const styles = StyleSheet.create({
+    iconFocused: {
+      backgroundColor: accentBackgroundColor,
+      color: iconColor,
+      borderRadius: 20,
+      width: 60,
+      padding: 5,
+      textAlign: 'center',
+    },
+    icon: {
+      color,     
+    }
+  });
 
   return (
     <Tabs
@@ -36,35 +54,35 @@ export default function TabLayout() {
         name="messages"
         options={{
           title: 'Messages',
-          tabBarIcon: ({ color }) => <MaterialIcons name="message" size={28} color={color} />,
+          tabBarIcon: ({ focused, color }) => <MaterialIcons name="forum" size={28} color={color} style={focused ? styles.iconFocused : styles.icon}/>,
         }}
       />
       <Tabs.Screen
         name="feed"
         options={{
           title: 'Feed',
-          tabBarIcon: ({ color }) => <MaterialIcons name="article" size={28} color={color} />,
+          tabBarIcon: ({ focused, color }) => <MaterialIcons name="web-stories" size={28} color={color} style={focused ? styles.iconFocused : styles.icon}/>,
         }}
       />
       <Tabs.Screen
         name="createCommunity"
         options={{
           title: 'Create Community',
-          tabBarIcon: ({ color }) => <MaterialIcons name="add-circle" size={28} color={color} />,
+          tabBarIcon: ({ focused, color }) => <MaterialIcons name="add-circle" size={28} color={color} style={focused ? styles.iconFocused : styles.icon}/>,
         }}
       />
       <Tabs.Screen
         name="games"
         options={{
           title: 'Games',
-          tabBarIcon: ({ color }) => <MaterialIcons name="sports-esports" size={28} color={color} />,
+          tabBarIcon: ({ focused,  color }) => <MaterialIcons name="sports-esports" size={28} color={color} style={focused ? styles.iconFocused : styles.icon}/>,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <MaterialIcons name="account-circle" size={28} color={color} />,
+          tabBarIcon: ({ focused, color }) => <MaterialIcons name="account-circle" size={28} color={color} style={focused ? styles.iconFocused : styles.icon}/>,
         }}
       />
     </Tabs>
