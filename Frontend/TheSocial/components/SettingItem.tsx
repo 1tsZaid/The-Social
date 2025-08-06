@@ -43,7 +43,7 @@ export const SettingItem: React.FC<SettingItemProps> = ({
       backgroundColor: iconBackgroundColor,
       borderRadius: 100,
       padding: 5,
-      paddingTop: 9,
+      paddingTop: 8,
       marginRight: 12,
     },
     title: {
@@ -65,7 +65,7 @@ export const SettingItem: React.FC<SettingItemProps> = ({
         <View style={styles.content}>
           <Ionicons 
             name={icon} 
-            size={24} 
+            size={25} 
             color={color} 
             style={styles.icon}
           />

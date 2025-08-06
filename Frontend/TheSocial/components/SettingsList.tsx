@@ -37,31 +37,31 @@ export const SettingsList: React.FC<SettingsListProps> = ({
         onPress={onMyAccount}
       />
       <SettingItem
-        icon="color-palette-sharp"
+        icon="color-palette"
         color={magentaColor}
         title="Appearance"
         onPress={onAppearance}
       />
       <SettingItem
-        icon="shield-checkmark-sharp"
+        icon="shield-checkmark"
         color={greenColor}
         title="Permissions"
         onPress={onPermissions}
       />
       <SettingItem
-        icon="lock-closed-sharp"
+        icon="lock-closed"
         color={goldColor}
         title="Privacy & Safety"
         onPress={onPrivacySafety}
       />
       <SettingItem
-        icon="card-sharp"
+        icon="card"
         color={purpleColor}
         title="Billing"
         onPress={onBilling}
       />
       <SettingItem
-        icon="help-circle-sharp"
+        icon="help-circle"
         color={silverColor}
         title="Support"
         onPress={onSupport}

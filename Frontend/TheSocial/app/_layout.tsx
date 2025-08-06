@@ -19,6 +19,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { ModalProvider, useModal } from '@/components/ModalContext';
 import BottomModal from '@/components/BottomModal';
+import CustomBackButton from '@/components/CustomBackButton';
 import CreateCommunityScreen from './createCommunity';
 import DiscoverScreen from './discover';
 import GameScreen from './game1';
@@ -64,12 +65,9 @@ export default function RootLayout() {
               name="profile" 
               options={{ 
                 headerShown: true,
-                title: 'Profile',
-                headerBackTitle: 'Back',
-                headerStyle: {
-                  backgroundColor: Colors[colorScheme ?? 'light'].surface,
-                },
-                headerTintColor: Colors[colorScheme ?? 'light'].textPrimary,
+                title: '',
+                headerTransparent: true,
+                headerLeft: () => <CustomBackButton />,
                 headerTitleStyle: {
                   fontWeight: '600',
                 },
