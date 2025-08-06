@@ -10,11 +10,16 @@ export const Colors = {
     
     // Accent colors
     accent: '#FFA500',
+
+    gold: '#FFD700',
+    silver: '#A5A9B4',
+    bronze: '#CD7F32',
+
     blue: '#2196F3',
     red: '#CE2029',
-    gold: '#FFD700',
-    bronze: '#CD7F32',
-    silver: '#A5A9B4',
+    green: '#34C759',
+    purple: '#8B5FBF',
+    magenta: '#FF6B9D',
     
     // Community icon colors
     communityTeal: '#20B2AA',
@@ -38,8 +43,8 @@ export const Colors = {
   },
   dark: {
     // Background colors
-    background: '#1A1A1A',
-    surface: '#292929',
+    background: '#000000',
+    surface: '#111111',
     
     // Text colors
     textPrimary: '#FFFFFF',
@@ -47,11 +52,16 @@ export const Colors = {
     
     // Accent colors
     accent: '#FF8000',
+
+    gold: '#FFD700',
+    silver: '#A5A9B4',
+    bronze: '#CD7F32',
+    
     blue: '#2196F3',
     red: '#CE2029',
-    gold: '#FFD700',
-    bronze: '#CD7F32',
-    silver: '#A5A9B4',
+    green: '#30D158',
+    purple: '#8B5FBF',
+    magenta: '#FF6B9D',
     
     // Community icon colors
     communityTeal: '#20B2AA',

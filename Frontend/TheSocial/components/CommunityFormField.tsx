@@ -22,9 +22,9 @@ export function CommunityFormField({
 }: CommunityFormFieldProps) {
   const backgroundColor = useThemeColor({}, 'surface');
   const borderColor = useThemeColor({}, 'borderDivider');
-  const textColor = useThemeColor({}, 'textSecondary');
+  const textColor = useThemeColor({}, 'textPrimary');
   const placeholderColor = useThemeColor({}, 'borderDivider');
-  const iconColor = useThemeColor({}, 'borderDivider');
+  const iconColor = useThemeColor({}, 'textSecondary');
 
   return (
     <View style={styles.container}>

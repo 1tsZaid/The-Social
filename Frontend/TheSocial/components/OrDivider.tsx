@@ -15,7 +15,7 @@ const OrDivider = () => {
       alignItems: 'center',
       gap: 16,
       width: 380,
-      height: 18,
+      height: 10,
       marginVertical: 28,
     },
     line: {

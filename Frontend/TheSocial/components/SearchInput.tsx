@@ -19,7 +19,7 @@ export function SearchInput({
 }: SearchInputProps) {
   const backgroundColor = useThemeColor({}, 'surface');
   const borderColor = useThemeColor({}, 'borderDivider');
-  const textColor = useThemeColor({}, 'textSecondary');
+  const textColor = useThemeColor({}, 'textPrimary');
   const iconColor = useThemeColor({}, 'textSecondary');
 
   return (

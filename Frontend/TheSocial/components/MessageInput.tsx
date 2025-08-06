@@ -28,7 +28,7 @@ export function MessageInput({
 
   const placeholderTextColor = useThemeColor({}, 'borderDivider');
   const borderColor = useThemeColor({}, 'borderDivider');
-  const color = useThemeColor({}, 'textSecondary');
+  const color = useThemeColor({}, 'textPrimary');
   const buttonBackground = useThemeColor({}, 'textPrimary');
   
   const theme = useColorScheme() ?? 'light';
@@ -53,7 +53,7 @@ export function MessageInput({
       borderRadius: 50,
       paddingHorizontal: 14,
       color,
-      ...Typography.bodySmall,
+      ...Typography.body,
     },
     sendButton: {
       width: 40,

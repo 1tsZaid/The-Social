@@ -8,16 +8,17 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface SettingItemProps {
   icon: keyof typeof Ionicons.glyphMap;
+  color: string;
   title: string;
   onPress: () => void;
 }
 
 export const SettingItem: React.FC<SettingItemProps> = ({
   icon,
+  color,
   title,
   onPress,
 }) => {
-  const textSecondaryColor = useThemeColor({}, 'textSecondary');
   const iconBackgroundColor = useThemeColor({}, 'background');
   
   const styles = StyleSheet.create({
@@ -65,7 +66,7 @@ export const SettingItem: React.FC<SettingItemProps> = ({
           <Ionicons 
             name={icon} 
             size={24} 
-            color={textSecondaryColor} 
+            color={color} 
             style={styles.icon}
           />
           <ThemedText 
