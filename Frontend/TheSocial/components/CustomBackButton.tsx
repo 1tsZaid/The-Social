@@ -11,7 +11,7 @@ export default function CustomBackButton() {
 
   return (
     <TouchableOpacity 
-      onPress={() => router.back()}
+      onPress={() => router.replace('/home/(tabs)/messages')}
       style={[styles.backButton, { backgroundColor }]}
     >
       <MaterialIcons name="arrow-back" size={24} color={iconColor} />

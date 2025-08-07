@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedView } from '@/components/ThemedView';
 import { ProfileHeader } from '@/components/ProfileHeader';
@@ -17,6 +18,7 @@ export default function ProfileScreen() {
   };
 
   const divderColor = useThemeColor({}, 'borderDivider')
+  const backgroundColor = useThemeColor({}, 'background');
 
   const handleEditProfile = () => {
     // Navigate to edit profile screen
@@ -75,10 +77,14 @@ export default function ProfileScreen() {
   };
   
   const styles = StyleSheet.create({
-    container: {
+    safeArea: {
       flex: 1,
+      backgroundColor,
     },
     scrollView: {
+      flex: 1,
+    },
+    container: {
       flex: 1,
     },
     scrollContent: {
@@ -96,41 +102,43 @@ export default function ProfileScreen() {
   });
 
   return (
-    <ThemedView style={styles.container}>
+    <SafeAreaView style={styles.safeArea} >
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Profile Header */}
-        <ProfileHeader
-          username={userData.username}
-          joinedDate={userData.joinedDate}
-          profileImage={userData.profileImage}
-          bannerColor={userData.bannerColor}
-          onEditProfile={handleEditProfile}
-          onNotification={handleNotification}
-        />
-        
-        {/* Divider */}
-        <View style={styles.divider} />
-        
-        {/* Settings List */}
-        <SettingsList
-          onMyAccount={handleMyAccount}
-          onAppearance={handleAppearance}
-          onPermissions={handlePermissions}
-          onPrivacySafety={handlePrivacySafety}
-          onBilling={handleBilling}
-          onSupport={handleSupport}
-        />
-        
-        {/* Logout Button */}
-        <LogoutButton onLogout={handleLogout} />
-        
-        {/* Bottom spacing */}
-        <View style={styles.bottomSpacing} />
+        <View>
+          {/* Profile Header */}
+          <ProfileHeader
+            username={userData.username}
+            joinedDate={userData.joinedDate}
+            profileImage={userData.profileImage}
+            bannerColor={userData.bannerColor}
+            onEditProfile={handleEditProfile}
+            onNotification={handleNotification}
+          />
+          
+          {/* Divider */}
+          <View style={styles.divider} />
+          
+          {/* Settings List */}
+          <SettingsList
+            onMyAccount={handleMyAccount}
+            onAppearance={handleAppearance}
+            onPermissions={handlePermissions}
+            onPrivacySafety={handlePrivacySafety}
+            onBilling={handleBilling}
+            onSupport={handleSupport}
+          />
+          
+          {/* Logout Button */}
+          <LogoutButton onLogout={handleLogout} />
+          
+          {/* Bottom spacing */}
+          <View style={styles.bottomSpacing} />
+        </View>
       </ScrollView>
-    </ThemedView>
+    </SafeAreaView>
   );
 }

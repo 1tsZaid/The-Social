@@ -33,7 +33,6 @@ export default function TabLayout() {
       color: iconColor,
       borderRadius: 20,
       width: 60,
-      padding: 5,
       textAlign: 'center',
     },
     icon: {
@@ -59,6 +58,7 @@ export default function TabLayout() {
             position: isTabBarVisible ? 'relative' : 'absolute',
             backgroundColor,
             transform: [{ translateY: tabBarTranslateY }],
+            height: 40,
           },
         }),
       }}>

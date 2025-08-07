@@ -16,7 +16,6 @@ import {
 } from '@expo-google-fonts/poppins';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Colors } from '@/constants/Colors';
 import { ModalProvider, useModal } from '@/components/ModalContext';
 import BottomModal from '@/components/BottomModal';
 import CustomBackButton from '@/components/CustomBackButton';

@@ -34,19 +34,12 @@ export function HomeHeaderDemo() {
         onAvatarPress={handleAvatarPress}
         height={56}
       />
-      {/* Add your content below the header */}
-      <ThemedView style={styles.content}>
-        {/* Your feed content would go here */}
-      </ThemedView>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  content: {
     flex: 1,
   },
 }); 

@@ -36,6 +36,7 @@ export function MessageItem({
       justifyContent: 'flex-start',
       height: 70,
       borderRadius: 30,
+      padding: 2,
       backgroundColor: bannerColor,
     },
     contentContainer: {
