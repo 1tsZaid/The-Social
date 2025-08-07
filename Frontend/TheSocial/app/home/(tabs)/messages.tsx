@@ -4,6 +4,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { MessageItem } from '@/components/MessageItem';
 import { DateSeparator } from '@/components/DateSeparator';
 import { MessageInput } from '@/components/MessageInput';
+import { useScrollHandler } from '@/hooks/useScrollHandler';
 
 interface Message {
   id: string;
@@ -61,6 +62,7 @@ const sampleMessages: Message[] = [
 
 export default function MessagesScreen() {
   const [messages, setMessages] = useState(sampleMessages);
+  const { onScroll } = useScrollHandler();
 
   const handleSendMessage = (newMessage: string) => {
     const newMessageItem = {
@@ -81,6 +83,8 @@ export default function MessagesScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       >
         {/* First set of messages */}
         {messages.slice(0, 3).map((message) => (
@@ -118,6 +122,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    paddingTop: 50,
   },
   scrollContent: {
     paddingBottom: 10,

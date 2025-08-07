@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, Animated } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { HapticTab } from '@/components/HapticTab';
@@ -8,6 +8,7 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useScroll } from '@/components/ScrollContext';
 
 const tabIcons = {
   messages: { filled: 'chatbubbles' as const, outlined: 'chatbubbles-outline' as const },
@@ -20,6 +21,7 @@ const tabIcons = {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
+  const { isTabBarVisible, tabBarTranslateY } = useScroll();
 
   const iconColor = useThemeColor({}, 'textPrimary');
   const color = useThemeColor({}, 'textSecondary');
@@ -49,12 +51,14 @@ export default function TabLayout() {
         tabBarShowLabel: false,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
             backgroundColor,
+            transform: [{ translateY: tabBarTranslateY }],
           },
           default: {
+            position: 'absolute',
             backgroundColor,
+            transform: [{ translateY: tabBarTranslateY }],
           },
         }),
       }}>

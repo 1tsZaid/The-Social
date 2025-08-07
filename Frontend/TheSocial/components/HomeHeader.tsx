@@ -54,6 +54,7 @@ export function HomeHeader({
 const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
+    borderRadius: 3,
   },
   content: {
     flex: 1,

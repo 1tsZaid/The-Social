@@ -6,11 +6,13 @@ import { ThemedView } from '@/components/ThemedView';
 import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { GameCard } from '@/components/GameCard';
 import { GameListItem } from '@/components/GameListItem';
-
 import { useModal } from '@/components/ModalContext';
+import { useScrollHandler } from '@/hooks/useScrollHandler';
 
 export default function GamesScreen() {
   const { openModal } = useModal();
+  const { onScroll } = useScrollHandler();
+  
   // Mock data for the leaderboard
   const leaderboardPlayers = [
     { name: 'Player Name 1', rank: '1st' },
@@ -62,6 +64,8 @@ export default function GamesScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       >
         {/* Leaderboard Section */}
         <View style={styles.section}>
@@ -129,6 +133,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    paddingTop: 50,
   },
   scrollContent: {
     padding: 16,

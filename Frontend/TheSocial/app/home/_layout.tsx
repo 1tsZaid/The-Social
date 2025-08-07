@@ -1,9 +1,13 @@
 import { Drawer } from 'expo-router/drawer';
+import { Animated } from 'react-native';
 
 import { DrawerContent } from '@/components/DrawerContent';
 import { HomeHeaderDemo } from '@/components/HomeHeaderDemo';
+import { ScrollProvider, useScroll } from '@/components/ScrollContext';
 
-export default function HomeLayout() {
+function HomeDrawerContent() {
+  const { isHeaderVisible, headerTranslateY } = useScroll();
+
   return (
     <Drawer
       drawerContent={(props) => <DrawerContent/>}
@@ -18,9 +22,30 @@ export default function HomeLayout() {
         name="(tabs)" 
         options={{ 
           title: 'Home',
-          header: () => <HomeHeaderDemo />
+          header: () => (
+            <Animated.View
+              style={{
+                transform: [{ translateY: headerTranslateY }],
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 1000,
+              }}
+            >
+              <HomeHeaderDemo />
+            </Animated.View>
+          )
         }} 
       />
     </Drawer>
+  );
+}
+
+export default function HomeLayout() {
+  return (
+    <ScrollProvider>
+      <HomeDrawerContent />
+    </ScrollProvider>
   );
 }

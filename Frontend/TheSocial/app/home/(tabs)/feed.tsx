@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Alert } from 'react-native';
 
 import { ThemedView } from '@/components/ThemedView';
 import { PostCard, type PostData } from '@/components/PostCard';
+import { useScrollHandler } from '@/hooks/useScrollHandler';
 
 // Mock data for demonstration
 const mockPosts: PostData[] = [
@@ -48,6 +49,7 @@ const mockPosts: PostData[] = [
 
 export default function FeedScreen() {
   const [posts, setPosts] = useState<PostData[]>(mockPosts);
+  const { onScroll } = useScrollHandler();
 
   const handleLike = (postId: string) => {
     setPosts(prevPosts =>
@@ -87,6 +89,8 @@ export default function FeedScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       >
         {posts.map((post) => (
           <PostCard
@@ -110,6 +114,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    paddingTop: 40,
   },
   scrollContent: {
     paddingVertical: 15,
