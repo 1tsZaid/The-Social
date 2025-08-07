@@ -42,6 +42,11 @@ const RegisterScreen = () => {
       flex: 1,
       justifyContent: "center",
     },
+    logoContainer: {
+      flex: 1,
+      minHeight: 100,
+      justifyContent: "center",
+    },
     headingSection: {
         width: 325,
         alignSelf: "center",
@@ -68,7 +73,9 @@ const RegisterScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>  
-          <Logo />
+          <View style={styles.logoContainer}>
+            <Logo />
+          </View>
           <View style={styles.headingSection}>
             <FormHeading textAlign='left' heading='CREATE NEW ACCOUNT' caption='Ready to make some new connections?'/>
           </View>

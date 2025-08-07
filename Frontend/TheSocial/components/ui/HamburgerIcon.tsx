@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface HamburgerIconProps {
@@ -17,11 +16,11 @@ export function HamburgerIcon({ onPress, size = 25 }: HamburgerIconProps) {
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <ThemedView style={[styles.iconContainer, { width: size, height: size }]}>
+      <View style={[styles.iconContainer, { width: size, height: size }]}>
         <View style={[styles.line, { backgroundColor: iconColor, width: size * 0.75 }]} />
         <View style={[styles.line, { backgroundColor: iconColor, width: size * 0.75 }]} />
         <View style={[styles.line, { backgroundColor: iconColor, width: size * 0.75 }]} />
-      </ThemedView>
+      </View>
     </TouchableOpacity>
   );
 }

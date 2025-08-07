@@ -28,7 +28,7 @@ export function HomeHeader({
   const borderColor = useThemeColor({}, 'borderDivider');
 
   return (
-    <ThemedView style={[styles.container, { height, borderBottomColor: borderColor }]} backgroundType='background'>
+    <ThemedView style={[styles.container, { height, borderBottomColor: borderColor }]} >
       
       {/* Header content */}
       <View style={styles.content}>
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 4,
+    backgroundColor: '#ff0000' + '15',
   },
   menuContainer: {
     width: 48,

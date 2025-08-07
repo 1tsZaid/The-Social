@@ -58,6 +58,18 @@ const sampleMessages: Message[] = [
     timestamp: '3:11pm',
     message: 'how are you',
   },
+  {
+    id: '8',
+    senderName: 'Ali Khan',
+    timestamp: '3:21pm',
+    message: 'how are you',
+  },
+  {
+    id: '9',
+    senderName: 'Ali Khan',
+    timestamp: '3:22pm',
+    message: 'how are you',
+  },
 ];
 
 export default function MessagesScreen() {

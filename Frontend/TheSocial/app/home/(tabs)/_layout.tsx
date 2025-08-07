@@ -51,12 +51,12 @@ export default function TabLayout() {
         tabBarShowLabel: false,
         tabBarStyle: Platform.select({
           ios: {
-            position: 'absolute',
+            position: isTabBarVisible ? 'relative' : 'absolute',
             backgroundColor,
             transform: [{ translateY: tabBarTranslateY }],
           },
           default: {
-            position: 'absolute',
+            position: isTabBarVisible ? 'relative' : 'absolute',
             backgroundColor,
             transform: [{ translateY: tabBarTranslateY }],
           },

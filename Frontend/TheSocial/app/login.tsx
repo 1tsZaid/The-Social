@@ -57,6 +57,11 @@ const LoginScreen = () => {
       flex: 1,
       justifyContent: "center",
     },
+    logoContainer: {
+      flex: 1,
+      minHeight: 100,
+      justifyContent: "center",
+    },
     inputSection: {
       height: 200,
       width: 300,
@@ -84,7 +89,9 @@ const LoginScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
-          <Logo />
+          <View style={styles.logoContainer}>
+            <Logo />
+          </View>
           <FormHeading textAlign='center' heading='WELCOME BACK!' caption='Ready to discover who’s around?'/>
           <View style={styles.inputSection}>
             <InputField
