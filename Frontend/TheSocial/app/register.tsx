@@ -36,7 +36,7 @@ const RegisterScreen = () => {
       backgroundColor,
     },
     scrollContainer: {
-      flex: 1,
+      flexGrow: 1,
     },
     container: {
       flex: 1,
@@ -45,6 +45,7 @@ const RegisterScreen = () => {
     logoContainer: {
       flex: 1,
       minHeight: 100,
+      maxHeight: 150,
       justifyContent: "center",
     },
     headingSection: {
@@ -66,11 +67,13 @@ const RegisterScreen = () => {
   });
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'right', 'bottom', 'left']}>
+    <SafeAreaView style={styles.safeArea} >
       <ScrollView 
         contentContainerStyle={styles.scrollContainer} 
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        overScrollMode="never"
       >
         <View style={styles.container}>  
           <View style={styles.logoContainer}>

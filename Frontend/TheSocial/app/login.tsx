@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Logo from '@/components/ui/Logo';
@@ -51,7 +51,7 @@ const LoginScreen = () => {
       backgroundColor,
     },
     scrollContainer: {
-      flex: 1,
+      flexGrow: 1,
     },
     container: {
       flex: 1,
@@ -60,6 +60,7 @@ const LoginScreen = () => {
     logoContainer: {
       flex: 1,
       minHeight: 100,
+      maxHeight: 150,
       justifyContent: "center",
     },
     inputSection: {
@@ -82,61 +83,63 @@ const LoginScreen = () => {
   });
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'right', 'bottom', 'left']}>
-      <ScrollView 
-        contentContainerStyle={styles.scrollContainer} 
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.container}>
-          <View style={styles.logoContainer}>
-            <Logo />
+    <SafeAreaView style={styles.safeArea}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContainer} 
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          overScrollMode="never"
+        >
+          <View style={styles.container}>
+            <View style={styles.logoContainer}>
+              <Logo />
+            </View>
+            <FormHeading textAlign='center' heading='WELCOME BACK!' caption={'Ready to discover who\'s around?'} />
+            <View style={styles.inputSection}>
+              <InputField
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="TheSocial@gmail.com"
+                secureTextEntry={false}
+              />
+              <InputField
+                label="Password"
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+                secureTextEntry={!showPassword}
+                rightIcon={
+                  <PasswordVisibilityIcon
+                    showPassword={showPassword}
+                    onPress={() => setShowPassword(!showPassword)}
+                  />
+                }
+              />
+              <ForgotPasswordLink onPress={handleForgotPassword} />
+            </View>
+            <View style={styles.mainButtonSection}>
+              <MainButton title="Log In" onPress={handleLogin} />
+            </View>
+            <View style={styles.dividerSection}> 
+              <OrDivider />
+            </View>
+            <View style={styles.socialSection}>
+              <SocialLoginButton
+                title="Continue with Google"
+                icon={<GoogleIcon />}
+                onPress={handleGoogleLogin}
+              />
+              <SocialLoginButton
+                title="Continue with Facebook"
+                icon={<FacebookIcon />}
+                onPress={handleFacebookLogin}
+              />
+            </View>
+            <FormLinkSection onPress={handleSignUp} linkText={"Sign Up"}>Don't have an account?</FormLinkSection>
           </View>
-          <FormHeading textAlign='center' heading='WELCOME BACK!' caption='Ready to discover who’s around?'/>
-          <View style={styles.inputSection}>
-            <InputField
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="TheSocial@gmail.com"
-              secureTextEntry={false}
-            />
-            <InputField
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Password"
-              secureTextEntry={!showPassword}
-              rightIcon={
-                <PasswordVisibilityIcon
-                  showPassword={showPassword}
-                  onPress={() => setShowPassword(!showPassword)}
-                />
-              }
-            />
-            <ForgotPasswordLink onPress={handleForgotPassword} />
-          </View>
-          <View style={styles.mainButtonSection}>
-            <MainButton title="Log In" onPress={handleLogin} />
-          </View>
-          <View style={styles.dividerSection}> 
-            <OrDivider />
-          </View>
-          <View style={styles.socialSection}>
-            <SocialLoginButton
-              title="Continue with Google"
-              icon={<GoogleIcon />}
-              onPress={handleGoogleLogin}
-            />
-            <SocialLoginButton
-              title="Continue with Facebook"
-              icon={<FacebookIcon />}
-              onPress={handleFacebookLogin}
-            />
-          </View>
-          <FormLinkSection onPress={handleSignUp} linkText={"Sign Up"}>Don't have an account?</FormLinkSection>
-        </View>
-      </ScrollView>
+        </ScrollView>
     </SafeAreaView>
   );
 };
