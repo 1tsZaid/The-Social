@@ -1,18 +1,16 @@
 import React from 'react';
 import {
   Modal,
-  View,
   StyleSheet,
-  TouchableOpacity,
+  Text,
+  Pressable,
+  View,
   ScrollView,
-  Dimensions,
+  Dimensions
 } from 'react-native';
 
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
-
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 type BottomModalProps = {
   isVisible: boolean;
@@ -21,27 +19,21 @@ type BottomModalProps = {
 };
 
 export default function BottomModal({ isVisible, onClose, children }: BottomModalProps) {
+
+  const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
   const dragHandleColor = useThemeColor({}, 'textSecondary');
   
   const styles = StyleSheet.create({
-    modalOverlay: {
-      flex: 1,
-      justifyContent: 'flex-end',
+    parentView: {
     },
-    backdrop: {
-      flex: 1,
-    },
-    content: {
-      borderTopLeftRadius: 16,
-      borderTopRightRadius: 16,
-      paddingTop: 32,
-      maxHeight: SCREEN_HEIGHT * 0.85,
-      minHeight: 200,
+    modalView: {
+      borderRadius: 20,
+      alignItems: 'center',
     },
     scrollView: {
-      flex: 1,
-      paddingHorizontal: 16,
-      paddingBottom: 16,
+      width: '100%',
+      height: SCREEN_HEIGHT * 0.8,
     },
     closeButton: {
       position: 'absolute',
@@ -66,36 +58,27 @@ export default function BottomModal({ isVisible, onClose, children }: BottomModa
   });
 
   return (
-    <Modal
-      visible={isVisible}
-      transparent={true}
-      animationType="slide"
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalOverlay}>
-        <TouchableOpacity 
-          style={styles.backdrop} 
-          activeOpacity={1} 
-          onPress={onClose}
-        />
-        <ThemedView style={styles.content} backgroundType='background'>
-          <TouchableOpacity 
-            style={styles.closeButton} 
-            onPress={onClose} 
-            accessibilityLabel="Close modal"
-          >
-            <ThemedText variant='h1' colorType='textSecondary'>×</ThemedText>
-          </TouchableOpacity>
-          <View style={styles.dragHandle} />
-          <ScrollView 
-            style={styles.scrollView}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingTop: 8 }}
-          >
-            {children}
-          </ScrollView>
-        </ThemedView>
-      </View>
-    </Modal>
+    <View style={styles.parentView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isVisible}
+        onRequestClose={onClose}
+      >
+          <View style={styles.modalView}>
+            <Pressable 
+              style={styles.closeButton} 
+              onPress={onClose} 
+              accessibilityLabel="Close modal"
+            >
+              <ThemedText variant='h1' colorType='textSecondary'>×</ThemedText>
+            </Pressable>
+            <View style={styles.dragHandle} />
+            <ScrollView style={styles.scrollView}>
+              {children}
+            </ScrollView>
+          </View>
+      </Modal>
+    </View>
   );
 }
