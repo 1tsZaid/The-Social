@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Modal,
   StyleSheet,
-  Text,
   Pressable,
   View,
   ScrollView,
@@ -11,6 +10,7 @@ import {
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { ThemedView } from '@/components/ThemedView';
 
 type BottomModalProps = {
   isVisible: boolean;
@@ -28,12 +28,15 @@ export default function BottomModal({ isVisible, onClose, children }: BottomModa
     parentView: {
     },
     modalView: {
+      flex: 1,
+      justifyContent: 'flex-end',
       borderRadius: 20,
       alignItems: 'center',
+      marginTop: SCREEN_HEIGHT * 0.2,
     },
     scrollView: {
       width: '100%',
-      height: SCREEN_HEIGHT * 0.8,
+      marginTop: 40,
     },
     closeButton: {
       position: 'absolute',
@@ -65,7 +68,7 @@ export default function BottomModal({ isVisible, onClose, children }: BottomModa
         visible={isVisible}
         onRequestClose={onClose}
       >
-          <View style={styles.modalView}>
+          <ThemedView style={styles.modalView} backgroundType='background'>
             <Pressable 
               style={styles.closeButton} 
               onPress={onClose} 
@@ -74,10 +77,10 @@ export default function BottomModal({ isVisible, onClose, children }: BottomModa
               <ThemedText variant='h1' colorType='textSecondary'>×</ThemedText>
             </Pressable>
             <View style={styles.dragHandle} />
-            <ScrollView style={styles.scrollView}>
+            <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} >
               {children}
             </ScrollView>
-          </View>
+          </ThemedView>
       </Modal>
     </View>
   );
