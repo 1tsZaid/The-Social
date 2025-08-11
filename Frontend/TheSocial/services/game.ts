@@ -1,52 +1,90 @@
 import api from './api';
 import { API_CONFIG } from '../constants/Api';
 
-interface GamePayload {
-  //game?: string; unique identifier for the game
-  //image?: string;
-  //banner?: string;
-  //description: string;
-  //averagePlayTime?: string; //optional timestamp
+interface Game {
+    game: string; // unique identifier for the game
+    image: string;
+    banner?: string;
 }
 
-interface GameLeaderboardPayload {
-  //game?: string;
-  //image?: string;
-  //banner?: string;
-  //user1?: string;
-  //user1Score?: number;
-  //user1Image?: string;
-  //user2?: string;
-  //user2Score?: number;
-  //user2Image?: string;
-  //user3?: string;
-  //user3Score?: number;
-  //user3Image?: string;
+interface GamePayload extends Game {
+  description: string;
+  averagePlayTime?: string;
 }
 
-interface YourLeaderboardPayload {
-  //game?: string;
-  //username?: string;
-  //score?: number;
-  //rank?: number;
+interface LeaderboardEntry {
+  username: string;
+  userImage?: string;
+  score: number;
+  rank: number;
 }
 
-export const getGameInfo = async () => {
+interface GameLeaderboardPayload extends Game {
+  topPlayers: LeaderboardEntry[];
+  lastUpdated: string;
+}
+
+interface PlayerLeaderboardStatsUpdate {
+  game: string;
+  scoreAchieved: number;
+  playTime: string;
+}
+
+interface PlayerLeaderboardFetch {
+  game: string;
+  username: string;
+  score: number;
+  rank: number;
+  totalPlayTime: string;
+}
+
+export const getGameInfo = async (game?: string): Promise<GamePayload> => {
   try {
-    const response = await api.get(API_CONFIG.ENDPOINTS.GAMES.BASE);
+    const endpoint = game
+      ? `${API_CONFIG.ENDPOINTS.GAMES.BASE}/${game}`
+      : API_CONFIG.ENDPOINTS.GAMES.BASE;
+    const response = await api.get(endpoint);
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching game info:', error);
     throw error;
   }
 };
 
-export const playGame = async (gameId: string) => {
+export const getLeaderboard = async (game: string, limit: number = 3): Promise<GameLeaderboardPayload> => {
   try {
-    const response = await api.post(API_CONFIG.ENDPOINTS.GAMES.PLAY(gameId));
+    const response = await api.get(
+      `${API_CONFIG.ENDPOINTS.GAMES.BASE}/${game}/leaderboard`, 
+      { params: { limit } }
+    );
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching leaderboard:', error);
+    throw error;
+  }
+};
+
+export const getPlayerLeaderboardStats = async (game: string): Promise<PlayerLeaderboardFetch> => {
+  try {
+    const response = await api.get(
+      `${API_CONFIG.ENDPOINTS.GAMES.BASE}/${game}/player-stats`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching player stats:', error);
+    throw error;
+  }
+};
+
+export const updatePlayerScore = async (playerLeaderboardStats: PlayerLeaderboardStatsUpdate): Promise<PlayerLeaderboardFetch> => {
+  try {
+    const response = await api.post(
+      `${API_CONFIG.ENDPOINTS.GAMES.BASE}/${playerLeaderboardStats.game}/score`,
+      { score: playerLeaderboardStats.scoreAchieved, playTime: playerLeaderboardStats.playTime }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating player score:', error);
     throw error;
   }
 };
