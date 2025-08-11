@@ -17,16 +17,18 @@ interface PostAttachedImg {
   image?: string; // url or the actual image file
 }
 
-interface CreatePostPayload {
+interface Post {
+  id: string; // unique identifier for the post set by the backend
   communityId?: string;
   content: string;
-  attachments?: PostAttachedImg[];
+  attachments: PostAttachedImg[];
 }
 
-interface Post extends Omit<CreatePostPayload, 'attachments'> {
-  postId: string; // unique identifier for the post set by the backend
+interface CreatePostPayload extends Omit<Post, 'id'>  {
+}
+
+interface RecieveMessagePayload extends Post {
   author: PostUser;
-  attachments: PostAttachedImg[];
   stats: PostStats;
   createdAt: string;
 }
@@ -39,12 +41,12 @@ interface GetPostsParams {
 }
 
 interface PostsResponse {
-  posts: Post[];
+  posts: RecieveMessagePayload[];
   totalPosts: number;
   hasMore: boolean;
 }
 
-export const createPost = async (payload: CreatePostPayload): Promise<Post> => {
+export const createPost = async (payload: CreatePostPayload): Promise<RecieveMessagePayload> => {
   try {
     const response = await api.post(API_CONFIG.ENDPOINTS.POSTS.BASE, payload);
     return response.data;
@@ -73,31 +75,31 @@ export const getCommunityPosts = async (
   }
 };
 
-export const getUserPosts = async (
-  userId: string,
-  params: Omit<GetPostsParams, 'userId'> = {}
-): Promise<PostsResponse> => {
-  try {
-    const response = await api.get(API_CONFIG.ENDPOINTS.POSTS.BY_USER(userId), {
-      params: {
-        limit: params.limit || 20,
-        page: params.page || 1,
-        sortBy: params.sortBy || 'latest'
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+// export const getUserPosts = async (
+//   userId: string,
+//   params: Omit<GetPostsParams, 'userId'> = {}
+// ): Promise<PostsResponse> => {
+//   try {
+//     const response = await api.get(API_CONFIG.ENDPOINTS.POSTS.BY_USER(userId), {
+//       params: {
+//         limit: params.limit || 20,
+//         page: params.page || 1,
+//         sortBy: params.sortBy || 'latest'
+//       }
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// };
 
-export const likePost = async (postId: string): Promise<void> => {
-  try {
-    await api.post(API_CONFIG.ENDPOINTS.POSTS.LIKE(postId));
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+// export const likePost = async (postId: string): Promise<void> => {
+//   try {
+//     await api.post(API_CONFIG.ENDPOINTS.POSTS.LIKE(postId));
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// };
 

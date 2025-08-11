@@ -63,10 +63,10 @@ export const unsubscribeFromMessages = () => {
   socket.off('message_received');
 };
 
-export const subscribeToTyping = (callback: (data: { userId: string, isTyping: boolean }) => void) => {
-  socket.on('user_typing', callback);
-};
+// export const subscribeToTyping = (callback: (data: { userId: string, isTyping: boolean }) => void) => {
+//   socket.on('user_typing', callback);
+// };
 
-export const emitTyping = (data: { receiverId?: string, communityId?: string }) => {
-  socket.emit('typing', data);
-};
+// export const emitTyping = (data: { receiverId?: string, communityId?: string }) => {
+//   socket.emit('typing', data);
+// };
