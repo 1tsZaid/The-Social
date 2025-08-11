@@ -16,7 +16,7 @@ interface CreateCommunityPayload {
   description: string;
   location: Location;
   image?: string;
-  banner?: string;
+  banner: string;
 }
 
 interface Community extends CreateCommunityPayload {

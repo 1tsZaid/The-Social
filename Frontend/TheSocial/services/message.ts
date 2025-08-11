@@ -4,7 +4,7 @@ import { API_CONFIG } from '../constants/Api';
 
 interface Message {
   id: string;
-  communityId?: string;
+  communityId: string;
   username: string;
   content: string;
   createdAt: string;
@@ -15,14 +15,14 @@ interface SendMessagePayload extends Omit<Message, 'id'> {
 
 interface RecieveMessagePayload extends Message {
   profileimage?: string; // optional image URL
-  banner?: string;
+  banner: string;
 }
 
 interface GetMessagesParams {
-  communityId?: string;
+  communityId: string;
+  date: string;
   limit?: number;
-  Date?: string;
-  Page?: number; // for pagination
+  page?: number; // for pagination
 }
 
 interface MessagesResponse extends RecieveMessagePayload {
@@ -33,7 +33,14 @@ interface MessagesResponse extends RecieveMessagePayload {
 
 export const getMessages = async (params: GetMessagesParams): Promise<MessagesResponse>  => {
   try {
-    const response = await api.get(API_CONFIG.ENDPOINTS.MESSAGES.BASE, { params });
+    const response = await api.get(API_CONFIG.ENDPOINTS.MESSAGES.BASE, {
+        params: {
+          communityId: params.communityId,
+          sortBy: params.date,
+          limit: params.limit || 20,
+          page: params.page || 1
+        }
+      });
     return response.data;
   } catch (error) {
     console.error('Error fetching messages:', error);

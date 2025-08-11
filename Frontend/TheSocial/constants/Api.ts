@@ -1,6 +1,5 @@
 export const API_CONFIG = {
   BASE_URL: 'https://your-backend-url.com/api',
-  // You can add more API related constants here
   ENDPOINTS: {
     AUTH: {
       LOGIN: '/auth/login',
@@ -16,23 +15,23 @@ export const API_CONFIG = {
     },
     GAMES: {
       BASE: '/games',
-      PLAY: (id: string) => `/games/${id}/play`
+      GET_ONE: (game: string) => `/games/${game}`,
+      LEADERBOARD: (game: string) => `/games/${game}/leaderboard`,
+      PLAYER_STATS: (game: string) => `/games/${game}/player-stats`,
+      UPDATE_SCORE: (game: string) => `/games/${game}/update-score`
     },
     MESSAGES: {
       BASE: '/messages'
     },
     POSTS: {
       BASE: '/posts',
-      GET_ONE: (id: string) => `/posts/${id}`,
       BY_COMMUNITY: (communityId: string) => `/posts/community/${communityId}`,
-      BY_USER: (userId: string) => `/posts/user/${userId}`,
-      LIKE: (id: string) => `/posts/${id}/like`,
-      UNLIKE: (id: string) => `/posts/${id}/unlike`,
-      COMMENTS: (id: string) => `/posts/${id}/comments`
+      BY_USER: (userId: string) => `/posts/user/${userId}`
     },
     PROFILE: {
       BASE: '/profile',
-      UPDATE: '/profile/update'
+      UPDATE: '/profile/update',
+      GET_BY_USERNAME: (username: string) => `/profile/${username}`
     }
   }
 };

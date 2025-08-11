@@ -4,7 +4,7 @@ import { API_CONFIG } from '../constants/Api';
 interface Profile {
   username: string;
   profileImage?: string;
-  bannerImage?: string;
+  bannerImage: string;
   joinedDate: string;
 }
 
@@ -37,7 +37,7 @@ export const updateProfile = async (payload: UpdateProfilePayload): Promise<Prof
 // Get profile by userId
 export const getProfileByUsername = async (username: string): Promise<Profile> => {
   try {
-    const response = await api.get(`${API_CONFIG.ENDPOINTS.PROFILE.BASE}/${username}`);
+    const response = await api.get(API_CONFIG.ENDPOINTS.PROFILE.GET_BY_USERNAME(username));
     return response.data;
   } catch (error) {
     console.error(error);

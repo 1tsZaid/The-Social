@@ -4,7 +4,7 @@ import { API_CONFIG } from '../constants/Api';
 interface PostUser {
   username: string;
   profileImage?: string;
-  bannerImage?: string;
+  bannerImage: string;
 }
 
 interface PostStats {
@@ -14,14 +14,14 @@ interface PostStats {
 
 interface PostAttachedImg {
   id?: string; // unique identifier for the attachment set by the backend
-  image?: string; // url or the actual image file
+  image: string; // url or the actual image file
 }
 
 interface Post {
   id: string; // unique identifier for the post set by the backend
-  communityId?: string;
+  communityId: string;
   content: string;
-  attachments: PostAttachedImg[];
+  attachments?: PostAttachedImg[];
 }
 
 interface CreatePostPayload extends Omit<Post, 'id'>  {
@@ -34,7 +34,7 @@ interface RecieveMessagePayload extends Post {
 }
 
 interface GetPostsParams {
-  communityId?: string;
+  communityId: string;
   limit?: number;
   page?: number;
   sortBy?: 'latest' | 'popular';

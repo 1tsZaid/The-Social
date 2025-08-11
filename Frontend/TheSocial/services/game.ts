@@ -41,7 +41,7 @@ interface PlayerLeaderboardFetch {
 export const getGameInfo = async (game?: string): Promise<GamePayload> => {
   try {
     const endpoint = game
-      ? `${API_CONFIG.ENDPOINTS.GAMES.BASE}/${game}`
+      ? API_CONFIG.ENDPOINTS.GAMES.GET_ONE(game)
       : API_CONFIG.ENDPOINTS.GAMES.BASE;
     const response = await api.get(endpoint);
     return response.data;
@@ -54,7 +54,7 @@ export const getGameInfo = async (game?: string): Promise<GamePayload> => {
 export const getLeaderboard = async (game: string, limit: number = 3): Promise<GameLeaderboardPayload> => {
   try {
     const response = await api.get(
-      `${API_CONFIG.ENDPOINTS.GAMES.BASE}/${game}/leaderboard`, 
+      API_CONFIG.ENDPOINTS.GAMES.LEADERBOARD(game),
       { params: { limit } }
     );
     return response.data;
@@ -67,7 +67,7 @@ export const getLeaderboard = async (game: string, limit: number = 3): Promise<G
 export const getPlayerLeaderboardStats = async (game: string): Promise<PlayerLeaderboardFetch> => {
   try {
     const response = await api.get(
-      `${API_CONFIG.ENDPOINTS.GAMES.BASE}/${game}/player-stats`
+      API_CONFIG.ENDPOINTS.GAMES.PLAYER_STATS(game)
     );
     return response.data;
   } catch (error) {
@@ -79,7 +79,7 @@ export const getPlayerLeaderboardStats = async (game: string): Promise<PlayerLea
 export const updatePlayerScore = async (playerLeaderboardStats: PlayerLeaderboardStatsUpdate): Promise<PlayerLeaderboardFetch> => {
   try {
     const response = await api.post(
-      `${API_CONFIG.ENDPOINTS.GAMES.BASE}/${playerLeaderboardStats.game}/score`,
+      API_CONFIG.ENDPOINTS.GAMES.UPDATE_SCORE(playerLeaderboardStats.game),
       { score: playerLeaderboardStats.scoreAchieved, playTime: playerLeaderboardStats.playTime }
     );
     return response.data;
