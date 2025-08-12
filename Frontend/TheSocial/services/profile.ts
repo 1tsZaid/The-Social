@@ -5,7 +5,7 @@ interface Profile {
   username: string; // unique identifier for the user
   profileImage?: string;
   bannerImage: string;
-  joinedDate: string; // Date with year and month
+  joinedDate: string; // Date with year and month i.e. "2023-10"
 }
 
 interface UpdateProfilePayload {

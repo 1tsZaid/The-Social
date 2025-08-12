@@ -10,7 +10,7 @@ interface Game {
 
 interface GamePayload extends Game {
   description: string;
-  averagePlayTime?: string; // time in minutes
+  averagePlayTime?: number; // time in minutes
 }
 
 interface LeaderboardEntry {
@@ -28,7 +28,7 @@ interface GameLeaderboardPayload extends Game {
 interface PlayerLeaderboardStatsUpdate {
   game: string;
   scoreAchieved: number;
-  playTime: string; // time in minutes
+  playTime: number; // time in minutes
 }
 
 interface PlayerLeaderboardFetch {
@@ -36,7 +36,7 @@ interface PlayerLeaderboardFetch {
   username: string;
   score: number;
   rank: number;
-  totalPlayTime: string; // time in minutes
+  totalPlayTime: number; // time in minutes
 }
 
 export const getGameInfo = async (game?: string): Promise<GamePayload | GamePayload[]> => {

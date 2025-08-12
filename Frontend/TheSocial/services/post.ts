@@ -29,7 +29,7 @@ interface CreatePostPayload extends Omit<Post, 'id'>  {
 interface RecieveMessagePayload extends Post {
   author: PostUser;
   stats: PostStats;
-  createdAt: string; // time, day, month, year
+  createdAt: string; // year, month, day, time: using isoString format
 }
 
 interface GetPostsParams {
