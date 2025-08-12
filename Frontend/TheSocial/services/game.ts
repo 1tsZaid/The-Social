@@ -38,7 +38,7 @@ interface PlayerLeaderboardFetch {
   totalPlayTime: string;
 }
 
-export const getGameInfo = async (game?: string): Promise<GamePayload> => {
+export const getGameInfo = async (game?: string): Promise<GamePayload | GamePayload[]> => {
   try {
     const endpoint = game
       ? API_CONFIG.ENDPOINTS.GAMES.GET_ONE(game)

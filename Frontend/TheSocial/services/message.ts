@@ -7,7 +7,7 @@ interface Message {
   communityId: string;
   username: string;
   content: string;
-  createdAt: string;
+  createdAt: string; // time, day, year
 }
 
 interface SendMessagePayload extends Omit<Message, 'id'> {
@@ -20,7 +20,14 @@ interface RecieveMessagePayload extends Message {
 
 interface GetMessagesParams {
   communityId: string;
-  date: string;
+  before: string; // day, year
+  limit?: number;
+  page?: number; // for pagination
+}
+
+interface GetTodayMessaesParams {
+  communityId: string;
+  beforeMessageId: string;
   limit?: number;
   page?: number; // for pagination
 }
@@ -31,12 +38,12 @@ interface MessagesResponse extends RecieveMessagePayload {
   hasMore: boolean;
 }
 
-export const getMessages = async (params: GetMessagesParams): Promise<MessagesResponse>  => {
+export const getMessagesDayBefore = async (params: GetMessagesParams): Promise<MessagesResponse>  => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.MESSAGES.BASE, {
         params: {
           communityId: params.communityId,
-          sortBy: params.date,
+          sortByDayBefore: params.before,
           limit: params.limit || 20,
           page: params.page || 1
         }
@@ -44,6 +51,38 @@ export const getMessages = async (params: GetMessagesParams): Promise<MessagesRe
     return response.data;
   } catch (error) {
     console.error('Error fetching messages:', error);
+    throw error;
+  }
+};
+
+export const getTodayMessagesBeforeMsgId = async (params: GetTodayMessaesParams): Promise<MessagesResponse> => {
+  try {
+    const response = await api.get(API_CONFIG.ENDPOINTS.MESSAGES.BASE, {
+        params: {
+          communityId: params.communityId,
+          beforeMessageId: params.beforeMessageId,
+          limit: params.limit || 20,
+          page: params.page || 1
+        }
+      });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching today\'s messages:', error);
+    throw error;
+  }
+};
+
+export const getLastMessage = async (communityId: string): Promise<MessagesResponse> => {
+  try {
+    const response = await api.get(API_CONFIG.ENDPOINTS.MESSAGES.BASE, {
+        params: {
+          communityId: communityId,
+          lastMessage: true
+        }
+      });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching messages by day:', error);
     throw error;
   }
 };

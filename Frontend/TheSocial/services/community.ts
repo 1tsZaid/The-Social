@@ -22,12 +22,12 @@ interface CreateCommunityPayload {
 interface Community extends CreateCommunityPayload {
   communityId: string;
   stats: CommunityStats;
+  nearby: boolean;
 }
 
 interface FindCommunitiesParams {
   latitude: number;
   longitude: number;
-  radius?: number; // in kilometers
   limit?: number;
   page?: number;
 }
@@ -60,7 +60,6 @@ export const findNearbyCommunities = async (params: FindCommunitiesParams): Prom
       params: {
         lat: params.latitude,
         lng: params.longitude,
-        radius: params.radius || 5, // default 5km radius
         limit: params.limit || 20,   // default 20 communities per page
         page: params.page || 1       // default first page
       }

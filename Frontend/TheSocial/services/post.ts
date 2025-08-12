@@ -40,6 +40,14 @@ interface GetPostsParams {
   sortBy?: 'latest' | 'popular';
 }
 
+interface GetBeforePostsParams {
+  communityId: string;
+  beforePostId: string;
+  limit?: number;
+  page?: number;
+  sortBy?: 'latest' | 'popular';
+}
+
 interface PostsResponse {
   posts: RecieveMessagePayload[];
   totalPosts: number;
@@ -75,6 +83,26 @@ export const getCommunityPosts = async (
   }
 };
 
+export const getCommunityPostsBeforeId = async (
+  communityId: string,
+  params: Omit<GetBeforePostsParams, 'communityId'>
+): Promise<PostsResponse> => {
+  try {
+    const response = await api.get(API_CONFIG.ENDPOINTS.POSTS.BY_COMMUNITY(communityId), {
+      params: {
+        beforePostId: params.beforePostId,
+        limit: params.limit || 20,
+        page: params.page || 1,
+        sortBy: params.sortBy || 'latest'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 // export const getUserPosts = async (
 //   userId: string,
 //   params: Omit<GetPostsParams, 'userId'> = {}
@@ -88,15 +116,6 @@ export const getCommunityPosts = async (
 //       }
 //     });
 //     return response.data;
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
-
-// export const likePost = async (postId: string): Promise<void> => {
-//   try {
-//     await api.post(API_CONFIG.ENDPOINTS.POSTS.LIKE(postId));
 //   } catch (error) {
 //     console.error(error);
 //     throw error;
