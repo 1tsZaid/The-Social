@@ -25,10 +25,9 @@ export function HomeHeader({
   onAvatarPress,
   height = 55 
 }: HomeHeaderProps) {
-  const borderColor = useThemeColor({}, 'borderDivider');
 
   return (
-    <ThemedView style={[styles.container, { height, borderBottomColor: borderColor }]} >
+    <ThemedView style={{ height }} >
       
       {/* Header content */}
       <View style={styles.content}>
@@ -53,13 +52,14 @@ export function HomeHeader({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 3,
   },
   content: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 4,
+    borderBottomLeftRadius : 20,
+    borderBottomRightRadius : 20,
     backgroundColor: '#ff0000' + '15',
   },
   menuContainer: {

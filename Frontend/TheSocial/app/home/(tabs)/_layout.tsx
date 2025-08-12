@@ -53,12 +53,15 @@ export default function TabLayout() {
             position: isTabBarVisible ? 'relative' : 'absolute',
             backgroundColor,
             transform: [{ translateY: tabBarTranslateY }],
+            borderTopWidth: 0,
+            height: 35,
           },
           default: {
             position: isTabBarVisible ? 'relative' : 'absolute',
             backgroundColor,
             transform: [{ translateY: tabBarTranslateY }],
-            height: 40,
+            height: 35,
+            borderTopWidth: 0,
           },
         }),
       }}>
