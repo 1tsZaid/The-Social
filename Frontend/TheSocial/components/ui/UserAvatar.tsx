@@ -27,7 +27,7 @@ export function UserAvatar({
       height: size,
       borderRadius: isActive ? 15 : size / 2,
       backgroundColor,
-      borderWidth: isActive ? 2 : 0,
+      borderWidth: isActive ? 1 : 0,
       borderColor: isActive ? borderColor : 'transparent',
     }
   ];
