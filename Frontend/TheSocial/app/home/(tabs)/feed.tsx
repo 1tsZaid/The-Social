@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+
 
 import { ThemedView } from '@/components/ThemedView';
 import { PostCard, type PostData } from '@/components/PostCard';
+import AddToPhotoIcon from '@/components/AddToPhotoIcon';
 import { useScrollHandler } from '@/hooks/useScrollHandler';
 
 // Mock data for demonstration
@@ -48,6 +51,7 @@ const mockPosts: PostData[] = [
 ];
 
 export default function FeedScreen() {
+  const router = useRouter();
   const [posts, setPosts] = useState<PostData[]>(mockPosts);
   const { onScroll } = useScrollHandler();
 
@@ -83,6 +87,10 @@ export default function FeedScreen() {
     Alert.alert('Options', `Options for post ${postId}`);
   };
 
+  const handleAddToPhotoPress = () => {
+    router.push('/post');
+  };
+
   return (
     <ThemedView style={styles.container} backgroundType="background">
       <ScrollView
@@ -104,6 +112,7 @@ export default function FeedScreen() {
           />
         ))}
       </ScrollView>
+      <AddToPhotoIcon onPress={handleAddToPhotoPress} />
     </ThemedView>
   );
 }
