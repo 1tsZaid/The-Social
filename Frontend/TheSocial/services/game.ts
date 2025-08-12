@@ -1,5 +1,6 @@
 import api from './api';
 import { API_CONFIG } from '../constants/Api';
+import socket from './socket';
 
 interface Game {
     game: string; // unique identifier for the game
@@ -9,11 +10,11 @@ interface Game {
 
 interface GamePayload extends Game {
   description: string;
-  averagePlayTime?: string;
+  averagePlayTime?: string; // time in minutes
 }
 
 interface LeaderboardEntry {
-  username: string;
+  username: string; // unique identifier for the player
   userImage?: string;
   score: number;
   rank: number;
@@ -27,7 +28,7 @@ interface GameLeaderboardPayload extends Game {
 interface PlayerLeaderboardStatsUpdate {
   game: string;
   scoreAchieved: number;
-  playTime: string;
+  playTime: string; // time in minutes
 }
 
 interface PlayerLeaderboardFetch {
@@ -35,7 +36,7 @@ interface PlayerLeaderboardFetch {
   username: string;
   score: number;
   rank: number;
-  totalPlayTime: string;
+  totalPlayTime: string; // time in minutes
 }
 
 export const getGameInfo = async (game?: string): Promise<GamePayload | GamePayload[]> => {
@@ -87,4 +88,28 @@ export const updatePlayerScore = async (playerLeaderboardStats: PlayerLeaderboar
     console.error('Error updating player score:', error);
     throw error;
   }
+};
+
+// WebSocket methods for real-time leaderboard updates
+export const subscribeToLeaderboard = (game: string, callback: (data: GameLeaderboardPayload) => void) => {
+  socket.connect();
+  socket.emit('join_game_leaderboard', { game }); // Join the game's room
+  socket.on('leaderboard_updated', callback);
+};
+
+export const unsubscribeFromLeaderboard = (game: string) => {
+  socket.emit('leave_game_leaderboard', { game }); // Leave the game's room
+  socket.off('leaderboard_updated');
+};
+
+// WebSocket methods for real-time player stats updates
+export const subscribeToPlayerStats = (game: string, callback: (data: PlayerLeaderboardFetch) => void) => {
+  socket.connect();
+  socket.emit('join_player_stats', { game }); // Join player stats room
+  socket.on('player_stats_updated', callback);
+};
+
+export const unsubscribeFromPlayerStats = (game: string) => {
+  socket.emit('leave_player_stats', { game }); // Leave player stats room
+  socket.off('player_stats_updated');
 };

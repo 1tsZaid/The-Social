@@ -2,10 +2,10 @@ import api from './api';
 import { API_CONFIG } from '../constants/Api';
 
 interface Profile {
-  username: string;
+  username: string; // unique identifier for the user
   profileImage?: string;
   bannerImage: string;
-  joinedDate: string;
+  joinedDate: string; // Date with year and month
 }
 
 interface UpdateProfilePayload {

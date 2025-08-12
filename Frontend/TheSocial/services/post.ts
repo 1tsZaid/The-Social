@@ -2,14 +2,13 @@ import api from './api';
 import { API_CONFIG } from '../constants/Api';
 
 interface PostUser {
-  username: string;
+  username: string; // unique identifier for the user
   profileImage?: string;
   bannerImage: string;
 }
 
 interface PostStats {
   likes: number;
-  comments: number;
 }
 
 interface PostAttachedImg {
@@ -18,8 +17,8 @@ interface PostAttachedImg {
 }
 
 interface Post {
-  id: string; // unique identifier for the post set by the backend
-  communityId: string;
+  id: number; // unique identifier for the post
+  communityId: string; // unique identifier for the community
   content: string;
   attachments?: PostAttachedImg[];
 }
@@ -30,7 +29,7 @@ interface CreatePostPayload extends Omit<Post, 'id'>  {
 interface RecieveMessagePayload extends Post {
   author: PostUser;
   stats: PostStats;
-  createdAt: string;
+  createdAt: string; // time, day, month, year
 }
 
 interface GetPostsParams {

@@ -20,7 +20,7 @@ interface CreateCommunityPayload {
 }
 
 interface Community extends CreateCommunityPayload {
-  communityId: string;
+  communityId: number; // unique identifier for the community set by the backend
   stats: CommunityStats;
   nearby: boolean;
 }

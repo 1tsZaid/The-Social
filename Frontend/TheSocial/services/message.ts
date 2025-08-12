@@ -3,11 +3,11 @@ import socket from './socket';
 import { API_CONFIG } from '../constants/Api';
 
 interface Message {
-  id: string;
-  communityId: string;
-  username: string;
+  id: number; // unique identifier for the message
+  communityId: string; // unique identifier for the community
+  username: string; // unique identifier for the user
   content: string;
-  createdAt: string; // time, day, year
+  createdAt: string; // time, day, month, year
 }
 
 interface SendMessagePayload extends Omit<Message, 'id'> {
