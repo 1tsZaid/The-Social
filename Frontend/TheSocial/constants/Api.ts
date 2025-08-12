@@ -2,36 +2,36 @@ export const API_CONFIG = {
   BASE_URL: 'https://your-backend-url.com/api',
   ENDPOINTS: {
     AUTH: {
-      LOGIN: '/auth/login',
-      REGISTER: '/auth/register',
-      LOGOUT: '/auth/logout',
-      REFRESH_TOKEN: '/auth/refresh-token'
+      LOGIN: '/auth/login', // Authenticates user with email and password, returns access and refresh tokens
+      REGISTER: '/auth/register', // Creates new user account with email, password, and username, returns access and refresh tokens
+      LOGOUT: '/auth/logout', // Logs out the current user and invalidates their tokens
+      REFRESH_TOKEN: '/auth/refresh-token' // Gets new access token using refresh token
     },
     COMMUNITIES: {
-      BASE: '/communities',
-      GET_ONE: (id: string) => `/communities/${id}`,
-      YOUR_COMMUNITIES: '/communities/yours',
-      NEARBY: '/communities/nearby'
+      CREATE_COMMUNITIES: '/communities/create', // Creates a new community with name, description, location, and images
+      GET_ONE: (id: string) => `/communities/${id}`, // Gets details of a specific community by ID
+      YOUR_COMMUNITIES: '/communities/yours', // Gets communities created by or joined by the current user
+      NEARBY: '/communities/nearby' // Finds communities near a specific location with pagination support
     },
     GAMES: {
-      BASE: '/games',
-      GET_ONE: (game: string) => `/games/${game}`,
-      LEADERBOARD: (game: string) => `/games/${game}/leaderboard`,
-      PLAYER_STATS: (game: string) => `/games/${game}/player-stats`,
-      UPDATE_SCORE: (game: string) => `/games/${game}/update-score`
+      BASE: '/games', // Gets information about all available games
+      GET_ONE: (game: string) => `/games/${game}`, // Gets detailed information about a specific game
+      LEADERBOARD: (game: string) => `/games/${game}/leaderboard`, // Gets top players leaderboard for a specific game
+      PLAYER_STATS: (game: string) => `/games/${game}/player-stats`, // Gets current user's stats for a specific game
+      UPDATE_SCORE: (game: string) => `/games/${game}/update-score` // Updates player's score and play time for a game
     },
     MESSAGES: {
-      BASE: '/messages'
+      BASE: '/messages' // Gets chat messages for a community with pagination and sends new messages
     },
     POSTS: {
-      BASE: '/posts',
-      BY_COMMUNITY: (communityId: string) => `/posts/community/${communityId}`,
-      BY_USER: (userId: string) => `/posts/user/${userId}`
+      BASE: '/posts', // Creates new posts with content and attachments
+      BY_COMMUNITY: (communityId: string) => `/posts/community/${communityId}`, // Gets all posts for a specific community with pagination
+      BY_USER: (userId: string) => `/posts/user/${userId}` // Gets all posts by a specific user (currently commented out in implementation)
     },
     PROFILE: {
-      BASE: '/profile',
-      UPDATE: '/profile/update',
-      GET_BY_USERNAME: (username: string) => `/profile/${username}`
+      BASE: '/profile', // Gets current user's profile information
+      UPDATE: '/profile/update', // Updates user's profile information (username, profile image, banner)
+      GET_BY_USERNAME: (username: string) => `/profile/${username}` // Gets profile information for a specific user by username
     }
   }
 };

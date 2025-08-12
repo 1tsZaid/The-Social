@@ -34,7 +34,7 @@ interface FindCommunitiesParams {
 
 export const createCommunity = async (payload: CreateCommunityPayload): Promise<Community> => {
   try {
-    const response = await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.BASE, payload);
+    const response = await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.CREATE_COMMUNITIES, payload);
     return response.data;
   } catch (error) {
     console.error(error);
