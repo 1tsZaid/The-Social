@@ -100,13 +100,14 @@ export const sendMessage = async (payload: SendMessagePayload): Promise<RecieveM
 };
 
 // WebSocket methods
-export const subscribeToMessages = (callback: (message: Message) => void) => {
-  socket.connect();
+export const subscribeToMessages = (communityId: number, callback: (message: Message) => void) => {
+  socket.connect('/' + communityId);
   socket.on('message_received', callback); // create callback
 };
 
-export const unsubscribeFromMessages = () => {
+export const unsubscribeFromMessages = (communityId: number) => {
   socket.off('message_received');
+  socket.disconnect('/' + communityId);
 };
 
 // export const subscribeToTyping = (callback: (data: { userId: string, isTyping: boolean }) => void) => {

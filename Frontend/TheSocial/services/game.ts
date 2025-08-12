@@ -103,13 +103,14 @@ export const unsubscribeFromLeaderboard = (game: string) => {
 };
 
 // WebSocket methods for real-time player stats updates
-export const subscribeToPlayerStats = (game: string, callback: (data: PlayerLeaderboardFetch) => void) => {
-  socket.connect();
+export const subscribeToPlayerStats = (game: string, communityId: number, callback: (data: PlayerLeaderboardFetch) => void) => {
+  socket.connect('/' + communityId);
   socket.emit('join_player_stats', { game }); // Join player stats room
   socket.on('player_stats_updated', callback);
 };
 
-export const unsubscribeFromPlayerStats = (game: string) => {
+export const unsubscribeFromPlayerStats = (game: string, communityId: number) => {
   socket.emit('leave_player_stats', { game }); // Leave player stats room
   socket.off('player_stats_updated');
+  socket.disconnect('/' + communityId);
 };

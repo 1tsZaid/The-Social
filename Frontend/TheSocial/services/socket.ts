@@ -2,48 +2,56 @@ import { io, Socket } from 'socket.io-client';
 import { API_CONFIG } from '../constants/Api';
 
 class SocketService {
-  private socket: Socket | null = null;
+  private sockets: Map<string, Socket> = new Map();
+  private readonly DEFAULT_NAMESPACE = '/';
 
-  connect() {
-    if (!this.socket) {
-      this.socket = io(API_CONFIG.BASE_URL, {
+  connect(namespace: string = this.DEFAULT_NAMESPACE){
+    if (!this.sockets.has(namespace)) {
+      const socketUrl = `${API_CONFIG.BASE_URL}${namespace}`;
+      const socket = io(socketUrl, {
         transports: ['websocket'],
         autoConnect: true,
       });
 
-      this.socket.on('connect', () => {
-        console.log('Connected to WebSocket server');
+      socket.on('connect', () => {
+        console.log(`Connected to WebSocket server on namespace: ${namespace}`);
       });
 
-      this.socket.on('disconnect', () => {
-        console.log('Disconnected from WebSocket server');
+      socket.on('disconnect', () => {
+        console.log(`Disconnected from WebSocket server on namespace: ${namespace}`);
       });
-    }
-    return this.socket;
-  }
 
-  disconnect() {
-    if (this.socket) {
-      this.socket.disconnect();
-      this.socket = null;
+      this.sockets.set(namespace, socket);
     }
   }
 
-  emit(event: string, data: any) {
-    if (this.socket) {
-      this.socket.emit(event, data);
+  disconnect(namespace: string = this.DEFAULT_NAMESPACE) {
+    const socket = this.sockets.get(namespace);
+    if (socket) {
+      socket.disconnect();
+      this.sockets.delete(namespace);
+      console.log(`Disconnected from namespace: ${namespace}`);
     }
   }
 
-  on(event: string, callback: (data: any) => void) {
-    if (this.socket) {
-      this.socket.on(event, callback);
+  emit(event: string, data: any, namespace: string = this.DEFAULT_NAMESPACE) {
+    const socket = this.sockets.get(namespace);
+    if (socket) {
+      socket.emit(event, data);
     }
   }
 
-  off(event: string) {
-    if (this.socket) {
-      this.socket.off(event);
+  on(event: string, callback: (data: any) => void, namespace: string = this.DEFAULT_NAMESPACE) {
+    const socket = this.sockets.get(namespace);
+    if (socket) {
+      socket.on(event, callback);
+    }
+  }
+
+  off(event: string, namespace: string = this.DEFAULT_NAMESPACE) {
+    const socket = this.sockets.get(namespace);
+    if (socket) {
+      socket.off(event);
     }
   }
 }
