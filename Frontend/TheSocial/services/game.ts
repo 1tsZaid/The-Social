@@ -39,6 +39,7 @@ interface PlayerLeaderboardFetch {
   totalPlayTime: number; // time in minutes
 }
 
+// Get game information by game name or all games
 export const getGameInfo = async (game?: string): Promise<GamePayload | GamePayload[]> => {
   try {
     const endpoint = game
@@ -52,6 +53,7 @@ export const getGameInfo = async (game?: string): Promise<GamePayload | GamePayl
   }
 };
 
+// get leaderboard for a specific game
 export const getLeaderboard = async (game: string, limit: number = 3): Promise<GameLeaderboardPayload> => {
   try {
     const response = await api.get(
@@ -65,6 +67,7 @@ export const getLeaderboard = async (game: string, limit: number = 3): Promise<G
   }
 };
 
+// get player leaderboard stats for a specific game
 export const getPlayerLeaderboardStats = async (game: string): Promise<PlayerLeaderboardFetch> => {
   try {
     const response = await api.get(
@@ -77,6 +80,7 @@ export const getPlayerLeaderboardStats = async (game: string): Promise<PlayerLea
   }
 };
 
+// update player leaderboard stats for a specific game
 export const updatePlayerScore = async (playerLeaderboardStats: PlayerLeaderboardStatsUpdate): Promise<PlayerLeaderboardFetch> => {
   try {
     const response = await api.post(

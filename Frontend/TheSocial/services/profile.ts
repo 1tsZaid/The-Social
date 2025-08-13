@@ -14,6 +14,7 @@ interface UpdateProfilePayload {
   bannerImage?: string;
 }
 
+// get profile of the current user
 export const getProfile = async (): Promise<Profile> => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.PROFILE.BASE);
@@ -24,6 +25,7 @@ export const getProfile = async (): Promise<Profile> => {
   }
 };
 
+// update profile of the current user
 export const updateProfile = async (payload: UpdateProfilePayload): Promise<Profile> => {
   try {
     const response = await api.put(API_CONFIG.ENDPOINTS.PROFILE.UPDATE, payload);
@@ -34,7 +36,7 @@ export const updateProfile = async (payload: UpdateProfilePayload): Promise<Prof
   }
 };
 
-// Get profile by userId
+// Get profile by username
 export const getProfileByUsername = async (username: string): Promise<Profile> => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.PROFILE.GET_BY_USERNAME(username));

@@ -31,7 +31,7 @@ export function PostFooter({
           count={interactions.likes}
           onPress={onLike}
         />
-        <InteractionButton
+        {/* <InteractionButton
           type="comment"
           count={interactions.comments}
           onPress={onComment}
@@ -40,7 +40,7 @@ export function PostFooter({
           type="share"
           count={interactions.shares}
           onPress={onShare}
-        />
+        /> */}
       </View>
       
       <InteractionButton

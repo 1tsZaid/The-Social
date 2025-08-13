@@ -38,6 +38,7 @@ interface MessagesResponse extends RecieveMessagePayload {
   hasMore: boolean;
 }
 
+// Get messages in a community before a specific day
 export const getMessagesDayBefore = async (params: GetMessagesParams): Promise<MessagesResponse>  => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.MESSAGES.BASE, {
@@ -55,6 +56,7 @@ export const getMessagesDayBefore = async (params: GetMessagesParams): Promise<M
   }
 };
 
+// Get today's messages in a community before a specific message ID
 export const getTodayMessagesBeforeMsgId = async (params: GetTodayMessaesParams): Promise<MessagesResponse> => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.MESSAGES.BASE, {
@@ -72,6 +74,7 @@ export const getTodayMessagesBeforeMsgId = async (params: GetTodayMessaesParams)
   }
 };
 
+// Get last message in a community
 export const getLastMessage = async (communityId: string): Promise<MessagesResponse> => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.MESSAGES.BASE, {
@@ -87,6 +90,7 @@ export const getLastMessage = async (communityId: string): Promise<MessagesRespo
   }
 };
 
+// This sends a new message to the community by websocket and http(which stores the data in db with a unique msgId)
 export const sendMessage = async (payload: SendMessagePayload): Promise<RecieveMessagePayload> => {
   try {
     const response = await api.post(API_CONFIG.ENDPOINTS.MESSAGES.BASE, payload);
