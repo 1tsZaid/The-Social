@@ -14,6 +14,7 @@ export default function LoginScreen() {
       <Button title="GO to Create Community" onPress={() => router.push('/createCommunity')} />
       <Button title="GO to Game 1" onPress={() => router.push('/game1')} />
       <Button title="GO to Post" onPress={() => router.push('/post')} />
+      <Button title="GO to Edit Profile" onPress={() => router.push('/editProfile')} />
     </View>
   );
 }

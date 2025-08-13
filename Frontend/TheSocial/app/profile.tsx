@@ -3,7 +3,6 @@ import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ThemedView } from '@/components/ThemedView';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { SettingsList } from '@/components/SettingsList';
 import { LogoutButton } from '@/components/LogoutButton';
@@ -22,7 +21,7 @@ export default function ProfileScreen() {
 
   const handleEditProfile = () => {
     // Navigate to edit profile screen
-    console.log('Edit Profile pressed');
+    router.push('/editProfile');
   };
 
   const handleNotification = () => {
