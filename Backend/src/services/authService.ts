@@ -1,7 +1,31 @@
 import bcrypt from 'bcryptjs';
 import prisma from '../config/database';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt';
-import { LoginRequest, RegisterRequest, TokenResponse, AuthUser } from '../types/auth';
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest extends LoginRequest {
+  username: string;
+}
+
+export interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  username: string;
+}
+
 
 export class AuthService {
   async register({ email, password, username }: RegisterRequest): Promise<TokenResponse> {
@@ -40,15 +64,6 @@ export class AuthService {
     const accessToken = generateAccessToken({ userId: user.id, email: user.email });
     const refreshToken = generateRefreshToken({ userId: user.id, email: user.email });
 
-    // Store refresh token
-    await prisma.refreshToken.create({
-      data: {
-        token: refreshToken,
-        userId: user.id,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      },
-    });
-
     return { accessToken, refreshToken };
   }
 
@@ -72,15 +87,6 @@ export class AuthService {
     const accessToken = generateAccessToken({ userId: user.id, email: user.email });
     const refreshToken = generateRefreshToken({ userId: user.id, email: user.email });
 
-    // Store refresh token
-    await prisma.refreshToken.create({
-      data: {
-        token: refreshToken,
-        userId: user.id,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-      },
-    });
-
     return { accessToken, refreshToken };
   }
 
@@ -88,30 +94,13 @@ export class AuthService {
     // Verify refresh token
     const payload = verifyRefreshToken(refreshToken);
 
-    // Check if refresh token exists in database
-    const storedToken = await prisma.refreshToken.findUnique({
-      where: { token: refreshToken },
-      include: { user: true },
-    });
-
-    if (!storedToken || storedToken.expiresAt < new Date()) {
-      throw new Error('Invalid refresh token');
-    }
-
     // Generate new access token
     const accessToken = generateAccessToken({
-      userId: storedToken.user.id,
-      email: storedToken.user.email,
+      userId: payload.userId,
+      email: payload.email,
     });
 
     return accessToken;
-  }
-
-  async logout(refreshToken: string): Promise<void> {
-    // Remove refresh token from database
-    await prisma.refreshToken.deleteMany({
-      where: { token: refreshToken },
-    });
   }
 
   async getUserById(userId: string): Promise<AuthUser | null> {

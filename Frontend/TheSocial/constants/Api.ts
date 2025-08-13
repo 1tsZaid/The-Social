@@ -4,7 +4,7 @@ export const API_CONFIG = {
     AUTH: {
       LOGIN: '/auth/login', // Authenticates user with email and password, returns access and refresh tokens
       REGISTER: '/auth/register', // Creates new user account with email, password, and username, returns access and refresh tokens
-      LOGOUT: '/auth/logout', // Logs out the current user and invalidates their tokens
+      // LOGOUT: '/auth/logout', // Logs out the current user and invalidates their tokens
       REFRESH_TOKEN: '/auth/refresh-token' // Gets new access token using refresh token
     },
     COMMUNITIES: {
