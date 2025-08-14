@@ -8,6 +8,8 @@ import { SettingsList } from '@/components/SettingsList';
 import { LogoutButton } from '@/components/LogoutButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
+import { deleteTokens, getTokens } from '@/utils/tokenStorage';
+
 export default function ProfileScreen() {
   const userData = {
     username: 'UserName',
@@ -53,7 +55,7 @@ export default function ProfileScreen() {
     console.log('Support pressed');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Alert.alert(
     //   'Log Out',
     //   'Are you sure you want to log out?',
@@ -67,7 +69,11 @@ export default function ProfileScreen() {
     //       style: 'destructive',
     //       onPress: () => {
             // Handle logout logic here
+            const tokens = await getTokens();
+            console.log('Tokens before logout:', tokens);
             console.log('User logged out');
+            await deleteTokens();
+            console.log('Tokens after logout:', await getTokens());
             router.replace('/login');
     //       },
     //     },
