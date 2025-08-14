@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 
 interface JWTPayload {
   userId: string;
-  email: string;
 }
 
 export const generateAccessToken = (payload: JWTPayload): string => {

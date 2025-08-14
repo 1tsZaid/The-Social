@@ -61,8 +61,8 @@ export class AuthService {
     });
 
     // Generate tokens
-    const accessToken = generateAccessToken({ userId: user.id, email: user.email });
-    const refreshToken = generateRefreshToken({ userId: user.id, email: user.email });
+    const accessToken = generateAccessToken({ userId: user.id });
+    const refreshToken = generateRefreshToken({ userId: user.id });
 
     return { accessToken, refreshToken };
   }
@@ -84,8 +84,8 @@ export class AuthService {
     }
 
     // Generate tokens
-    const accessToken = generateAccessToken({ userId: user.id, email: user.email });
-    const refreshToken = generateRefreshToken({ userId: user.id, email: user.email });
+    const accessToken = generateAccessToken({ userId: user.id });
+    const refreshToken = generateRefreshToken({ userId: user.id });
 
     return { accessToken, refreshToken };
   }
@@ -97,24 +97,23 @@ export class AuthService {
     // Generate new access token
     const accessToken = generateAccessToken({
       userId: payload.userId,
-      email: payload.email,
     });
 
     return accessToken;
   }
 
-  async getUserById(userId: string): Promise<AuthUser | null> {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        username: true,
-      },
-    });
+  // async getUserById(userId: string): Promise<AuthUser | null> {
+  //   const user = await prisma.user.findUnique({
+  //     where: { id: userId },
+  //     select: {
+  //       id: true,
+  //       email: true,
+  //       username: true,
+  //     },
+  //   });
 
-    return user;
-  }
+  //   return user;
+  // }
 }
 
 export const authService = new AuthService();
