@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -111,7 +112,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <View style={[styles.profilePicture, { borderColor: profileBorderColor }]}>
             {profileImage ? (
               <View style={styles.profileImagePlaceholder}>
-                {/* Image would be rendered here */}
+                <Image 
+                  source={{ uri: profileImage }} 
+                  style={{ width: 88, height: 88, borderRadius: 45 }} 
+                />
               </View>
             ) : (
               <View style={styles.profileImagePlaceholder}>

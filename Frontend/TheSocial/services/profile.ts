@@ -3,15 +3,15 @@ import { API_CONFIG } from '../constants/Api';
 
 interface Profile {
   username: string; // unique identifier for the user
-  profileImage?: string;
-  bannerImage: string;
+  profileImageUrl?: string;
+  banner: string;
   joinedDate: string; // Date with year and month i.e. "2023-10"
 }
 
 interface UpdateProfilePayload {
   username?: string;
-  profileImage?: string;
-  bannerImage?: string;
+  profileImageInBase64?: string; // base64 encoded string of the profile image
+  banner?: string;
 }
 
 // get profile of the current user
