@@ -90,9 +90,9 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async refreshAccessToken(refreshToken: string): Promise<string> {
+  async refreshAccessToken(token: RefreshTokenRequest): Promise<string> {
     // Verify refresh token
-    const payload = verifyRefreshToken(refreshToken);
+    const payload = verifyRefreshToken(token.refreshToken);
 
     // Generate new access token
     const accessToken = generateAccessToken({
