@@ -14,8 +14,8 @@ export const API_CONFIG = {
       NEARBY: '/communities/nearby' // Finds communities near a specific location with pagination support
     },
     GAMES: {
-      BASE: '/games', // Gets information about all available games
-      GET_ONE: (game: string) => `/games/${game}`, // Gets detailed information about a specific game
+      // BASE: '/games', // Gets information about all available games
+      // GET_ONE: (game: string) => `/games/${game}`, // Gets detailed information about a specific game
       LEADERBOARD: (game: string) => `/games/${game}/leaderboard`, // Gets top players leaderboard for a specific game
       PLAYER_STATS: (game: string) => `/games/${game}/player-stats`, // Gets current user's stats for a specific game
       UPDATE_SCORE: (game: string) => `/games/${game}/update-score` // Updates player's score and play time for a game

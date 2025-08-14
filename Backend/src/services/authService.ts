@@ -9,6 +9,7 @@ export interface LoginRequest {
 
 export interface RegisterRequest extends LoginRequest {
   username: string;
+  banner: string;
 }
 
 export interface TokenResponse {
@@ -28,7 +29,7 @@ export interface AuthUser {
 
 
 export class AuthService {
-  async register({ email, password, username }: RegisterRequest): Promise<TokenResponse> {
+  async register({ email, password, username, banner }: RegisterRequest): Promise<TokenResponse> {
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
       where: {
@@ -57,6 +58,7 @@ export class AuthService {
         email,
         username,
         password: hashedPassword,
+        banner,
       },
     });
 

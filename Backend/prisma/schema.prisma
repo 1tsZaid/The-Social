@@ -13,5 +13,6 @@ model User {
   username  String   @unique
   password  String
   createdAt DateTime @default(now())
+  banner    String   @default("#000000")
 }
 

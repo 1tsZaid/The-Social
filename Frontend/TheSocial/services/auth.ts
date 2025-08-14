@@ -17,6 +17,7 @@ interface LoginPayload {
 
 interface RegisterPayload extends LoginPayload {
   username: string; // unique identifier for the user
+  banner: string;
 }
 
 export const login = async ({ email, password }: LoginPayload): Promise<TokenResponse> => {
@@ -29,9 +30,9 @@ export const login = async ({ email, password }: LoginPayload): Promise<TokenRes
   }
 };
 
-export const register = async ({ email, password, username }: RegisterPayload): Promise<TokenResponse> => {
+export const register = async ({ email, password, username, banner }: RegisterPayload): Promise<TokenResponse> => {
   try {
-    const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.REGISTER, { email, password, username });
+    const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.REGISTER, { email, password, username, banner });
     return response.data;
   } catch (error) {
     console.error(error);
