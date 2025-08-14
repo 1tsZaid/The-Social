@@ -2,17 +2,6 @@ import api from './api';
 import { API_CONFIG } from '../constants/Api';
 import socket from './socket';
 
-interface Game {
-    game: string; // unique identifier for the game
-    image: string;
-    banner?: string;
-}
-
-interface GamePayload extends Game {
-  description: string;
-  averagePlayTime?: number; // time in minutes
-}
-
 interface LeaderboardEntry {
   username: string; // unique identifier for the player
   userImage?: string;
@@ -20,7 +9,8 @@ interface LeaderboardEntry {
   rank: number;
 }
 
-interface GameLeaderboardPayload extends Game {
+interface GameLeaderboardPayload {
+  game: string;
   topPlayers: LeaderboardEntry[];
   lastUpdated: string;
 }
@@ -38,20 +28,6 @@ interface PlayerLeaderboardFetch {
   rank: number;
   totalPlayTime: number; // time in minutes
 }
-
-// Get game information by game name or all games
-export const getGameInfo = async (game?: string): Promise<GamePayload | GamePayload[]> => {
-  try {
-    const endpoint = game
-      ? API_CONFIG.ENDPOINTS.GAMES.GET_ONE(game)
-      : API_CONFIG.ENDPOINTS.GAMES.BASE;
-    const response = await api.get(endpoint);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching game info:', error);
-    throw error;
-  }
-};
 
 // get leaderboard for a specific game
 export const getLeaderboard = async (game: string, limit: number = 3): Promise<GameLeaderboardPayload> => {
