@@ -16,15 +16,47 @@ import FacebookIcon from '@/components/ui/FacebookIcon';
 import PasswordVisibilityIcon from '@/components/ui/PasswordVisibilityIcon';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { login } from '@/services/auth';
+import { saveTokens } from '@/utils/tokenStorage';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    // Alert.alert('Login', `Email: ${email}\nPassword: ${password}`);
-    router.replace('/home/messages');
+  const handleLogin = async () => {
+      try {
+        // Call the register function
+        const response = await login({
+          email,
+          password,
+        });
+  
+        if (response?.accessToken && response?.refreshToken) {
+          await saveTokens({
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
+          });
+        }
+  
+        // Handle the response
+        console.log(response);
+        router.replace('/home/messages');
+      } catch (error: unknown) {
+          console.error(error);
+  
+          let message = 'An unexpected error occurred';
+          if (error instanceof Error) {
+            message = error.message;
+          } else if (typeof error === 'string') {
+            message = error;
+          } else if (error && typeof error === 'object' && 'message' in error) {
+            message = String((error as any).message);
+          }
+  
+          Alert.alert('Error', message);
+        }
+  
   };
 
   const handleForgotPassword = () => {
