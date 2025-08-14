@@ -115,7 +115,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               </View>
             ) : (
               <View style={styles.profileImagePlaceholder}>
-                <Ionicons name="person" size={40} color={textSecondaryColor} />
+                <Ionicons name="person" size={45} color={textSecondaryColor} />
               </View>
             )}
           </View>

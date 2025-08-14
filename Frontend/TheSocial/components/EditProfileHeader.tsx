@@ -1,4 +1,3 @@
-// Frontend/TheSocial/components/EditProfileHeader.tsx
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -121,7 +120,7 @@ export const EditProfileHeader: React.FC<EditProfileHeaderProps> = ({
           style={styles.bannerEditButton} 
           onPress={onBannerEdit}
         >
-          <Ionicons name="camera" size={24} color={textSecondaryColor} />
+          <Ionicons name="brush" size={24} color={textSecondaryColor} />
         </TouchableOpacity>
       </View>
       <View style={styles.content}>
@@ -133,7 +132,7 @@ export const EditProfileHeader: React.FC<EditProfileHeaderProps> = ({
               </View>
             ) : (
               <View style={styles.profileImagePlaceholder}>
-                <Ionicons name="person" size={40} color={textSecondaryColor} />
+                <Ionicons name="person" size={45} color={textSecondaryColor} />
               </View>
             )}
           </View>
@@ -141,7 +140,7 @@ export const EditProfileHeader: React.FC<EditProfileHeaderProps> = ({
             style={styles.profileEditButton} 
             onPress={onProfileEdit}
           >
-            <Ionicons name="camera" size={24} color={textSecondaryColor} />
+            <Ionicons name="brush" size={18} color={textSecondaryColor} />
           </TouchableOpacity>
         </View>
         <View style={styles.userSection}>
