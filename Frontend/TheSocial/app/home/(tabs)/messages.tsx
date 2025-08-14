@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { MessageItem } from '@/components/MessageItem';
 import { DateSeparator } from '@/components/DateSeparator';

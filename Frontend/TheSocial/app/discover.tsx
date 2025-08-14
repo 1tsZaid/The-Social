@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Stack } from 'expo-router';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { SearchInput } from '@/components/SearchInput';

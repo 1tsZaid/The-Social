@@ -1,7 +1,7 @@
 import api from './api';
 import { API_CONFIG } from '../constants/Api';
 
-interface Profile {
+export interface Profile {
   username: string; // unique identifier for the user
   profileImageUrl?: string;
   banner: string;
@@ -15,9 +15,15 @@ interface UpdateProfilePayload {
 }
 
 // get profile of the current user
-export const getProfile = async (): Promise<Profile> => {
+export const getProfile = async (token: string): Promise<Profile> => {
   try {
-    const response = await api.get(API_CONFIG.ENDPOINTS.PROFILE.BASE);
+    console.log(API_CONFIG.ENDPOINTS.PROFILE.BASE);
+    console.log('Token:', token);
+    const response = await api.get(API_CONFIG.ENDPOINTS.PROFILE.BASE, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -26,9 +32,13 @@ export const getProfile = async (): Promise<Profile> => {
 };
 
 // update profile of the current user
-export const updateProfile = async (payload: UpdateProfilePayload): Promise<Profile> => {
+export const updateProfile = async (token: string, payload: UpdateProfilePayload): Promise<Profile> => {
   try {
-    const response = await api.put(API_CONFIG.ENDPOINTS.PROFILE.UPDATE, payload);
+    const response = await api.put(API_CONFIG.ENDPOINTS.PROFILE.UPDATE, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);

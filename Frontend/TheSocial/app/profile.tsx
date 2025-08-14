@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -9,17 +9,27 @@ import { LogoutButton } from '@/components/LogoutButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 import { deleteTokens, getTokens } from '@/utils/tokenStorage';
+import { getProfile, Profile } from '@/services/profile';
 
 export default function ProfileScreen() {
-  const userData = {
-    username: 'UserName',
-    joinedDate: 'January 2024',
-    profileImage: undefined,
-    bannerColor: "#FF8000",
-  };
-
+  const [userData, setUserData] = useState<Profile | undefined>(undefined);
   const divderColor = useThemeColor({}, 'borderDivider')
   const backgroundColor = useThemeColor({}, 'background');
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const tokens = await getTokens();
+      if (tokens) {
+        const profileData = await getProfile(tokens.accessToken);
+        setUserData(profileData);
+      }
+    };
+    fetchProfileData();
+  }, []);
+
+  if (!userData) {
+    return <ActivityIndicator />;
+  }
 
   const handleEditProfile = () => {
     // Navigate to edit profile screen
@@ -118,8 +128,8 @@ export default function ProfileScreen() {
           <ProfileHeader
             username={userData.username}
             joinedDate={userData.joinedDate}
-            profileImage={userData.profileImage}
-            bannerColor={userData.bannerColor}
+            profileImage={userData.profileImageUrl}
+            bannerColor={userData.banner}
             onEditProfile={handleEditProfile}
             onNotification={handleNotification}
           />

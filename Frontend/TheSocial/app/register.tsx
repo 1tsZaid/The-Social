@@ -22,6 +22,8 @@ const RegisterScreen = () => {
   const [rePassword, setRePassword] = useState('');
   const [showRePassword, setShowRePassword] = useState(false);
   const [username, setUsername] = useState('');
+  
+  const backgroundColor = useThemeColor({}, 'background')
 
   const handleRegister = async () => {
     try {
@@ -68,8 +70,6 @@ const RegisterScreen = () => {
   const handleLogIn = () => {
     router.replace('/login');
   };
-
-  const backgroundColor = useThemeColor({}, 'background')
   
   const styles = StyleSheet.create({
     safeArea: {

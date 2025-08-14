@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Alert } from 'react-native';
-import { Stack } from 'expo-router';
 
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
