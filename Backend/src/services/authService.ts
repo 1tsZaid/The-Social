@@ -35,7 +35,7 @@ export class AuthService {
       where: {
         OR: [
           { email },
-          { username }
+          { username: username.toLowerCase() }
         ]
       }
     });
@@ -44,7 +44,7 @@ export class AuthService {
       if (existingUser.email === email) {
         throw new Error('Email already registered');
       }
-      if (existingUser.username === username) {
+      if (existingUser.username === username.toLowerCase()) {
         throw new Error('Username already taken');
       }
     }
@@ -56,7 +56,7 @@ export class AuthService {
     const user = await prisma.user.create({
       data: {
         email,
-        username,
+        username: username.toLowerCase(),
         password: hashedPassword,
         banner,
       },

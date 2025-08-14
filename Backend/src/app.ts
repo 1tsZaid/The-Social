@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
+import profileRoutes from './routes/profileRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -30,8 +32,12 @@ app.use('/api/auth', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Serve static files (uploaded images)
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
