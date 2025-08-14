@@ -10,7 +10,11 @@ export const Colors = {
     
     // Accent colors
     accent: '#FFA500',
+    
+    // Border and divider colors
+    borderDivider: '#BABCBE',
 
+    // Other colors
     gold: '#FFD700',
     silver: '#A5A9B4',
     bronze: '#CD7F32',
@@ -20,19 +24,6 @@ export const Colors = {
     green: '#34C759',
     purple: '#8B5FBF',
     magenta: '#FF6B9D',
-    
-    // Community icon colors
-    communityTeal: '#20B2AA',
-    communityBlue: '#87CEEB',
-    communityBeige: '#F5DEB3',
-    communityGray: '#696969',
-    
-    // Border and divider colors
-    borderDivider: '#BABCBE',
-
-    // Banner Colors
-    bannerBlue: '#2196F3',
-    bannerRed: '#CE2029',
     
     // Legacy support (keeping for backward compatibility)
     text: '#202124',
@@ -53,6 +44,9 @@ export const Colors = {
     // Accent colors
     accent: '#FF8000',
 
+    // Border and divider colors
+    borderDivider: '#414345',
+
     gold: '#FFD700',
     silver: '#A5A9B4',
     bronze: '#CD7F32',
@@ -63,25 +57,25 @@ export const Colors = {
     purple: '#8B5FBF',
     magenta: '#FF6B9D',
     
-    // Community icon colors
-    communityTeal: '#20B2AA',
-    communityBlue: '#87CEEB',
-    communityBeige: '#F5DEB3',
-    communityGray: '#696969',
-    
-    // Border and divider colors
-    borderDivider: '#414345',
-    
-    // Banner Colors
-    bannerBlue: '#2196F3',
-    bannerRed: '#CE2029',
-    
     // Legacy support (keeping for backward compatibility)
     text: '#FFFFFF',
     tint: '#FF8000',
     icon: '#B3B3B3',
     tabIconDefault: '#B3B3B3',
     tabIconSelected: '#FF8000',
+  },
+  // Community banner colors
+  community: {
+    teal: '#20B2AA',
+    blue: '#87CEEB',
+    beige: '#F5DEB3',
+    gray: '#696969',
+  },
+  
+  // profile banner Colors
+  profile: {
+    blue: '#2196F3',
+    red: '#CE2029',
   },
 };
 

@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://your-backend-url.com/api',
+  BASE_URL: 'http://localhost:3000/api',
   ENDPOINTS: {
     AUTH: {
       LOGIN: '/auth/login', // Authenticates user with email and password, returns access and refresh tokens

@@ -76,7 +76,7 @@ const LoginScreen = () => {
       alignSelf: "center",
     },
     socialSection: {
-      height: 150,
+      height: 140,
       width: 300,
       alignSelf: "center",
     },

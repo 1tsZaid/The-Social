@@ -11,6 +11,9 @@ import FormLinkSection from '@/components/FormLinkSection';
 import PasswordVisibilityIcon from '@/components/ui/PasswordVisibilityIcon';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors } from '@/constants/Colors';
+import { register } from '@/services/auth';
+import { saveTokens } from '@/utils/tokenStorage';
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -18,10 +21,48 @@ const RegisterScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rePassword, setRePassword] = useState('');
   const [showRePassword, setShowRePassword] = useState(false);
+  const [username, setUsername] = useState('');
 
-  const handleRegister = () => {
-    // Alert.alert('Register', `Email: ${email}\nPassword: ${password}Re-Password: ${rePassword}`);
-    router.replace('/home/messages');
+  const handleRegister = async () => {
+    try {
+      // Randomly select a profile banner color
+      const profileBannerColors = Object.values(Colors.profile);
+      const randomIndex = Math.floor(Math.random() * profileBannerColors.length);
+      const banner = profileBannerColors[randomIndex];
+
+      // Call the register function
+      const response = await register({
+        email,
+        password,
+        username,
+        banner,
+      });
+
+      if (response?.accessToken && response?.refreshToken) {
+        await saveTokens({
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+        });
+      }
+
+      // Handle the response
+      console.log(response);
+      router.replace('/home/messages');
+    } catch (error: unknown) {
+        console.error(error);
+
+        let message = 'An unexpected error occurred';
+        if (error instanceof Error) {
+          message = error.message;
+        } else if (typeof error === 'string') {
+          message = error;
+        } else if (error && typeof error === 'object' && 'message' in error) {
+          message = String((error as any).message);
+        }
+
+        Alert.alert('Error', message);
+      }
+
   };
   
   const handleLogIn = () => {
@@ -55,14 +96,14 @@ const RegisterScreen = () => {
         marginBottom: 40,
     },
     inputSection: {
-      height: 275,
+      height: 350,
       width: 300,
       alignSelf: "center",
     },
     mainButtonSection: {
       width: 300,
       alignSelf: "center",
-      marginBottom: 100,
+      marginBottom: 10,
     },
   });
 
@@ -88,6 +129,13 @@ const RegisterScreen = () => {
               value={email}
               onChangeText={setEmail}
               placeholder="TheSocial@gmail.com"
+              secureTextEntry={false}
+            />
+            <InputField
+              label="Username"
+              value={username}
+              onChangeText={setUsername}
+              placeholder="SocialUser123"
               secureTextEntry={false}
             />
             <InputField
