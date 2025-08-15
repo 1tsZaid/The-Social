@@ -8,6 +8,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import MainButton from '@/components/MainButton';
 
 interface ProfileHeaderProps {
+  refreshKey?: number; // Optional prop for refreshing
   username: string;
   joinedDate: string;
   profileImage?: string;
@@ -17,6 +18,7 @@ interface ProfileHeaderProps {
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
+  refreshKey,
   username,
   joinedDate,
   profileImage,
@@ -112,7 +114,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <View style={[styles.profilePicture, { borderColor: profileBorderColor }]}>
             {profileImage ? (
               <View style={styles.profileImagePlaceholder}>
-                <Image 
+                <Image
+                  key={refreshKey} // Use refreshKey to force re-render
                   source={{ uri: profileImage }} 
                   style={{ width: 88, height: 88, borderRadius: 45 }} 
                 />

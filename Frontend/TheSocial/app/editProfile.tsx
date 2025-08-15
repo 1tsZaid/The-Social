@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { EditProfileHeader } from '@/components/EditProfileHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -13,7 +14,7 @@ import { imageUriToBase64 } from '@/utils/imageUriToBase64';
 import { getProfile, updateProfile, Profile, UpdateProfilePayload } from '@/services/profile';
 
 export default function ProfileScreen() {
-
+  const [refreshKey, setRefreshKey] = useState(0);
   const [userData, setUserData] = useState<Profile | undefined>(undefined);
   const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
   const [username, setUsername] = useState('');
@@ -21,21 +22,31 @@ export default function ProfileScreen() {
   const divderColor = useThemeColor({}, 'borderDivider')
   const backgroundColor = useThemeColor({}, 'background');
 
-  useEffect(() => {
-      const fetchProfileData = async () => {
-        const tokenFlag = await checkTokens();
-        if (tokenFlag) {
-          const profileData = await getProfile();
-          setUserData(profileData);
-          setProfileImage(profileData.profileImageUrl);
-          setUsername(profileData.username);
-        } else {
-          deleteTokens();
-          router.replace('/login');
-        }
-      };
+  useFocusEffect(
+    useCallback(() => {
       fetchProfileData();
-    }, []);
+      setRefreshKey(prev => prev + 1);
+      console.log('Edit Screen is now visible! times:', refreshKey);
+
+      // Optional cleanup when screen is unfocused
+      return () => {
+        console.log('Edit Screen is now hidden ❌');
+      };
+    }, [])
+  );
+
+    const fetchProfileData = async () => {
+      const tokenFlag = await checkTokens();
+      if (tokenFlag) {
+        const profileData = await getProfile();
+        setUserData(profileData);
+        setProfileImage(profileData.profileImageUrl);
+        setUsername(profileData.username);
+      } else {
+        deleteTokens();
+        router.replace('/login');
+      }
+    };
   
     if (!userData) {
       return <ActivityIndicator />;
@@ -70,6 +81,7 @@ export default function ProfileScreen() {
         username: username !== userData.username ? username : undefined,
         profileImageInBase64: profileImage !== userData.profileImageUrl ? await imageUriToBase64(profileImage) : undefined,
       };
+      console.log('Payload to update profile:', payload);
       await updateProfile(payload);
       router.replace('/profile');
     } else {
@@ -104,6 +116,7 @@ export default function ProfileScreen() {
         <View style={styles.container}>
           {/* Profile Header */}
           <EditProfileHeader
+            refreshKey={refreshKey}
             username={username}
             profileImage={profileImage}
             bannerColor={userData.banner}

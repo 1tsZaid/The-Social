@@ -46,7 +46,7 @@ export class AuthController {
 
   async verfiyAccessToken(req: Request, res: Response): Promise<void> {
     try {
-      const result = authService.verifyAccessToken(req.body.accessToken);
+      const result = await authService.verifyAccessToken(req.body.accessToken);
       
       if (result.isValid) {
         res.status(200).json(result);
@@ -60,7 +60,7 @@ export class AuthController {
 
   async verfiyRefreshToken(req: Request, res: Response): Promise<void> {
     try {
-      const result = authService.verifyRefreshToken(req.body.refreshToken);
+      const result = await authService.verifyRefreshToken(req.body.refreshToken);
       
       if (result.isValid) {
         res.status(200).json(result);

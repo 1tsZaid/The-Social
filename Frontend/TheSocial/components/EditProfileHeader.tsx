@@ -8,6 +8,7 @@ import MainButton from '@/components/MainButton';
 import { Typography } from '@/constants/Typography';
 
 interface EditProfileHeaderProps {
+  refreshKey?: number; // Optional prop for refreshing
   username: string;
   profileImage?: string;
   bannerColor?: string;
@@ -19,6 +20,7 @@ interface EditProfileHeaderProps {
 }
 
 export const EditProfileHeader: React.FC<EditProfileHeaderProps> = ({
+  refreshKey,
   username,
   profileImage,
   bannerColor,
@@ -130,6 +132,7 @@ export const EditProfileHeader: React.FC<EditProfileHeaderProps> = ({
             {profileImage ? (
               <View style={styles.profileImagePlaceholder}>
                 <Image 
+                  key={refreshKey} // Use refreshKey to force re-render
                   source={{ uri: profileImage }} 
                   style={{ width: 88, height: 88, borderRadius: 45 }} 
                 />

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { SettingsList } from '@/components/SettingsList';
@@ -13,24 +14,36 @@ import { checkTokens } from '@/utils/checkTokens';
 import { getProfile, Profile } from '@/services/profile';
 
 export default function ProfileScreen() {
+  const [refreshKey, setRefreshKey] = useState(0);
   const [userData, setUserData] = useState<Profile | undefined>(undefined);
   const divderColor = useThemeColor({}, 'borderDivider')
   const backgroundColor = useThemeColor({}, 'background');
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      const tokenFlag = await checkTokens();
-      if (tokenFlag) {
-        const profileData = await getProfile();
-        setUserData(profileData);
-        console.log('Profile data fetched:', profileData);
-      } else {
-        deleteTokens();
-        router.replace('/login');
-      }
-    };
-    fetchProfileData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchProfileData();
+      setRefreshKey(prev => prev + 1);
+      console.log('Profile Screen is now visible! times:', refreshKey);
+
+      // Optional cleanup when screen is unfocused
+      return () => {
+        console.log('Profile Screen is now hidden ❌');
+      };
+    }, [])
+  );
+
+  const fetchProfileData = async () => {
+    const tokenFlag = await checkTokens();
+    if (tokenFlag) {
+      const profileData = await getProfile();
+      setUserData(profileData);
+      setRefreshKey(refreshKey + 1);
+      console.log('Profile data fetched:', profileData);
+    } else {
+      deleteTokens();
+      router.replace('/login');
+    }
+  };
 
   if (!userData) {
     return <ActivityIndicator />;
@@ -131,6 +144,7 @@ export default function ProfileScreen() {
         <View>
           {/* Profile Header */}
           <ProfileHeader
+            refreshKey={refreshKey}
             username={userData.username}
             joinedDate={userData.joinedDate}
             profileImage={userData.profileImageUrl}
