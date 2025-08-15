@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import prisma from '../config/database';
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt';
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken, verifyAccessToken } from '../utils/jwt';
 
 export interface LoginRequest {
   email: string;
@@ -25,6 +25,11 @@ export interface AuthUser {
   id: string;
   email: string;
   username: string;
+}
+
+export interface TokenVerificationResult {
+  isValid: boolean;
+  error?: string;
 }
 
 
@@ -102,6 +107,36 @@ export class AuthService {
     });
 
     return accessToken;
+  }
+
+  verifyAccessToken(token: string): TokenVerificationResult {
+    try {
+      const payload = verifyAccessToken(token);
+
+      return {
+        isValid: true,
+      }
+    } catch (error) {
+      return {
+        isValid: false,
+        error: error instanceof Error ? error.message : 'Invalid access token'
+      };
+    }
+  }
+
+  verifyRefreshToken(token: string): TokenVerificationResult {
+    try {
+      const payload = verifyRefreshToken(token);
+
+      return {
+        isValid: true,
+      };
+    } catch (error) {
+      return {
+        isValid: false,
+        error: error instanceof Error ? error.message : 'Invalid refresh token'
+      };
+    }
   }
 
   // async getUserById(userId: string): Promise<AuthUser | null> {

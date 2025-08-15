@@ -43,6 +43,34 @@ export class AuthController {
       }
     }
   }
+
+  async verfiyAccessToken(req: Request, res: Response): Promise<void> {
+    try {
+      const result = authService.verifyAccessToken(req.body.accessToken);
+      
+      if (result.isValid) {
+        res.status(200).json({ message: 'Access token is valid' });
+      } else {
+        res.status(401).json({ error: result.error }); // result.error = invalid signature
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  async verfiyRefreshToken(req: Request, res: Response): Promise<void> {
+    try {
+      const result = authService.verifyRefreshToken(req.body.refreshToken);
+      
+      if (result.isValid) {
+        res.status(200).json({ message: 'Access token is valid' });
+      } else {
+        res.status(401).json({ error: result.error }); // result.error = invalid signature
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 }
 
 export const authController = new AuthController();
