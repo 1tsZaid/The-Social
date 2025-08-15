@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'react-native';
@@ -29,6 +29,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const profileBorderColor = useThemeColor({}, 'background');
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
+
+  useEffect(() => {
+    console.log('Profile Header refresh key changed to:', refreshKey);
+  });
   
   const styles = StyleSheet.create({
     container: {

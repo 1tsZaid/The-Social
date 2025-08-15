@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { EditProfileHeader } from '@/components/EditProfileHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -21,36 +21,35 @@ export default function ProfileScreen() {
 
   const divderColor = useThemeColor({}, 'borderDivider')
   const backgroundColor = useThemeColor({}, 'background');
+  const isFocused = useIsFocused();
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
+    if (isFocused) {
       fetchProfileData();
-      setRefreshKey(prev => prev + 1);
+      setRefreshKey(refreshKey + 1);
       console.log('Edit Screen is now visible! times:', refreshKey);
-
-      // Optional cleanup when screen is unfocused
-      return () => {
-        console.log('Edit Screen is now hidden ❌');
-      };
-    }, [])
-  );
-
-    const fetchProfileData = async () => {
-      const tokenFlag = await checkTokens();
-      if (tokenFlag) {
-        const profileData = await getProfile();
-        setUserData(profileData);
-        setProfileImage(profileData.profileImageUrl);
-        setUsername(profileData.username);
-      } else {
-        deleteTokens();
-        router.replace('/login');
-      }
-    };
-  
-    if (!userData) {
-      return <ActivityIndicator />;
+    } else {
+      console.log('Edit Screen is now hidden ❌');
     }
+  }, [isFocused]);
+
+
+  const fetchProfileData = async () => {
+    const tokenFlag = await checkTokens();
+    if (tokenFlag) {
+      const profileData = await getProfile();
+      setUserData(profileData);
+      setProfileImage(profileData.profileImageUrl);
+      setUsername(profileData.username);
+    } else {
+      deleteTokens();
+      router.replace('/login');
+    }
+  };
+  
+  if (!userData) {
+    return <ActivityIndicator />;
+  }
 
   
   const pickImage = async () => {

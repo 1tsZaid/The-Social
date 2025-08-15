@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { SettingsList } from '@/components/SettingsList';
@@ -18,26 +18,23 @@ export default function ProfileScreen() {
   const [userData, setUserData] = useState<Profile | undefined>(undefined);
   const divderColor = useThemeColor({}, 'borderDivider')
   const backgroundColor = useThemeColor({}, 'background');
+  const isFocused = useIsFocused();
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
+    if (isFocused) {
       fetchProfileData();
-      setRefreshKey(prev => prev + 1);
+      setRefreshKey(refreshKey + 1);
       console.log('Profile Screen is now visible! times:', refreshKey);
-
-      // Optional cleanup when screen is unfocused
-      return () => {
-        console.log('Profile Screen is now hidden ❌');
-      };
-    }, [])
-  );
+    } else {
+      console.log('Profile Screen is now hidden ❌');
+    }
+  }, [isFocused]);
 
   const fetchProfileData = async () => {
     const tokenFlag = await checkTokens();
     if (tokenFlag) {
       const profileData = await getProfile();
       setUserData(profileData);
-      setRefreshKey(refreshKey + 1);
       console.log('Profile data fetched:', profileData);
     } else {
       deleteTokens();
