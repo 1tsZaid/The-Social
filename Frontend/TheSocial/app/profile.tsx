@@ -23,6 +23,7 @@ export default function ProfileScreen() {
       if (tokenFlag) {
         const profileData = await getProfile();
         setUserData(profileData);
+        console.log('Profile data fetched:', profileData);
       } else {
         deleteTokens();
         router.replace('/login');
