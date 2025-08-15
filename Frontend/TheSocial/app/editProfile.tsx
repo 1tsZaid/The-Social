@@ -14,7 +14,6 @@ import { imageUriToBase64 } from '@/utils/imageUriToBase64';
 import { getProfile, updateProfile, Profile, UpdateProfilePayload } from '@/services/profile';
 
 export default function ProfileScreen() {
-  const [refreshKey, setRefreshKey] = useState(0);
   const [userData, setUserData] = useState<Profile | undefined>(undefined);
   const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
   const [username, setUsername] = useState('');
@@ -26,10 +25,8 @@ export default function ProfileScreen() {
   useEffect(() => {
     if (isFocused) {
       fetchProfileData();
-      setRefreshKey(refreshKey + 1);
-      console.log('Edit Screen is now visible! times:', refreshKey);
     } else {
-      console.log('Edit Screen is now hidden ❌');
+      console.log('Edit Screen ❌');
     }
   }, [isFocused]);
 
@@ -115,7 +112,6 @@ export default function ProfileScreen() {
         <View style={styles.container}>
           {/* Profile Header */}
           <EditProfileHeader
-            refreshKey={refreshKey}
             username={username}
             profileImage={profileImage}
             bannerColor={userData.banner}

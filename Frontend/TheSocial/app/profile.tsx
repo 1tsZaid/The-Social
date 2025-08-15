@@ -14,7 +14,6 @@ import { checkTokens } from '@/utils/checkTokens';
 import { getProfile, Profile } from '@/services/profile';
 
 export default function ProfileScreen() {
-  const [refreshKey, setRefreshKey] = useState(0);
   const [userData, setUserData] = useState<Profile | undefined>(undefined);
   const divderColor = useThemeColor({}, 'borderDivider')
   const backgroundColor = useThemeColor({}, 'background');
@@ -23,10 +22,8 @@ export default function ProfileScreen() {
   useEffect(() => {
     if (isFocused) {
       fetchProfileData();
-      setRefreshKey(refreshKey + 1);
-      console.log('Profile Screen is now visible! times:', refreshKey);
     } else {
-      console.log('Profile Screen is now hidden ❌');
+      console.log('Profile Screen ❌');
     }
   }, [isFocused]);
 
@@ -141,7 +138,6 @@ export default function ProfileScreen() {
         <View>
           {/* Profile Header */}
           <ProfileHeader
-            refreshKey={refreshKey}
             username={userData.username}
             joinedDate={userData.joinedDate}
             profileImage={userData.profileImageUrl}

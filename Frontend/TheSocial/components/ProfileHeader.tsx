@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'react-native';
@@ -8,7 +8,6 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import MainButton from '@/components/MainButton';
 
 interface ProfileHeaderProps {
-  refreshKey?: number; // Optional prop for refreshing
   username: string;
   joinedDate: string;
   profileImage?: string;
@@ -18,7 +17,6 @@ interface ProfileHeaderProps {
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
-  refreshKey,
   username,
   joinedDate,
   profileImage,
@@ -29,10 +27,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const profileBorderColor = useThemeColor({}, 'background');
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
-
-  useEffect(() => {
-    console.log('Profile Header refresh key changed to:', refreshKey);
-  });
   
   const styles = StyleSheet.create({
     container: {
@@ -119,8 +113,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             {profileImage ? (
               <View style={styles.profileImagePlaceholder}>
                 <Image
-                  key={refreshKey} // Use refreshKey to force re-render
-                  source={{ uri: profileImage }} 
+                  source={{ uri: `${profileImage}?cache=${Math.random()}` }} 
                   style={{ width: 88, height: 88, borderRadius: 45 }} 
                 />
               </View>
