@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import fsSync from 'fs';
 import path from 'path';
 
 export class FileUploadService {
@@ -16,14 +17,22 @@ export class FileUploadService {
     }
   }
 
-  getFileWithExtension(inputPath: string): string | null {
+  getFileWithPng(inputPath: string): string | null {
     console.log("inputPath", inputPath);
 
-    inputPath = path.join(this.uploadDir, inputPath);
-    console.log("inputPath after join", inputPath);
+    const fullPath = path.join(this.uploadDir, inputPath);
+    console.log("fullPath after join", fullPath);
 
-    console.log("is file", path.basename(inputPath) + '.png');
-    return path.basename(inputPath) + '.png';
+    const pngFilePath = fullPath + '.png';
+    console.log("final file path", pngFilePath);
+
+    if (fsSync.existsSync(pngFilePath)) {
+        console.log("File exists:", inputPath + '.png');
+        return inputPath + '.png';
+    } else {
+        console.log("File does not exist:", pngFilePath);
+        return null;
+    }
   }
 
 

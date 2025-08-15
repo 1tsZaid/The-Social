@@ -29,13 +29,13 @@ export class ProfileService {
     if (!user) {
       throw new Error('user not found');
     }
-    console.log("file", fileUploadService.getFileWithExtension(user.id));
-    console.log("file type", typeof fileUploadService.getFileWithExtension(user.id));
+    console.log("file", fileUploadService.getFileWithPng(user.id));
+    console.log("file type", typeof fileUploadService.getFileWithPng(user.id));
 
     return {
       username: user.username,
       banner: user.banner,
-      profileImageUrl: fileUploadService.getFileWithExtension(user.id) || undefined,
+      profileImageUrl: fileUploadService.getFileWithPng(user.id) || undefined,
       joinedDate: user.createdAt.toISOString().slice(0, 7),
     };
   }
@@ -58,7 +58,7 @@ export class ProfileService {
     return {
       username: user.username,
       banner: user.banner,
-      profileImageUrl: fileUploadService.getFileWithExtension(user.id) || undefined,
+      profileImageUrl: fileUploadService.getFileWithPng(user.id) || undefined,
       joinedDate: user.createdAt.toISOString().slice(0, 7),
     };
   }
@@ -77,7 +77,7 @@ export class ProfileService {
       throw new Error('user not found');
     }
 
-    let profileImageUrl = fileUploadService.getFileWithExtension(id) || undefined;
+    let profileImageUrl = fileUploadService.getFileWithPng(id) || undefined;
     let username = user.username;
 
     // Handle profile image update
@@ -117,7 +117,7 @@ export class ProfileService {
 
     return {
       username,
-      profileImageUrl: fileUploadService.getFileWithExtension(id) || undefined,
+      profileImageUrl: fileUploadService.getFileWithPng(id) || undefined,
       banner: user.banner,
       joinedDate: user.createdAt.toISOString().slice(0, 7),
     };
