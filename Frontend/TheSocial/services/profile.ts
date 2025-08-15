@@ -1,5 +1,6 @@
 import api from './api';
 import { API_CONFIG } from '../constants/Api';
+import { getTokens } from '../utils/tokenStorage';
 
 export interface Profile {
   username: string; // unique identifier for the user
@@ -15,16 +16,21 @@ export interface UpdateProfilePayload {
 }
 
 // get profile of the current user
-export const getProfile = async (token: string): Promise<Profile> => {
+export const getProfile = async (): Promise<Profile> => {
   try {
-    console.log(API_CONFIG.ENDPOINTS.PROFILE.BASE);
-    console.log('Token:', token);
+    const tokens = await getTokens();
     const response = await api.get(API_CONFIG.ENDPOINTS.PROFILE.BASE, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
-    return response.data;
+    const data = response.data;
+    return {
+      username: data.username,
+      profileImageUrl: data.profileImageUrl ? `${API_CONFIG.STATIC_BASE_URL}${data.profileImageUrl}` : undefined,
+      banner: data.banner,
+      joinedDate: data.joinedDate,
+    };
   } catch (error) {
     console.error(error);
     throw error;
@@ -32,14 +38,21 @@ export const getProfile = async (token: string): Promise<Profile> => {
 };
 
 // update profile of the current user
-export const updateProfile = async (token: string, payload: UpdateProfilePayload): Promise<Profile> => {
+export const updateProfile = async (payload: UpdateProfilePayload): Promise<Profile> => {
   try {
+    const tokens = await getTokens();
     const response = await api.put(API_CONFIG.ENDPOINTS.PROFILE.UPDATE, payload, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
-    return response.data;
+    const data = response.data;
+    return {
+      username: data.username,
+      profileImageUrl: data.profileImageUrl ? `${API_CONFIG.STATIC_BASE_URL}${data.profileImageUrl}` : undefined,
+      banner: data.banner,
+      joinedDate: data.joinedDate,
+    };
   } catch (error) {
     console.error(error);
     throw error;
@@ -50,7 +63,13 @@ export const updateProfile = async (token: string, payload: UpdateProfilePayload
 export const getProfileByUsername = async (username: string): Promise<Profile> => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.PROFILE.GET_BY_USERNAME(username));
-    return response.data;
+    const data = response.data;
+    return {
+      username: data.username,
+      profileImageUrl: data.profileImageUrl ? `${API_CONFIG.STATIC_BASE_URL}${data.profileImageUrl}` : undefined,
+      banner: data.banner,
+      joinedDate: data.joinedDate,
+    };
   } catch (error) {
     console.error(error);
     throw error;

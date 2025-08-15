@@ -1,7 +1,7 @@
 import { verifyAccessToken, verifyRefreshToken, refreshAccessToken } from '@/services/auth';
 import { getTokens, saveTokens } from './tokenStorage';
 
-async function checkTokens(): Promise<boolean> {
+export async function checkTokens(): Promise<boolean> {
   const tokens = await getTokens();
   
   if (!tokens) {

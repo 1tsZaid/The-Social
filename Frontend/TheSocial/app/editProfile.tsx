@@ -7,7 +7,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { EditProfileHeader } from '@/components/EditProfileHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-import { getTokens } from '@/utils/tokenStorage';
+import { deleteTokens } from '@/utils/tokenStorage';
+import { checkTokens } from '@/utils/checkTokens';
 import { imageUriToBase64 } from '@/utils/imageUriToBase64';
 import { getProfile, updateProfile, Profile, UpdateProfilePayload } from '@/services/profile';
 
@@ -22,12 +23,15 @@ export default function ProfileScreen() {
 
   useEffect(() => {
       const fetchProfileData = async () => {
-        const tokens = await getTokens();
-        if (tokens) {
-          const profileData = await getProfile(tokens.accessToken);
+        const tokenFlag = await checkTokens();
+        if (tokenFlag) {
+          const profileData = await getProfile();
           setUserData(profileData);
           setProfileImage(profileData.profileImageUrl);
           setUsername(profileData.username);
+        } else {
+          deleteTokens();
+          router.replace('/login');
         }
       };
       fetchProfileData();
@@ -60,14 +64,17 @@ export default function ProfileScreen() {
   };
 
   const onSave = async () => {
-    const tokens = await getTokens();
-    if (tokens) {
+    const tokenFlag = await checkTokens();
+    if (tokenFlag) {
       const payload: UpdateProfilePayload = {
         username: username !== userData.username ? username : undefined,
         profileImageInBase64: profileImage !== userData.profileImageUrl ? await imageUriToBase64(profileImage) : undefined,
       };
-      await updateProfile(tokens.accessToken, payload);
+      await updateProfile(payload);
       router.replace('/profile');
+    } else {
+      deleteTokens();
+      router.replace('/login');
     }
   }
 

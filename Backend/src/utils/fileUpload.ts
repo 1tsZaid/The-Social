@@ -1,5 +1,4 @@
 import fs from 'fs/promises';
-import fsSync from 'fs';
 import path from 'path';
 
 export class FileUploadService {
@@ -18,27 +17,15 @@ export class FileUploadService {
   }
 
   getFileWithExtension(inputPath: string): string | null {
+    console.log("inputPath", inputPath);
+
     inputPath = path.join(this.uploadDir, inputPath);
-    if (!fsSync.existsSync(inputPath)) {
-        return null;
-    }
+    console.log("inputPath after join", inputPath);
 
-    const stats = fsSync.statSync(inputPath);
-
-    if (stats.isFile()) {
-        // If it's a file, return it (only if it has an extension)
-        return path.extname(inputPath) ? inputPath : null;
-    }
-
-    if (stats.isDirectory()) {
-        const files = fsSync.readdirSync(inputPath);
-        // Find first file with an extension
-        const fileWithExt = files.find(file => path.extname(file));
-        return fileWithExt ? path.join(inputPath, fileWithExt) : null;
-    }
-
-    return null;
+    console.log("is file", path.basename(inputPath) + '.png');
+    return path.basename(inputPath) + '.png';
   }
+
 
   async saveBase64Image(id: string, base64Data: string): Promise<string> {
     // Extract file extension from base64 data
@@ -71,8 +58,7 @@ export class FileUploadService {
 
     await fs.writeFile(filepath, buffer);
 
-    // Return relative URL path
-    return `/uploads/profiles/${filename}`;
+    return filename;
   }
 
   async deleteImage(id: string): Promise<void> {

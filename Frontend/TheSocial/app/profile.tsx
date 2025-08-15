@@ -9,6 +9,7 @@ import { LogoutButton } from '@/components/LogoutButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 import { deleteTokens, getTokens } from '@/utils/tokenStorage';
+import { checkTokens } from '@/utils/checkTokens';
 import { getProfile, Profile } from '@/services/profile';
 
 export default function ProfileScreen() {
@@ -18,10 +19,13 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const tokens = await getTokens();
-      if (tokens) {
-        const profileData = await getProfile(tokens.accessToken);
+      const tokenFlag = await checkTokens();
+      if (tokenFlag) {
+        const profileData = await getProfile();
         setUserData(profileData);
+      } else {
+        deleteTokens();
+        router.replace('/login');
       }
     };
     fetchProfileData();

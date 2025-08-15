@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { router, Stack } from 'expo-router';
-import { getTokens } from '@/utils/tokenStorage';
+
+import { deleteTokens } from '@/utils/tokenStorage';
+import { checkTokens } from '@/utils/checkTokens';
 
 export default function IndexScreen() {
   const [loading, setLoading] = useState(true);
@@ -9,12 +11,13 @@ export default function IndexScreen() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const tokens = await getTokens(); // must be async
-        if (tokens) {
+        const tokenFlag = await checkTokens();
+        if (tokenFlag) {
           console.log('Tokens found, going to home');
           router.replace('/home/messages');
         } else {
-          console.log('No tokens found, going to login');
+          deleteTokens();
+          console.log('Tokens not found, going to login');
           router.replace('/login');
         }
       } catch (error) {

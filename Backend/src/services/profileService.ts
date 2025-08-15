@@ -29,6 +29,8 @@ export class ProfileService {
     if (!user) {
       throw new Error('user not found');
     }
+    console.log("file", fileUploadService.getFileWithExtension(user.id));
+    console.log("file type", typeof fileUploadService.getFileWithExtension(user.id));
 
     return {
       username: user.username,
@@ -85,9 +87,10 @@ export class ProfileService {
         if (profileImageUrl) {
           await fileUploadService.deleteImage(profileImageUrl);
         }
-        
+        console.log("image in base64", payload.profileImageInBase64);
         // Save new image
         profileImageUrl = await fileUploadService.saveBase64Image(id, payload.profileImageInBase64);
+        console.log("image saved", profileImageUrl);
       } catch (error) {
         throw new Error(`Image upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
