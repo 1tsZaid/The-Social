@@ -130,7 +130,9 @@ export const EditProfileHeader: React.FC<EditProfileHeaderProps> = ({
             {profileImage ? (
               <View style={styles.profileImagePlaceholder}>
                 <Image
-                  source={{ uri: `${profileImage}?cache=${Math.random()}` }} 
+                  source={{ uri: profileImage?.startsWith('http://') || profileImage?.startsWith('https://')
+                    ? `${profileImage}?cache=${Math.random()}`
+                    : profileImage }} 
                   style={{ width: 88, height: 88, borderRadius: 45 }} 
                 />
               </View>
