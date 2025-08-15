@@ -66,9 +66,9 @@ export const verifyAccessToken = async (accessToken: string): Promise<TokenVerif
   }
 };
 
-export const verifyRefreshToken = async (accessToken: string): Promise<TokenVerificationResult> => {
+export const verifyRefreshToken = async (refreshToken: string): Promise<TokenVerificationResult> => {
   try {
-    const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.VERIFY_ACCESS_TOKEN, { accessToken });
+    const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.VERIFY_REFRESH_TOKEN, { refreshToken });
     return response.data;
   } catch (error) {
     console.error(error);
