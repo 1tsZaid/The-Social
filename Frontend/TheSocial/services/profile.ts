@@ -8,7 +8,7 @@ export interface Profile {
   joinedDate: string; // Date with year and month i.e. "2023-10"
 }
 
-interface UpdateProfilePayload {
+export interface UpdateProfilePayload {
   username?: string;
   profileImageInBase64?: string; // base64 encoded string of the profile image
   banner?: string;

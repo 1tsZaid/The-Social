@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
@@ -7,20 +7,35 @@ import * as ImagePicker from 'expo-image-picker';
 import { EditProfileHeader } from '@/components/EditProfileHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-export default function ProfileScreen() {
-  // data from backend
-  const userData = {
-    username: 'UserName',
-    joinedDate: 'January 2024',
-    profileImage: undefined,
-    bannerColor: "#FF8000",
-  };
+import { getTokens } from '@/utils/tokenStorage';
+import { imageUriToBase64 } from '@/utils/imageUriToBase64';
+import { getProfile, updateProfile, Profile, UpdateProfilePayload } from '@/services/profile';
 
-  const [profileImage, setProfileImage] = useState<string | undefined>(userData.profileImage);
-  const [username, setUsername] = useState(userData.username);
+export default function ProfileScreen() {
+
+  const [userData, setUserData] = useState<Profile | undefined>(undefined);
+  const [profileImage, setProfileImage] = useState<string | undefined>(undefined);
+  const [username, setUsername] = useState('');
 
   const divderColor = useThemeColor({}, 'borderDivider')
   const backgroundColor = useThemeColor({}, 'background');
+
+  useEffect(() => {
+      const fetchProfileData = async () => {
+        const tokens = await getTokens();
+        if (tokens) {
+          const profileData = await getProfile(tokens.accessToken);
+          setUserData(profileData);
+          setProfileImage(profileData.profileImageUrl);
+          setUsername(profileData.username);
+        }
+      };
+      fetchProfileData();
+    }, []);
+  
+    if (!userData) {
+      return <ActivityIndicator />;
+    }
 
   
   const pickImage = async () => {
@@ -44,8 +59,16 @@ export default function ProfileScreen() {
     }
   };
 
-  const onSave = () => {
-    //data to backend
+  const onSave = async () => {
+    const tokens = await getTokens();
+    if (tokens) {
+      const payload: UpdateProfilePayload = {
+        username: username !== userData.username ? username : undefined,
+        profileImageInBase64: profileImage !== userData.profileImageUrl ? await imageUriToBase64(profileImage) : undefined,
+      };
+      await updateProfile(tokens.accessToken, payload);
+      router.replace('/profile');
+    }
   }
 
   const styles = StyleSheet.create({
@@ -76,7 +99,7 @@ export default function ProfileScreen() {
           <EditProfileHeader
             username={username}
             profileImage={profileImage}
-            bannerColor={userData.bannerColor}
+            bannerColor={userData.banner}
             onUsernameChange={(username) => setUsername(username)}
             onProfileEdit={pickImage}
             onBannerEdit={() => Alert.alert('Edit Banner')}
