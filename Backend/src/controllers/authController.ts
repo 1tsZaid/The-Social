@@ -49,7 +49,7 @@ export class AuthController {
       const result = authService.verifyAccessToken(req.body.accessToken);
       
       if (result.isValid) {
-        res.status(200).json({ message: 'Access token is valid' });
+        res.status(200).json(result);
       } else {
         res.status(401).json({ error: result.error }); // result.error = invalid signature
       }
@@ -63,7 +63,7 @@ export class AuthController {
       const result = authService.verifyRefreshToken(req.body.refreshToken);
       
       if (result.isValid) {
-        res.status(200).json({ message: 'Access token is valid' });
+        res.status(200).json(result);
       } else {
         res.status(401).json({ error: result.error }); // result.error = invalid signature
       }

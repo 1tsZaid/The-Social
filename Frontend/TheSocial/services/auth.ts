@@ -20,6 +20,11 @@ interface RegisterPayload extends LoginPayload {
   banner: string;
 }
 
+export interface TokenVerificationResult {
+  isValid: boolean;
+  error?: string;
+}
+
 export const login = async ({ email, password }: LoginPayload): Promise<TokenResponse> => {
   try {
     const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.LOGIN, { email, password });
@@ -48,6 +53,26 @@ export const refreshAccessToken = async (refreshToken: string): Promise<string> 
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const verifyAccessToken = async (accessToken: string): Promise<TokenVerificationResult> => {
+  try {
+    const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.VERIFY_ACCESS_TOKEN, { accessToken });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return { isValid: false, error: 'Verification failed' };
+  }
+};
+
+export const verifyRefreshToken = async (accessToken: string): Promise<TokenVerificationResult> => {
+  try {
+    const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.VERIFY_ACCESS_TOKEN, { accessToken });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return { isValid: false, error: 'Verification failed' };
   }
 };
 
