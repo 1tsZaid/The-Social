@@ -219,85 +219,97 @@ class CommunityService {
   }
 
   async getUserCommunities(userId: string, params?: FindCommunitiesParams): Promise<Community[]> {
-    try {
-        const limit = Math.min(params?.limit ?? this.DEFAULT_LIMIT, this.MAX_LIMIT);
-        const skip = params?.page ? (params.page - 1) * limit : 0;
+  try {
+    console.log('Getting communities for user:', userId);
+    
+    const limit = Math.min(params?.limit ?? this.DEFAULT_LIMIT, this.MAX_LIMIT);
+    const skip = params?.page ? (params.page - 1) * limit : 0;
 
-        let communities: any[];
-
-        // Execute different queries based on whether coordinates are provided
-        if (params?.latitude && params?.longitude) {
-        communities = await prisma.$queryRaw<any[]>`
-            SELECT 
-            c."communityId",
-            c."name",
-            c."description",
-            c."locationName",
-            c."banner",
-            ST_X(c."location") as lng,
-            ST_Y(c."location") as lat,
-            COUNT(m."A") as member_count,
-            ST_Distance(
-                c."location"::geography,
-                ST_SetSRID(ST_MakePoint(${params.longitude}, ${params.latitude}), 4326)::geography
-            ) as distance_meters
-            FROM "Community" c
-            LEFT JOIN "_UserCommunities" m ON c."communityId" = m."B"
-            INNER JOIN "_UserCommunities" user_membership ON c."communityId" = user_membership."B"
-            WHERE user_membership."A" = ${userId}
-            GROUP BY c."communityId", c."name", c."description", c."locationName", c."banner", c."location"
-            ORDER BY c."name" ASC
-            LIMIT ${limit}
-            OFFSET ${skip}
-        `;
-        } else {
-        communities = await prisma.$queryRaw<any[]>`
-            SELECT 
-            c."communityId",
-            c."name",
-            c."description",
-            c."locationName",
-            c."banner",
-            ST_X(c."location") as lng,
-            ST_Y(c."location") as lat,
-            COUNT(m."A") as member_count
-            FROM "Community" c
-            LEFT JOIN "_UserCommunities" m ON c."communityId" = m."B"
-            INNER JOIN "_UserCommunities" user_membership ON c."communityId" = user_membership."B"
-            WHERE user_membership."A" = ${userId}
-            GROUP BY c."communityId", c."name", c."description", c."locationName", c."banner", c."location"
-            ORDER BY c."name" ASC
-            LIMIT ${limit}
-            OFFSET ${skip}
-        `;
+    // First, get the user with their communities using Prisma relations
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        communities: {
+          take: limit,
+          skip: skip,
+          orderBy: { name: 'asc' }
         }
+      }
+    });
 
-        console.log('Fetched communities:', communities);
+    console.log('User found:', user ? 'Yes' : 'No');
+    console.log('Communities count:', user?.communities?.length || 0);
 
-        return communities.map(community => {
-        let nearby = false;
-        if (params?.latitude && params?.longitude && community.distance_meters) {
-            nearby = community.distance_meters <= this.NEARBY_DISTANCE_M;
+    if (!user || !user.communities) {
+      return [];
+    }
+
+    // Convert to the format expected by your interface
+    const communities: Community[] = [];
+    
+    for (const community of user.communities) {
+      // Get member count for each community
+      const memberCount = await prisma.user.count({
+        where: {
+          communities: {
+            some: {
+              communityId: community.communityId
+            }
+          }
         }
+      });
 
-        return {
-            communityId: community.communityId,
-            name: community.name,
-            description: community.description,
-            location: {
-            coordinates: [community.lng, community.lat],
-            name: community.locationName
-            },
-            banner: community.banner,
-            members: parseInt(community.member_count) || 0,
-            nearby
-        };
-        });
-    } catch (error) {
-        console.error('Error fetching user communities:', error);
-        throw error;
+      console.log(`Processing community: ${community.name}, Members: ${memberCount}`);
+
+      // Extract coordinates using raw query for this specific community
+      const locationData = await prisma.$queryRaw<any[]>`
+        SELECT ST_X(location) as lng, ST_Y(location) as lat
+        FROM "Community"
+        WHERE "communityId" = ${community.communityId}
+      `;
+
+      const coords = locationData[0] || { lng: 0, lat: 0 };
+
+      console.log(`Coordinates for ${community.name}:`, coords);
+      
+      let nearby = false;
+      if (params?.latitude && params?.longitude) {
+        // Calculate distance if coordinates provided
+        const distanceResult = await prisma.$queryRaw<any[]>`
+          SELECT ST_Distance(
+            location::geography,
+            ST_SetSRID(ST_MakePoint(${params.longitude}, ${params.latitude}), 4326)::geography
+          ) as distance_meters
+          FROM "Community"
+          WHERE "communityId" = ${community.communityId}
+        `;
+        
+        const distance = distanceResult[0]?.distance_meters || Infinity;
+        nearby = distance <= this.NEARBY_DISTANCE_M;
+      }
+
+      console.log(`Is ${community.name} nearby?`, nearby);
+
+      communities.push({
+        communityId: community.communityId,
+        name: community.name,
+        description: community.description,
+        location: {
+          coordinates: [coords.lng, coords.lat],
+          name: community.locationName
+        },
+        banner: community.banner,
+        members: memberCount,
+        nearby
+      });
     }
-    }
+
+    return communities;
+  } catch (error) {
+    console.error('Error fetching user communities:', error);
+    throw error;
+  }
+}
 }
 
 export const communityService = new CommunityService();
