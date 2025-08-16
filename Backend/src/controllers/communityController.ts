@@ -17,8 +17,10 @@ export class CommunityController {
       }
 
       const payload = req.body;
+      // console.log('Creating community with payload:', payload);
       const community = await communityService.createCommunity(req.user.userId, payload);
-      res.status(201).json(community);
+      // console.log('Community created:', community);
+      res.status(200).json(community);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
@@ -51,8 +53,10 @@ export class CommunityController {
         page: page ? Number(page) : 1,
       };
 
+      console.log('Fetching user communities with params:', params);
+
       const communities = await communityService.getUserCommunities(req.user.userId, params);
-      res.json(communities);
+      res.status(200).json(communities);
     } catch (error) {
       if (error instanceof Error) {
         res.status(404).json({ error: error.message });
@@ -91,7 +95,7 @@ export class CommunityController {
       }
 
       const communities = await communityService.getCommunitiesNearby(req.user.userId, params);
-      res.json(communities);
+      res.status(200).json(communities);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
@@ -106,7 +110,7 @@ export class CommunityController {
     try {
       const communityId = req.params.communityId;
       const community = await communityService.getCommunity(communityId);
-      res.json(community);
+      res.status(200).json(community);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
@@ -126,7 +130,7 @@ export class CommunityController {
 
       const communityId: string = req.params.communityId;
       const join = await communityService.joinCommunity(req.user.userId, communityId);
-      res.json(join);
+      res.status(200).json(join);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
@@ -146,7 +150,7 @@ export class CommunityController {
 
       const communityId: string = req.params.communityId;
       const leave = await communityService.leaveCommunity(req.user.userId, communityId);
-      res.json(leave);
+      res.status(200).json(leave);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {

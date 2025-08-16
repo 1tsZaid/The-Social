@@ -7,7 +7,7 @@ interface Location {
 }
 
 interface CreateCommunityPayload {
-  name: string;
+  name: string; // unique name for the community
   description: string;
   location: Location;
   communityImageInBase64?: string; // base64 encoded string of the community image
