@@ -111,13 +111,16 @@ class CommunityService {
             ST_SetSRID(ST_MakePoint(${params.longitude}, ${params.latitude}), 4326)::geography
           ) as distance_meters
         FROM "Community" c
-        LEFT JOIN "_UserCommunities" m ON c."communityId" = m."B"
-        LEFT JOIN "_UserCommunities" user_membership ON c."communityId" = user_membership."B" AND user_membership."A" = ${userId}
-        WHERE user_membership."A" IS NULL
-          AND ST_DWithin(
+        LEFT JOIN "_UserCommunities" m ON c."communityId" = m."A"
+        WHERE ST_DWithin(
             c."location"::geography,
             ST_SetSRID(ST_MakePoint(${params.longitude}, ${params.latitude}), 4326)::geography,
             ${this.NEARBY_DISTANCE_M}
+          )
+          AND c."communityId" NOT IN (
+            SELECT uc."A" 
+            FROM "_UserCommunities" uc 
+            WHERE uc."B" = ${userId}
           )
         GROUP BY c."communityId", c."name", c."description", c."locationName", c."banner", c."location"
         ORDER BY distance_meters ASC
