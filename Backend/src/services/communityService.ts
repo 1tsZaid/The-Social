@@ -1,4 +1,5 @@
 import prisma from '../config/database';
+import { createId } from '@paralleldrive/cuid2';
 
 interface Location {
   coordinates: [number, number]; // [longitude, latitude]
@@ -35,9 +36,10 @@ class CommunityService {
   async createCommunity(userId: string, payload: CreateCommunityPayload): Promise<Community> {
     try {
       // Create community with PostGIS point geometry
+      const communityId = createId();
       const createdCommunity = await prisma.$queryRaw<any[]>`
         INSERT INTO "Community" (
-          "communityId", 
+          "communityId",
           "name", 
           "description", 
           "locationName", 
@@ -45,7 +47,7 @@ class CommunityService {
           "banner", 
           "ownerId"
         ) VALUES (
-          ${prisma.community.create.name}(), -- Generate cuid
+          ${communityId},
           ${payload.name},
           ${payload.description},
           ${payload.location.name},
