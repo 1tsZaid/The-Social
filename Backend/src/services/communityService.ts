@@ -157,9 +157,9 @@ class CommunityService {
           c."banner",
           ST_X(c."location") as lng,
           ST_Y(c."location") as lat,
-          COUNT(m."A") as member_count
+          COUNT(m."B") as member_count
         FROM "Community" c
-        LEFT JOIN "_UserCommunities" m ON c."communityId" = m."B"
+        LEFT JOIN "_UserCommunities" m ON c."communityId" = m."A"
         WHERE c."communityId" = ${communityId}
         GROUP BY c."communityId", c."name", c."description", c."locationName", c."banner", c."location"
       `;
@@ -200,7 +200,7 @@ class CommunityService {
       return true;
     } catch (error) {
       console.error('Error joining community:', error);
-      throw new Error('Failed to join community');
+      throw error;
     }
   }
 
