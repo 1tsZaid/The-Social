@@ -6,6 +6,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
+import communityRoutes from './routes/communityRouter';
 
 // Load environment variables
 dotenv.config();
@@ -42,6 +43,7 @@ app.use('/uploads', (req, res, next) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/communities', communityRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

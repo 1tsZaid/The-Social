@@ -6,22 +6,18 @@ interface Location {
   name: string;
 }
 
-interface CommunityStats {
-  members: number;
-  online: number;
-}
-
 interface CreateCommunityPayload {
   name: string;
   description: string;
   location: Location;
-  image?: string;
+  communityImageInBase64?: string; // base64 encoded string of the community image
   banner: string;
 }
 
-interface Community extends CreateCommunityPayload {
-  communityId: number; // unique identifier for the community set by the backend
-  stats: CommunityStats;
+interface Community extends Omit<CreateCommunityPayload, 'communityImageInBase64'> {
+  communityId: string; // unique identifier for the community set by the backend
+  communityImageUrl?: string; // URL to the community image
+  members: number;
   nearby: boolean;
 }
 
@@ -31,6 +27,7 @@ interface FindCommunitiesParams {
   limit?: number;
   page?: number;
 }
+
 
 export const createCommunity = async (payload: CreateCommunityPayload): Promise<Community> => {
   try {
@@ -43,9 +40,16 @@ export const createCommunity = async (payload: CreateCommunityPayload): Promise<
 };
 
 // Get communities created by or joined by the current user
-export const getYourCommunities = async (): Promise<Community[]> => {
+export const getYourCommunities = async (param: FindCommunitiesParams): Promise<Community[]> => {
   try {
-    const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.YOUR_COMMUNITIES);
+    const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.YOUR_COMMUNITIES, {
+      params: {
+        latitude: param.latitude,
+        longitude: param.longitude,
+        limit: param.limit || 20, // default 20 communities per page
+        page: param.page || 1     // default first page
+      }
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -58,8 +62,8 @@ export const findNearbyCommunities = async (params: FindCommunitiesParams): Prom
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.NEARBY, {
       params: {
-        lat: params.latitude,
-        lng: params.longitude,
+        latitude: params.latitude,
+        longitude: params.longitude,
         limit: params.limit || 20,   // default 20 communities per page
         page: params.page || 1       // default first page
       }
@@ -71,10 +75,28 @@ export const findNearbyCommunities = async (params: FindCommunitiesParams): Prom
   }
 };
 
-export const getCommunity = async (id: string): Promise<Community> => {
+export const getCommunity = async (id: string): Promise<Community | null> => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.GET_ONE(id));
     return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const joinCommunity = async (communityId: string): Promise<void> => {
+  try {
+    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.JOIN(communityId));
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const leaveCommunity = async (communityId: string): Promise<void> => {
+  try {
+    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.LEAVE(communityId));
   } catch (error) {
     console.error(error);
     throw error;

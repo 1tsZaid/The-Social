@@ -14,5 +14,22 @@ model User {
   password  String
   createdAt DateTime @default(now())
   banner    String   @default("#000000")
+
+  communities Community[] @relation("UserCommunities")
 }
 
+model Community {
+  communityId     String   @id @default(cuid())
+  name            String   @unique
+  description     String
+  banner          String   @default("#ffffff")
+  locationName    String
+  location        Unsupported("geometry(Point, 4326)")
+  ownerId         String
+  
+  // Relations
+  members User[] @relation("UserCommunities")
+  
+  // Indexes for location-based queries
+  @@index([location], type: Gist)
+}
