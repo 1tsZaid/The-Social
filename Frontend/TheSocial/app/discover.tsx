@@ -56,7 +56,9 @@ export default function DiscoverScreen() {
       if (!tokenFlag) {
         deleteTokens();
         router.replace('/login');
-      } 
+      }
+
+      console.log('Location to use:', locationToUse);
 
       const data = await findNearbyCommunities({
         latitude: locationToUse.latitude,
@@ -65,6 +67,8 @@ export default function DiscoverScreen() {
         page: 1,
       });
       
+      console.log('Nearby communities:',  data);
+
       setCommunities(data);
       setFilteredCommunities(data);
     } catch (error) {

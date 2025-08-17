@@ -33,7 +33,7 @@ export interface FindCommunitiesParams {
 class CommunityService {
   private readonly DEFAULT_LIMIT = 10;
   private readonly MAX_LIMIT = 100;
-  private readonly NEARBY_DISTANCE_M = 5000; // 5 kilometers in meters for PostGIS
+  private readonly NEARBY_DISTANCE_M = 50000000; // 5000 meters = 5 kilometers and in meters for PostGIS
 
   async createCommunity(userId: string, payload: CreateCommunityPayload): Promise<Community> {
     try {
@@ -103,6 +103,13 @@ class CommunityService {
       const limit = Math.min(params.limit ?? this.DEFAULT_LIMIT, this.MAX_LIMIT);
       const skip = params.page ? (params.page - 1) * limit : 0;
 
+      console.log('limit: ', limit);
+      console.log('skip: ', skip);
+      console.log('userId: ', userId);
+      console.log('latitude: ', params.latitude);
+      console.log('longitude: ', params.longitude);
+
+
       // Query for nearby communities that the user has NOT joined using PostGIS
       const communities = await prisma.$queryRaw<any[]>`
         SELECT 
@@ -113,7 +120,7 @@ class CommunityService {
           c."banner",
           ST_X(c."location") as lng,
           ST_Y(c."location") as lat,
-          COUNT(m."A") as member_count,
+          COUNT(m."B") as member_count,
           ST_Distance(
             c."location"::geography,
             ST_SetSRID(ST_MakePoint(${params.longitude}, ${params.latitude}), 4326)::geography
@@ -132,9 +139,9 @@ class CommunityService {
           )
         GROUP BY c."communityId", c."name", c."description", c."locationName", c."banner", c."location"
         ORDER BY distance_meters ASC
-        LIMIT ${limit}
-        OFFSET ${skip}
       `;
+
+      console.log('Fetched nearby communities:', communities);
 
       return communities.map(community => ({
         communityId: community.communityId as string,
