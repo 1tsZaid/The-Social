@@ -49,7 +49,7 @@ export const register = async ({ email, password, username, banner }: RegisterPa
 export const refreshAccessToken = async (refreshToken: string): Promise<string> => {
   try {
     const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.REFRESH_TOKEN, { refreshToken });
-    return response.data;
+    return response.data.accessToken;
   } catch (error) {
     console.error(error);
     throw error;
