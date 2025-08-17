@@ -124,7 +124,7 @@ export class CommunityController {
   async joinCommunity(req: AuthenticatedRequest, res: Response) {
     try {
       if (!req.user) {
-        console.log(req.user);
+        console.log('hello from the join community controller', req.user);
         res.status(401).json({ error: 'User not authenticated' });
         return;
       }

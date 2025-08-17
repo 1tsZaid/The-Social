@@ -99,10 +99,13 @@ export const getCommunity = async (id: string): Promise<Community | null> => {
   }
 };
 
+
 export const joinCommunity = async (communityId: string): Promise<void> => {
   try {
     const tokens = await getTokens();
-    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.JOIN(communityId), {
+    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.JOIN(communityId), 
+    {},
+    {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
@@ -116,7 +119,9 @@ export const joinCommunity = async (communityId: string): Promise<void> => {
 export const leaveCommunity = async (communityId: string): Promise<void> => {
   try {
     const tokens = await getTokens();
-    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.LEAVE(communityId), {
+    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.LEAVE(communityId), 
+    {},
+    {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },

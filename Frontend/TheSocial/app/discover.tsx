@@ -142,7 +142,6 @@ export default function DiscoverScreen() {
 
   // Handle join community
   const handleJoinCommunity = async (communityId: string) => {
-    const community = communities.find(c => c.communityId === communityId);
     
     try {
       const tokenFlag = await checkTokens();
@@ -160,12 +159,7 @@ export default function DiscoverScreen() {
           : c
       );
       setCommunities(updatedCommunities);
-      
-      Alert.alert(
-        'Success',
-        `You have successfully joined "${community?.name}"!`,
-        [{ text: 'OK' }]
-      );
+
     } catch (error) {
       console.error('Error joining community:', error);
       Alert.alert(
