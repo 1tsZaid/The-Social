@@ -5,6 +5,7 @@ import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
+import { Image } from 'react-native';
 
 interface CommunityCardProps {
   title: string;
@@ -12,6 +13,7 @@ interface CommunityCardProps {
   memberCount: number;
   location: string;
   bannerColor: string;
+  imageUrl?: string;
   iconName: string;
   onJoinPress?: () => void;
 }
@@ -22,6 +24,7 @@ export function CommunityCard({
   memberCount,
   location,
   bannerColor,
+  imageUrl,
   iconName,
   onJoinPress,
 }: CommunityCardProps) {
@@ -36,12 +39,18 @@ export function CommunityCard({
       <View style={[styles.banner, { backgroundColor: bannerColor }]} />
       
       {/* Community Icon */}
-      <View style={[styles.iconContainer, { backgroundColor: '#F5F5F5' }]}>
-        <Ionicons name={iconName as any} size={32} color="#666" />
-        <ThemedText style={styles.iconText} variant="caption" colorType="textSecondary">
-          COMMUNITY
-        </ThemedText>
-      </View>
+      { imageUrl ? (
+        <View style={styles.iconContainer}>
+          <Image source={{ uri: imageUrl }} style={{ width: 96, height: 96, borderRadius: 20, }} />
+        </View>
+      ) : (
+        <View style={[styles.iconContainer, { backgroundColor: '#F5F5F5' }]}>
+          <Ionicons name={iconName as any} size={32} color="#666" />
+          <ThemedText style={styles.iconText} variant="caption" colorType="textSecondary">
+            COMMUNITY
+          </ThemedText> 
+        </View> 
+      )}
       
       {/* Content */}
       <View style={styles.content}>

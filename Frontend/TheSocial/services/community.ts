@@ -38,7 +38,8 @@ export const createCommunity = async (payload: CreateCommunityPayload): Promise<
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
-    return response.data;
+
+    return normalizeCommunity(response.data);
   } catch (error) {
     console.error(error);
     throw error;
@@ -60,7 +61,7 @@ export const getYourCommunities = async (param: FindCommunitiesParams): Promise<
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
-    return response.data;
+    return response.data.map((c: any) => normalizeCommunity(c));
   } catch (error) {
     console.error(error);
     throw error;
@@ -82,7 +83,7 @@ export const findNearbyCommunities = async (params: FindCommunitiesParams): Prom
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
-    return response.data;
+    return response.data.map((c: any) => normalizeCommunity(c));
   } catch (error) {
     console.error(error);
     throw error;
@@ -92,7 +93,7 @@ export const findNearbyCommunities = async (params: FindCommunitiesParams): Prom
 export const getCommunity = async (id: string): Promise<Community | null> => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.GET_ONE(id));
-    return response.data;
+    return normalizeCommunity(response.data);
   } catch (error) {
     console.error(error);
     throw error;
@@ -131,3 +132,16 @@ export const leaveCommunity = async (communityId: string): Promise<void> => {
     throw error;
   }
 };
+
+const normalizeCommunity = (data: any): Community => ({
+  communityId: data.communityId,
+  name: data.name,
+  description: data.description,
+  location: data.location,
+  banner: data.banner,
+  members: data.members,
+  communityImageUrl: data.communityImageUrl
+    ? `${API_CONFIG.STATIC_BASE_URL}${data.communityImageUrl}`
+    : undefined,
+  nearby: data.nearby,
+});

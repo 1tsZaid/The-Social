@@ -152,6 +152,7 @@ class CommunityService {
           name: community.locationName
         },
         banner: community.banner,
+        communityImageUrl: communityUploadService.getFileWithPng(community.communityId) || undefined,
         members: parseInt(community.member_count) || 0,
         nearby: true // All results are nearby by definition
       }));
@@ -193,6 +194,7 @@ class CommunityService {
           name: communityData.locationName
         },
         banner: communityData.banner,
+        communityImageUrl: communityUploadService.getFileWithPng(communityData.communityId) || undefined,
         members: parseInt(communityData.member_count) || 0,
         nearby: false
       };
@@ -317,6 +319,7 @@ class CommunityService {
           name: community.locationName
         },
         banner: community.banner,
+        communityImageUrl: communityUploadService.getFileWithPng(community.communityId) || undefined,
         members: memberCount,
         nearby
       });
