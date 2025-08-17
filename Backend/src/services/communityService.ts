@@ -1,5 +1,7 @@
 import prisma from '../config/database';
 import { createId } from '@paralleldrive/cuid2';
+import { communityUploadService } from '../utils/fileUpload';
+
 
 interface Location {
   coordinates: [number, number]; // [longitude, latitude]
@@ -71,9 +73,15 @@ class CommunityService {
         }
       });
 
+      let communityImageUrl: string = '';
+      if (payload.communityImageInBase64) {
+        communityImageUrl = await communityUploadService.saveBase64Image(community.communityId, payload.communityImageInBase64);       
+      }
+
       // Return the created community
       return {
         communityId: community.communityId,
+        communityImageUrl: communityImageUrl || undefined,
         name: community.name,
         description: community.description,
         location: {

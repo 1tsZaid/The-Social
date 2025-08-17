@@ -1,5 +1,6 @@
 import api from './api';
 import { API_CONFIG } from '../constants/Api';
+import { getTokens } from '../utils/tokenStorage';
 
 interface Location {
   coordinates: [number, number]; // [longitude, latitude]
@@ -31,7 +32,12 @@ interface FindCommunitiesParams {
 
 export const createCommunity = async (payload: CreateCommunityPayload): Promise<Community> => {
   try {
-    const response = await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.CREATE_COMMUNITIES, payload);
+    const tokens = await getTokens();
+    const response = await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.CREATE_COMMUNITIES, payload, {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -42,13 +48,17 @@ export const createCommunity = async (payload: CreateCommunityPayload): Promise<
 // Get communities created by or joined by the current user
 export const getYourCommunities = async (param: FindCommunitiesParams): Promise<Community[]> => {
   try {
+    const tokens = await getTokens();
     const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.YOUR_COMMUNITIES, {
       params: {
         latitude: param.latitude,
         longitude: param.longitude,
         limit: param.limit || 20, // default 20 communities per page
         page: param.page || 1     // default first page
-      }
+      },
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
     });
     return response.data;
   } catch (error) {
@@ -60,13 +70,17 @@ export const getYourCommunities = async (param: FindCommunitiesParams): Promise<
 // Find communities near a specific location
 export const findNearbyCommunities = async (params: FindCommunitiesParams): Promise<Community[]> => {
   try {
+    const tokens = await getTokens();
     const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.NEARBY, {
       params: {
         latitude: params.latitude,
         longitude: params.longitude,
         limit: params.limit || 20,   // default 20 communities per page
         page: params.page || 1       // default first page
-      }
+      },
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
     });
     return response.data;
   } catch (error) {
@@ -87,7 +101,12 @@ export const getCommunity = async (id: string): Promise<Community | null> => {
 
 export const joinCommunity = async (communityId: string): Promise<void> => {
   try {
-    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.JOIN(communityId));
+    const tokens = await getTokens();
+    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.JOIN(communityId), {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
   } catch (error) {
     console.error(error);
     throw error;
@@ -96,7 +115,12 @@ export const joinCommunity = async (communityId: string): Promise<void> => {
 
 export const leaveCommunity = async (communityId: string): Promise<void> => {
   try {
-    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.LEAVE(communityId));
+    const tokens = await getTokens();
+    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.LEAVE(communityId), {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
   } catch (error) {
     console.error(error);
     throw error;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -10,7 +11,10 @@ import { CommunityGuidelinesLink } from '@/components/CommunityGuidelinesLink';
 import MainButton from '@/components/MainButton';
 
 import { createCommunity, CreateCommunityPayload } from '@/services/community';
+import { Colors } from '@/constants/Colors';
 import { imageUriToBase64 } from '@/utils/imageUriToBase64';
+import { checkTokens } from '@/utils/checkTokens';
+import { deleteTokens } from '@/utils/tokenStorage'
 
 interface CommunityFormData {
   name: string;
@@ -85,10 +89,14 @@ export default function CreateCommunityScreen() {
     }
 
     try {
+      const profileBannerColors = Object.values(Colors.community);
+      const randomIndex = Math.floor(Math.random() * profileBannerColors.length);
+      const banner = profileBannerColors[randomIndex];
+
       const payload: CreateCommunityPayload = {
         name: formData.name,
         description: formData.description,
-        banner: '', // optional → handle later if you support banners
+        banner: banner,
         location: {
           name: formData.locationName,
           coordinates: [lng, lat] as [number, number],
@@ -101,9 +109,16 @@ export default function CreateCommunityScreen() {
 
       setCommunityImageUrl(null);
 
-      await createCommunity(payload);
-      console.log('Community created with payload:', payload);
-      Alert.alert('Success', 'Community created successfully!');
+      const tokenFlag = await checkTokens();
+      if (tokenFlag) {
+        console.log('Community creation request with payload:', payload);
+        const result = await createCommunity(payload);
+        console.log('Community created with payload:', result);
+        Alert.alert('Success', 'Community created successfully!');
+      } else {
+        deleteTokens();
+        router.replace('/login');
+      }
     } catch (error) {
       Alert.alert('Error', 'Failed to create community. Please try again.');
       console.error(error);
