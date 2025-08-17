@@ -28,7 +28,7 @@ export class FileUploadService {
     const pngFilePath = fullPath + '.png';
 
     if (fsSync.existsSync(pngFilePath)) {
-      return path.join(this.subDir, inputPath + '.png'); // return relative path
+      return this.subDir + '/' + inputPath + '.png'; // return relative path
     } else {
       return null;
     }

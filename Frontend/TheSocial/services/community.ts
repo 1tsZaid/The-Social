@@ -15,7 +15,7 @@ export interface CreateCommunityPayload {
   banner: string;
 }
 
-interface Community extends Omit<CreateCommunityPayload, 'communityImageInBase64'> {
+export interface Community extends Omit<CreateCommunityPayload, 'communityImageInBase64'> {
   communityId: string; // unique identifier for the community set by the backend
   communityImageUrl?: string; // URL to the community image
   members: number;
