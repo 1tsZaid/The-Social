@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -9,6 +10,7 @@ import { CommunityGuidelinesLink } from '@/components/CommunityGuidelinesLink';
 import MainButton from '@/components/MainButton';
 
 import { createCommunity, CreateCommunityPayload } from '@/services/community';
+import { imageUriToBase64 } from '@/utils/imageUriToBase64';
 
 interface CommunityFormData {
   name: string;
@@ -19,6 +21,7 @@ interface CommunityFormData {
 }
 
 export default function CreateCommunityScreen() {
+  const [communityImageUrl, setCommunityImageUrl] = useState<string | null>(null);
   const [formData, setFormData] = useState<CommunityFormData>({
     name: '',
     description: '',
@@ -27,9 +30,24 @@ export default function CreateCommunityScreen() {
     latitude: '',
   });
 
-  const handleIconUpload = () => {
-    // TODO: Implement image picker functionality
-    Alert.alert('Upload Icon', 'Image picker functionality to be implemented');
+  const handleIconUpload = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (!permissionResult.granted) {
+      Alert.alert('Permission Required', 'You need to allow access to photos.');
+      return;
+    }
+    
+    // Open picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+
+    if (!result.canceled) {
+      setCommunityImageUrl(result.assets[0].uri);
+    }
   };
 
   const handleGuidelinesPress = () => {
@@ -77,6 +95,12 @@ export default function CreateCommunityScreen() {
         },
       };
 
+      if (communityImageUrl) {
+        payload.communityImageInBase64 = await imageUriToBase64(communityImageUrl); // handle base64 conversion in the upload function
+      }
+
+      setCommunityImageUrl(null);
+
       await createCommunity(payload);
       console.log('Community created with payload:', payload);
       Alert.alert('Success', 'Community created successfully!');
@@ -113,7 +137,7 @@ export default function CreateCommunityScreen() {
         {/* Main Content */}
         <ThemedView style={styles.mainContent}>
           {/* Icon Upload */}
-          <CommunityIconUpload onPress={handleIconUpload} />
+          <CommunityIconUpload uri={communityImageUrl} onPress={handleIconUpload} />
 
           {/* Form Fields */}
           <CommunityFormField
