@@ -6,7 +6,7 @@ interface Location {
   name: string;
 }
 
-interface CreateCommunityPayload {
+export interface CreateCommunityPayload {
   name: string; // unique name for the community
   description: string;
   location: Location;

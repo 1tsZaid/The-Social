@@ -8,17 +8,23 @@ import { CommunityFormField } from '@/components/CommunityFormField';
 import { CommunityGuidelinesLink } from '@/components/CommunityGuidelinesLink';
 import MainButton from '@/components/MainButton';
 
+import { createCommunity, CreateCommunityPayload } from '@/services/community';
+
 interface CommunityFormData {
   name: string;
   description: string;
-  location: string;
+  locationName: string;
+  longitude: string;
+  latitude: string;
 }
 
 export default function CreateCommunityScreen() {
   const [formData, setFormData] = useState<CommunityFormData>({
     name: '',
     description: '',
-    location: '',
+    locationName: '',
+    longitude: '',
+    latitude: '',
   });
 
   const handleIconUpload = () => {
@@ -31,7 +37,7 @@ export default function CreateCommunityScreen() {
     Alert.alert('Community Guidelines', 'Navigate to guidelines page');
   };
 
-  const handleCreateCommunity = () => {
+  const handleCreateCommunity = async () => {
     if (!formData.name.trim()) {
       Alert.alert('Error', 'Please enter a community name');
       return;
@@ -42,23 +48,54 @@ export default function CreateCommunityScreen() {
       return;
     }
 
-    if (!formData.location.trim()) {
-      Alert.alert('Error', 'Please enter a community location');
+    if (!formData.locationName.trim()) {
+      Alert.alert('Error', 'Please enter a community location name');
       return;
     }
 
-    // TODO: Implement community creation logic
-    Alert.alert('Success', 'Community created successfully!');
+    if (!formData.longitude.trim() || !formData.latitude.trim()) {
+      Alert.alert('Error', 'Please enter valid longitude and latitude');
+      return;
+    }
+
+    const lng = parseFloat(formData.longitude);
+    const lat = parseFloat(formData.latitude);
+
+    if (isNaN(lng) || isNaN(lat)) {
+      Alert.alert('Error', 'Longitude and Latitude must be valid numbers');
+      return;
+    }
+
+    try {
+      const payload: CreateCommunityPayload = {
+        name: formData.name,
+        description: formData.description,
+        banner: '', // optional → handle later if you support banners
+        location: {
+          name: formData.locationName,
+          coordinates: [lng, lat] as [number, number],
+        },
+      };
+
+      await createCommunity(payload);
+      console.log('Community created with payload:', payload);
+      Alert.alert('Success', 'Community created successfully!');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to create community. Please try again.');
+      console.error(error);
+    }
   };
 
-  const isFormValid = formData.name.trim() && 
-                     formData.description.trim() && 
-                     formData.location.trim();
+  const isFormValid =
+    !!formData.name.trim() &&
+    !!formData.description.trim() &&
+    !!formData.locationName.trim() &&
+    formData.longitude !== null &&
+    formData.latitude !== null;
 
   return (
     <ThemedView style={styles.container}>
-      
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -83,7 +120,7 @@ export default function CreateCommunityScreen() {
             label="Community Name"
             placeholder="Enter community name"
             value={formData.name}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
+            onChangeText={(text) => setFormData((prev) => ({ ...prev, name: text }))}
           />
 
           <CommunityFormField
@@ -91,26 +128,36 @@ export default function CreateCommunityScreen() {
             placeholder="Tell us about your community"
             multiline
             value={formData.description}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, description: text }))}
+            onChangeText={(text) => setFormData((prev) => ({ ...prev, description: text }))}
           />
 
           <CommunityFormField
-            label="Location"
-            placeholder="Enter community location"
-            showLocationIcon
-            value={formData.location}
-            onChangeText={(text) => setFormData(prev => ({ ...prev, location: text }))}
+            label="Location Name"
+            placeholder="Enter community location name"
+            value={formData.locationName}
+            onChangeText={(text) => setFormData((prev) => ({ ...prev, locationName: text }))}
+          />
+
+          {/* Separate Longitude and Latitude */}
+          <CommunityFormField
+            label="Longitude"
+            placeholder="Enter longitude (e.g. 12.34)"
+            value={formData.longitude}
+            onChangeText={(text) => setFormData((prev) => ({ ...prev, longitude: text }))}
+          />
+
+          <CommunityFormField
+            label="Latitude"
+            placeholder="Enter latitude (e.g. 56.78)"
+            value={formData.latitude}
+            onChangeText={(text) => setFormData((prev) => ({ ...prev, latitude: text }))}
           />
 
           {/* Guidelines Link */}
           <CommunityGuidelinesLink onPress={handleGuidelinesPress} />
 
           {/* Create Button */}
-          <MainButton 
-            title="Create"
-            onPress={handleCreateCommunity}
-            disabled={!isFormValid}
-          />
+          <MainButton title="Create" onPress={handleCreateCommunity} disabled={!isFormValid} />
         </ThemedView>
       </ScrollView>
     </ThemedView>
