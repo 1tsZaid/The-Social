@@ -1,5 +1,5 @@
 import prisma from '../config/database';
-import { fileUploadService } from '../utils/fileUpload';
+import { profileUploadService } from '../utils/fileUpload';
 
 interface Profile {
   username: string;
@@ -29,13 +29,13 @@ export class ProfileService {
     if (!user) {
       throw new Error('user not found');
     }
-    console.log("file", fileUploadService.getFileWithPng(user.id));
-    console.log("file type", typeof fileUploadService.getFileWithPng(user.id));
+    console.log("file", profileUploadService.getFileWithPng(user.id));
+    console.log("file type", typeof profileUploadService.getFileWithPng(user.id));
 
     return {
       username: user.username,
       banner: user.banner,
-      profileImageUrl: fileUploadService.getFileWithPng(user.id) || undefined,
+      profileImageUrl: profileUploadService.getFileWithPng(user.id) || undefined,
       joinedDate: user.createdAt.toISOString().slice(0, 7),
     };
   }
@@ -58,7 +58,7 @@ export class ProfileService {
     return {
       username: user.username,
       banner: user.banner,
-      profileImageUrl: fileUploadService.getFileWithPng(user.id) || undefined,
+      profileImageUrl: profileUploadService.getFileWithPng(user.id) || undefined,
       joinedDate: user.createdAt.toISOString().slice(0, 7),
     };
   }
@@ -77,7 +77,7 @@ export class ProfileService {
       throw new Error('user not found');
     }
 
-    let profileImageUrl = fileUploadService.getFileWithPng(id) || undefined;
+    let profileImageUrl = profileUploadService.getFileWithPng(id) || undefined;
     let username = user.username;
 
     // Handle profile image update
@@ -85,11 +85,11 @@ export class ProfileService {
       try {
         // Delete old image if exists
         if (profileImageUrl) {
-          await fileUploadService.deleteImage(profileImageUrl);
+          await profileUploadService.deleteImage(profileImageUrl);
         }
         console.log("image in base64", payload.profileImageInBase64);
         // Save new image
-        profileImageUrl = await fileUploadService.saveBase64Image(id, payload.profileImageInBase64);
+        profileImageUrl = await profileUploadService.saveBase64Image(id, payload.profileImageInBase64);
         console.log("image saved", profileImageUrl);
       } catch (error) {
         throw new Error(`Image upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -117,7 +117,7 @@ export class ProfileService {
 
     return {
       username,
-      profileImageUrl: fileUploadService.getFileWithPng(id) || undefined,
+      profileImageUrl: profileUploadService.getFileWithPng(id) || undefined,
       banner: user.banner,
       joinedDate: user.createdAt.toISOString().slice(0, 7),
     };

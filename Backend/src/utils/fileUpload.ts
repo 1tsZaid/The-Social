@@ -3,10 +3,16 @@ import fsSync from 'fs';
 import path from 'path';
 
 export class FileUploadService {
-  private uploadDir = path.join(process.cwd(), 'uploads', 'profiles');
+  private baseUploadDir = path.join(process.cwd(), 'uploads');
+  private subDir: string;
 
-  constructor() {
+  constructor(subDir: string) {
+    this.subDir = subDir;
     this.ensureUploadDir();
+  }
+
+  private get uploadDir() {
+    return path.join(this.baseUploadDir, this.subDir);
   }
 
   private async ensureUploadDir(): Promise<void> {
@@ -18,35 +24,26 @@ export class FileUploadService {
   }
 
   getFileWithPng(inputPath: string): string | null {
-    console.log("inputPath", inputPath);
-
     const fullPath = path.join(this.uploadDir, inputPath);
-    console.log("fullPath after join", fullPath);
-
     const pngFilePath = fullPath + '.png';
-    console.log("final file path", pngFilePath);
 
     if (fsSync.existsSync(pngFilePath)) {
-        console.log("File exists:", inputPath + '.png');
-        return inputPath + '.png';
+      return path.join(this.subDir, inputPath + '.png'); // return relative path
     } else {
-        console.log("File does not exist:", pngFilePath);
-        return null;
+      return null;
     }
   }
-
 
   async saveBase64Image(id: string, base64Data: string): Promise<string> {
     // Extract file extension from base64 data
     const matches = base64Data.match(/^data:image\/([a-zA-Z]*);base64,(.+)$/);
-    
     if (!matches || matches.length !== 3) {
       throw new Error('Invalid base64 image format');
     }
 
     const extension = matches[1];
     const imageData = matches[2];
-    
+
     // Validate image type
     const allowedTypes = ['jpeg', 'jpg', 'png', 'webp'];
     if (!allowedTypes.includes(extension.toLowerCase())) {
@@ -59,7 +56,7 @@ export class FileUploadService {
 
     // Convert base64 to buffer and save
     const buffer = Buffer.from(imageData, 'base64');
-    
+
     // Check file size (limit to 5MB)
     if (buffer.length > 5 * 1024 * 1024) {
       throw new Error('Image size must be less than 5MB');
@@ -67,11 +64,11 @@ export class FileUploadService {
 
     await fs.writeFile(filepath, buffer);
 
-    return filename;
+    return path.join(this.subDir, filename); // return relative path (e.g., profiles/abc.png)
   }
 
   async deleteImage(id: string): Promise<void> {
-    if (!id || !id.startsWith('/uploads/profiles/')) {
+    if (!id.startsWith(this.subDir)) {
       return;
     }
 
@@ -86,4 +83,7 @@ export class FileUploadService {
   }
 }
 
-export const fileUploadService = new FileUploadService();
+// Example: Create services for different dirs
+export const profileUploadService = new FileUploadService('profiles');
+export const postUploadService = new FileUploadService('posts');
+export const communityUploadService = new FileUploadService('communities');

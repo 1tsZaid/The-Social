@@ -1,6 +1,6 @@
 export const API_CONFIG = {
   BASE_URL: 'http://localhost:3000/api',
-  STATIC_BASE_URL: 'http://localhost:3000/uploads/profiles/',
+  STATIC_BASE_URL: 'http://localhost:3000/uploads/',
   ENDPOINTS: {
     AUTH: {
       LOGIN: '/auth/login', // Authenticates user with email and password, returns access and refresh tokens
