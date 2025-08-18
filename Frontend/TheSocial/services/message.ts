@@ -8,7 +8,7 @@ interface Message {
   id?: number; // unique identifier for the message
   communityId: string; // unique identifier for the community
   content: string;
-  createdAt: string; // year, month, day, time: using isoString format
+  createdAt?: string; // year, month, day, time: using isoString format
 }
 
 interface SendMessagePayload extends Omit<Message, 'id'> {}

@@ -1,128 +1,98 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { MessageItem } from '@/components/MessageItem';
-import { DateSeparator } from '@/components/DateSeparator';
 import { MessageInput } from '@/components/MessageInput';
 import { useScrollHandler } from '@/hooks/useScrollHandler';
+import { DateSeparator } from '@/components/DateSeparator';
+
+import { subscribeToMessages, unsubscribeFromMessages, sendMessage } from '@/services/message';
 
 interface Message {
-  id: string;
+  id?: string;
+  communityId: string;
+  senderId: string;
   senderName: string;
-  timestamp: string;
+  banner?: string;
+  imageUrl?: string;
+  timestamp?: string;
   message: string;
 }
 
-// Sample data for demonstration
-const sampleMessages: Message[] = [
-  {
-    id: '1',
-    senderName: 'Ali Khan',
-    timestamp: '2:00pm',
-    message: 'how are you',
-  },
-  {
-    id: '2',
-    senderName: 'Ali Khan',
-    timestamp: '2:10pm',
-    message: 'how are you',
-  },
-  {
-    id: '3',
-    senderName: 'Ali Khan',
-    timestamp: '2:11pm',
-    message: 'how are you',
-  },
-  // Date separator will be inserted here
-  {
-    id: '4',
-    senderName: 'Ali Khan',
-    timestamp: '1:00pm',
-    message: 'how are you',
-  },
-  {
-    id: '5',
-    senderName: 'Ali Khan',
-    timestamp: '2:10pm',
-    message: 'how are you',
-  },
-  {
-    id: '6',
-    senderName: 'Ali Khan',
-    timestamp: '2:11pm',
-    message: 'how are you',
-  },
-  {
-    id: '7',
-    senderName: 'Ali Khan',
-    timestamp: '3:11pm',
-    message: 'how are you',
-  },
-  {
-    id: '8',
-    senderName: 'Ali Khan',
-    timestamp: '3:21pm',
-    message: 'how are you',
-  },
-  {
-    id: '9',
-    senderName: 'Ali Khan',
-    timestamp: '3:22pm',
-    message: 'how are you',
-  },
-];
-
-export default function MessagesScreen() {
-  const [messages, setMessages] = useState(sampleMessages);
+export default function MessagesScreen({ communityId }: { communityId: string }) {
+  // Messages mapped by communityId
+  const [messagesByCommunity, setMessagesByCommunity] = useState<Record<string, Message[]>>({});
   const { onScroll } = useScrollHandler();
 
+  // Get messages for the current communityId
+  const messages = messagesByCommunity[communityId] || [];
+
+  useEffect(() => {
+    // Subscribe to incoming messages for this community
+    subscribeToMessages(communityId, (msg) => {
+      setMessagesByCommunity((prev) => {
+        const existing = prev[communityId] || [];
+        return {
+          ...prev,
+          [communityId]: [...existing, msg],
+        };
+      });
+    });
+
+    // Cleanup on unmount
+    return () => {
+      unsubscribeFromMessages(communityId);
+    };
+  }, [communityId]);
+
   const handleSendMessage = (newMessage: string) => {
-    const newMessageItem = {
-      id: Date.now().toString(),
+    const message: Message = {
+      communityId,
+      senderId: 'you', // real userId will come from backend JWT
       senderName: 'You',
-      timestamp: new Date().toLocaleTimeString([], { 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      }),
       message: newMessage,
     };
-    setMessages(prev => [...prev, newMessageItem]);
+
+    // Optimistic update in UI
+    setMessagesByCommunity((prev) => {
+      const existing = prev[communityId] || [];
+      return {
+        ...prev,
+        [communityId]: [...existing, message],
+      };
+    });
+
+    // Send through socket
+    sendMessage({
+      communityId,
+      content: newMessage,
+    });
   };
 
   return (
     <ThemedView style={styles.container} backgroundType="background">
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         onScroll={onScroll}
         scrollEventThrottle={16}
       >
-        {/* First set of messages */}
-        {messages.slice(0, 3).map((message) => (
-          <MessageItem
-            key={message.id}
-            senderName={message.senderName}
-            timestamp={message.timestamp}
-            message={message.message}
-          />
-        ))}
-        
         {/* Date separator */}
-        <DateSeparator date="Yesterday" />
-        
-        {/* Second set of messages */}
-        {messages.slice(3).map((message) => (
+        {/* <DateSeparator date="Yesterday" /> */}
+
+        {messages.map((msg, index) => (
           <MessageItem
-            key={message.id}
-            senderName={message.senderName}
-            timestamp={message.timestamp}
-            message={message.message}
+            key={index}
+            senderName={msg.senderName}
+            banner={msg.banner || '#ff0000'}
+            imageUrl={msg.imageUrl}
+            timestamp={msg.timestamp!}
+            message={msg.message}
           />
         ))}
       </ScrollView>
-      
-      {/* Message input at bottom */}
+
       <MessageInput onSendMessage={handleSendMessage} />
     </ThemedView>
   );

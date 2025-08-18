@@ -6,20 +6,22 @@ import { MessageAvatar } from './MessageAvatar';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface MessageItemProps {
+  imageUrl?: string;
   senderName: string;
   timestamp: string;
+  banner: string;
   message: string;
   avatarSize?: number;
 }
 
 export function MessageItem({ 
+  imageUrl,
   senderName, 
-  timestamp, 
+  timestamp,
+  banner,
   message, 
   avatarSize = 45 
 }: MessageItemProps) {
-
-  const bannerColor = useThemeColor({}, 'bannerRed') + '50';
 
 
   const styles = StyleSheet.create({
@@ -37,7 +39,7 @@ export function MessageItem({
       height: 70,
       borderRadius: 30,
       padding: 2,
-      backgroundColor: bannerColor,
+      backgroundColor: banner + '50',
     },
     contentContainer: {
       flex: 1,
@@ -46,7 +48,7 @@ export function MessageItem({
     headerRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 20,
+      gap: 10,
     },
   }); 
 
@@ -67,7 +69,7 @@ export function MessageItem({
             colorType="textSecondary"
             variant="caption"
           >
-            {timestamp}
+            🞄   {timestamp}
           </ThemedText>
         </View>
         <ThemedText 
