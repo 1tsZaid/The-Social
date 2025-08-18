@@ -1,37 +1,38 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { UserAvatar } from './UserAvatar';
+import { Avatar } from './Avatar';
 
-interface User {
+interface Data {
   id: string;
   imageUrl?: string;
-  isActive?: boolean;
+  isActive: boolean;
 }
 
-interface UserAvatarsRowProps {
-  users: User[];
+interface AvatarsRowProps {
+  data: Data[];
   avatarSize?: number;
   maxVisible?: number;
-  onAvatarPress?: (userId: string) => void;
+  onAvatarPress: (communityId: string) => void;
 }
 
-export function UserAvatarsRow({ 
-  users, 
+export function AvatarsRow({ 
+  data, 
   avatarSize = 40, 
   maxVisible = 7,
   onAvatarPress 
-}: UserAvatarsRowProps) {
-  const visibleUsers = users.slice(0, maxVisible);
+}: AvatarsRowProps) {
+  const visibleUsers = data.slice(0, maxVisible);
 
   return (
     <View style={styles.container}>
       {visibleUsers.map((user, index) => (
         <View key={user.id} style={[styles.avatarContainer, { marginLeft: index > 0 ? 8 : 0 }]}>
-          <UserAvatar
+          <Avatar
             size={avatarSize}
+            id={user.id}
             imageUrl={user.imageUrl}
             isActive={user.isActive}
-            onPress={onAvatarPress ? () => onAvatarPress(user.id) : undefined}
+            onPress={onAvatarPress}
           />
         </View>
       ))}

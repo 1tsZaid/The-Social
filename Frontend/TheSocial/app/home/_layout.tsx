@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DrawerContent } from '@/components/DrawerContent';
 import { HomeHeaderDemo } from '@/components/HomeHeaderDemo';
+import { CommunitiesProvider } from '@/components/CommunitiesContext';
 import { ScrollProvider, useScroll } from '@/components/ScrollContext';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -52,7 +53,9 @@ function HomeDrawerContent() {
 export default function HomeLayout() {
   return (
     <ScrollProvider>
-      <HomeDrawerContent />
+      <CommunitiesProvider>
+        <HomeDrawerContent />
+      </CommunitiesProvider>
     </ScrollProvider>
   );
 }

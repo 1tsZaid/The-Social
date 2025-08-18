@@ -1,32 +1,39 @@
 import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { ThemedView } from '@/components/ThemedView';
+import { useCommunities } from '@/components/CommunitiesContext';
 import { HamburgerIcon } from '@/components/ui/HamburgerIcon';
-import { UserAvatarsRow } from '@/components/ui/UserAvatarsRow';
-
-// Sample user data for demonstration
-const sampleUsers = [
-  { id: '1', imageUrl: undefined, isActive: true },
-  { id: '2', imageUrl: undefined, isActive: false },
-  { id: '3', imageUrl: undefined, isActive: false },
-  { id: '4', imageUrl: undefined, isActive: false },
-  { id: '5', imageUrl: undefined, isActive: false },
-  { id: '6', imageUrl: undefined, isActive: false },
-  { id: '7', imageUrl: undefined, isActive: false },
-];
+import { AvatarsRow } from '@/components/ui/AvatarsRow';
 
 export function HomeHeaderDemo() {
   const navigation = useNavigation() as any;
+  const { communities, selectedCommunityId, setSelectedCommunity, loading } = useCommunities();
 
   const handleMenuPress = () => {
     navigation.openDrawer();
   };
 
-  const handleAvatarPress = (userId: string) => {
-    Alert.alert('Avatar', `User ${userId} avatar pressed`);
+  const handleAvatarPress = (communityId: string) => {
+    // Set the selected community when avatar is pressed
+    setSelectedCommunity(communityId);
+    Alert.alert('Community', `Switched to community ${communityId}`);
   };
+
+  // Get the selected community
+  const selectedCommunity = (c: string): boolean => c === selectedCommunityId ? true : false;
+
+  const createDataForCommunity = () => {
+    const data = communities.map((community) => ({
+      id: community.communityId,
+      imageUrl: community.communityImageUrl || undefined,
+      isActive: selectedCommunity(community.communityId),
+    }));
+    return data;
+  };
+
+  const communityAvatars = createDataForCommunity();
 
   return (
     <ThemedView style={styles.container} backgroundType="background">
@@ -40,12 +47,18 @@ export function HomeHeaderDemo() {
           
           {/* User avatars row */}
           <View style={styles.avatarsContainer}>
-            <UserAvatarsRow
-              users={sampleUsers}
-              avatarSize={40}
-              maxVisible={7}
-              onAvatarPress={handleAvatarPress}
-            />
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="small" color="#666" />
+              </View>
+            ) : (
+              <AvatarsRow
+                data={communityAvatars}
+                avatarSize={40}
+                maxVisible={7}
+                onAvatarPress={handleAvatarPress}
+              />
+            )}
           </View>
         </View>
       </ThemedView>
@@ -75,5 +88,10 @@ const styles = StyleSheet.create({
   avatarsContainer: {
     flex: 1,
     justifyContent: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }); 
