@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 
 import { ThemedView } from './ThemedView';
@@ -7,59 +7,18 @@ import { ThemedText } from './ThemedText';
 import { DrawerActionButton } from './DrawerActionButton';
 import { CommunityItem } from './CommunityItem';
 import { useModal } from '@/components/ModalContext';
-
-interface Community {
-  id: string;
-  name: string;
-  location: string;
-  onlineCount: number;
-  memberCount: number;
-  icon: string;
-  iconColor: string;
-}
-
-const mockCommunities: Community[] = [
-  {
-    id: '1',
-    name: 'Tech Innovato...',
-    location: 'San Francisco, CA',
-    onlineCount: 100,
-    memberCount: 567,
-    icon: 'construct',
-    iconColor: 'communityTeal',
-  },
-  {
-    id: '2',
-    name: 'Gamers United',
-    location: 'Austin, TX',
-    onlineCount: 9,
-    memberCount: 100,
-    icon: 'game-controller',
-    iconColor: 'communityBlue',
-  },
-  {
-    id: '3',
-    name: 'Local Foodies',
-    location: 'New York, NY',
-    onlineCount: 5,
-    memberCount: 7,
-    icon: 'restaurant',
-    iconColor: 'communityBeige',
-  },
-  {
-    id: '4',
-    name: 'Bookworm Cor...',
-    location: 'Chicago, IL',
-    onlineCount: 9,
-    memberCount: 18,
-    icon: 'book',
-    iconColor: 'communityGray',
-  },
-];
+import { useCommunities } from '@/components/CommunitiesContext';
 
 export function DrawerContent() {
   const { openModal } = useModal();
-  const [selectedCommunityId, setSelectedCommunityId] = useState('1');
+  const { 
+    communities, 
+    loading, 
+    error, 
+    selectedCommunityId, 
+    setSelectedCommunity, 
+    refreshCommunities 
+  } = useCommunities();
 
   const handleCreateCommunity = () => {
     openModal('createCommunity');
@@ -70,8 +29,13 @@ export function DrawerContent() {
   };
 
   const handleCommunityPress = (communityId: string) => {
-    setSelectedCommunityId(communityId);
-    // Here you would typically navigate to the community or update the current context
+    setSelectedCommunity(communityId);
+    // Optional: Close drawer after selection
+    // navigation.closeDrawer();
+  };
+
+  const handleRefresh = () => {
+    refreshCommunities();
   };
 
   return (
@@ -89,6 +53,11 @@ export function DrawerContent() {
             title="Discover a New Community"
             onPress={handleDiscoverCommunity}
           />
+          <DrawerActionButton
+            icon="refresh"
+            title="Refresh Communities"
+            onPress={handleRefresh}
+          />
         </ThemedView>
 
         {/* Communities Section */}
@@ -102,19 +71,40 @@ export function DrawerContent() {
           </ThemedText>
 
           <ThemedView style={styles.communitiesList}>
-            {mockCommunities.map((community) => (
-              <CommunityItem
-                key={community.id}
-                name={community.name}
-                location={community.location}
-                onlineCount={community.onlineCount}
-                memberCount={community.memberCount}
-                icon={community.icon as any}
-                iconColor={community.iconColor}
-                isSelected={selectedCommunityId === community.id}
-                onPress={() => handleCommunityPress(community.id)}
-              />
-            ))}
+            {loading ? (
+              <ThemedView style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#666" />
+                <ThemedText style={styles.loadingText}>Loading communities...</ThemedText>
+              </ThemedView>
+            ) : error ? (
+              <ThemedView style={styles.errorContainer}>
+                <ThemedText style={styles.errorText} colorType="textSecondary">
+                  {error}
+                </ThemedText>
+                <DrawerActionButton
+                  icon="refresh"
+                  title="Try Again"
+                  onPress={handleRefresh}
+                />
+              </ThemedView>
+            ) : communities.length === 0 ? (
+              <ThemedView style={styles.emptyContainer}>
+                <ThemedText style={styles.emptyText} colorType="textSecondary">
+                  No communities found. Create or discover one!
+                </ThemedText>
+              </ThemedView>
+            ) : (
+              communities.map((community) => (
+                <CommunityItem
+                  name={community.name}
+                  imageUri={community.communityImageUrl}
+                  location={community.location.name}
+                  memberCount={community.members}
+                  isSelected={selectedCommunityId === community.communityId}
+                  onPress={() => handleCommunityPress(community.communityId)}
+                />
+              ))
+            )}
           </ThemedView>
         </ThemedView>
       </ScrollView>
@@ -143,4 +133,35 @@ const styles = StyleSheet.create({
   communitiesList: {
     paddingBottom: 16,
   },
-}); 
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 32,
+  },
+  loadingText: {
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 28,
+    paddingVertical: 32,
+  },
+  errorText: {
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 28,
+    paddingVertical: 32,
+  },
+  emptyText: {
+    textAlign: 'center',
+  },
+});

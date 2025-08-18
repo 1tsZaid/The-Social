@@ -1,41 +1,32 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, ViewStyle, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, ViewStyle, View, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { ThemedText } from './ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Colors } from '@/constants/Colors';
 
 interface CommunityItemProps {
   name: string;
+  imageUri?: string;
   location: string;
-  onlineCount: number;
   memberCount: number;
-  icon: keyof typeof Ionicons.glyphMap;
-  iconColor: string | keyof typeof Colors.light;
-  isSelected?: boolean;
+  isSelected: boolean;
   onPress: () => void;
   style?: ViewStyle;
 }
 
 export function CommunityItem({
   name,
+  imageUri,
   location,
-  onlineCount,
   memberCount,
-  icon,
-  iconColor,
   isSelected = false,
   onPress,
   style,
 }: CommunityItemProps) {
   const surfaceColor = useThemeColor({}, 'surface');
   const backgroundColor = useThemeColor({}, 'background');
-  
-  // Handle icon color - can be a theme color name or direct hex value
-  const resolvedIconColor = typeof iconColor === 'string' && iconColor in Colors.light 
-    ? useThemeColor({}, iconColor as keyof typeof Colors.light)
-    : iconColor;
+  const iconBackgroundColor = useThemeColor({}, 'background');
 
   return (
     <TouchableOpacity
@@ -50,13 +41,23 @@ export function CommunityItem({
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <View
-        style={[
-          styles.iconContainer,
-          { backgroundColor: resolvedIconColor },
-        ]}
-      >
-        <Ionicons name={icon} size={20} color="white" />
+      <View style={styles.imageContainer}>
+        {imageUri ? (
+          <Image
+            source={{ uri: imageUri }}
+            style={styles.communityImage}
+            resizeMode="cover"
+          />
+        ) : (
+          <View
+            style={[
+              styles.placeholderContainer,
+              { backgroundColor: iconBackgroundColor },
+            ]}
+          >
+            <Ionicons name="people" size={20} color="white" />
+          </View>
+        )}
       </View>
       
       <View style={styles.content}>
@@ -64,6 +65,7 @@ export function CommunityItem({
           style={styles.name}
           variant="body"
           colorType="textPrimary"
+          numberOfLines={1}
         >
           {name}
         </ThemedText>
@@ -72,6 +74,7 @@ export function CommunityItem({
           style={styles.location}
           variant="caption"
           colorType="textSecondary"
+          numberOfLines={1}
         >
           {location}
         </ThemedText>
@@ -82,7 +85,7 @@ export function CommunityItem({
             variant="caption"
             colorType="textSecondary"
           >
-            {onlineCount} online • {memberCount} members
+            {memberCount} members
           </ThemedText>
         </View>
       </View>
@@ -100,13 +103,22 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     minHeight: 60,
   },
-  iconContainer: {
+  imageContainer: {
     width: 40,
     height: 40,
     borderRadius: 8,
+    marginRight: 12,
+    overflow: 'hidden',
+  },
+  communityImage: {
+    width: '100%',
+    height: '100%',
+  },
+  placeholderContainer: {
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
   },
   content: {
     flex: 1,
@@ -129,4 +141,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
     marginRight: 4,
   },
-}); 
+});
