@@ -82,13 +82,13 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 Health check: http://localhost:${PORT}/health`);
   console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
   console.log(`👤 Profile API: http://localhost:${PORT}/api/profile`);
   console.log(`👤 Community API: http://localhost:${PORT}/api/communities`);
-  console.log(`💬 Chat Socket: ws://localhost:${PORT}/api/chat`);
+  console.log(`💬 Chat Socket: ws://localhost:${PORT}/chat`);
 });
 
 export default app;

@@ -1,74 +1,48 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { ThemedView } from './ThemedView';
+import { Ionicons } from '@expo/vector-icons';
+import { useThemeColor } from '@/hooks/useThemeColor';
+
+import { API_CONFIG } from '@/constants/Api'
 
 interface MessageAvatarProps {
+  imageUrl?: string;
   size?: number;
 }
 
-export function MessageAvatar({ size = 36 }: MessageAvatarProps) {
+export function MessageAvatar({ imageUrl, size = 36 }: MessageAvatarProps) {
+  const iconColor = useThemeColor({}, 'textPrimary');
+  const surfaceColor = useThemeColor({}, 'surface');
+
+  const styles = StyleSheet.create({
+    container: {
+      position: 'relative',
+    },
+    profileImagePlaceholder: {
+      width: size,
+      height: size,
+      borderRadius: 45,
+      backgroundColor: surfaceColor,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  }); 
   return (
     <View style={[styles.container, { width: size, height: size }]}>
-      <View 
-        style={[styles.background, { width: size, height: size }]}
-      />
-      <View style={[styles.placeholder, { width: size, height: size }]}>
-        {/* Placeholder shapes - triangle, square, gear */}
-        <View style={styles.shapesContainer}>
-          <View style={styles.triangle} />
-          <View style={styles.square} />
-          <View style={styles.gear} />
+      {imageUrl ? (
+        // TODO: Add Image component when imageUrl is provided
+        <View style={styles.profileImagePlaceholder}>
+          <Image source={{ uri: API_CONFIG.STATIC_BASE_URL + imageUrl }} style={{ 
+            width: size, 
+            height: size, 
+            borderRadius: 45 }}/>
         </View>
-      </View>
+      ) : (
+        <View style={styles.profileImagePlaceholder}>
+          <Ionicons name="person" size={20} color={iconColor} />
+        </View>
+      )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
-  background: {
-    position: 'absolute',
-    borderRadius: 100,
-    opacity: 0.3,
-    backgroundColor: 'rgba(33, 150, 243, 0.3)',
-  },
-  placeholder: {
-    position: 'absolute',
-    borderRadius: 100,
-    backgroundColor: '#ECE6F0',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  shapesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 2,
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 3,
-    borderRightWidth: 3,
-    borderBottomWidth: 6,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: '#5F6368',
-  },
-  square: {
-    width: 4,
-    height: 4,
-    backgroundColor: '#5F6368',
-    borderRadius: 1,
-  },
-  gear: {
-    width: 6,
-    height: 6,
-    backgroundColor: '#5F6368',
-    borderRadius: 3,
-  },
-}); 

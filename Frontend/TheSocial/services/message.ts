@@ -11,9 +11,13 @@ interface Message {
   createdAt?: string; // year, month, day, time: using isoString format
 }
 
-interface SendMessagePayload extends Omit<Message, 'id'> {}
+export interface SendMessagePayload extends Omit<Message, 'id'> {}
 
-interface RecieveMessagePayload extends Message {}
+export interface RecieveMessagePayload extends Message {
+  username: string;
+  userImage?: string;
+  banner: string;
+}
 
 // interface GetMessagesParams {
 //   communityId: string;
@@ -102,9 +106,9 @@ export const sendMessage = async (payload: SendMessagePayload) => {
 
 export const subscribeToMessages = async (
   communityId: string,
-  callback: (message: Message) => void
+  callback: (message: RecieveMessagePayload) => void
 ) => {
-  await checkTokens;
+  await checkTokens();
   const tokens = await getTokens();
 
   // connect to /chat namespace with token
@@ -112,9 +116,10 @@ export const subscribeToMessages = async (
     namespace: '/chat',
     authToken: tokens.accessToken,
   });
-
+  
   // join community room
   socket.emit('join_community', communityId, '/chat');
+  console.log(`📥 User ${tokens.accessToken} joined community ${communityId}`);
 
   // listen for messages
   socket.on('message_received', callback, '/chat');

@@ -1,11 +1,14 @@
 import { Server } from 'socket.io';
 import { authenticateSocket, AuthenticatedSocket } from '../middleware/socketAuth';
+import { profileService } from '../services/profileService'
 
 interface Message {
   communityId: string;
   content: string;
   createdAt: string;
-  userId?: string; // Will be added from JWT
+  username: string;
+  userImage?: string;
+  banner: string;
 }
 
 export const setupChatSocket = (io: Server) => {
@@ -50,24 +53,30 @@ export const setupChatSocket = (io: Server) => {
     });
 
     // Handle new message
-    socket.on('new_message', (messageData: Message) => {
+    socket.on('new_message', async (messageData: Message) => {
       try {
         if (!messageData.communityId || !messageData.content) {
           socket.emit('error', { message: 'Invalid message data' });
           return;
         }
 
+        //get profile by userId
+        const {username, banner, profileImageUrl} = await profileService.getProfileByUserId(socket.user!.userId);
+
         // Attach sender info
         const message: Message = {
           ...messageData,
-          userId: socket.user!.userId,
-          createdAt: messageData.createdAt || new Date().toISOString(),
+          username: username,
+          userImage: profileImageUrl,
+          banner: banner,
+          createdAt: messageData.createdAt || new Date().toISOString(), // year, month, day and time.
         };
 
         // Broadcast to that community room only
         chatNamespace.to(message.communityId).emit('message_received', message);
 
-        console.log(`💬 Message in ${message.communityId} by ${socket.user!.userId}`);
+        console.log(`💬 Message in community ${message.communityId} by ${socket.user!.userId}: ${message}`);
+        console.log(message);
       } catch (error) {
         console.error('❌ Error handling new message:', error);
         socket.emit('error', { message: 'Failed to send message' });

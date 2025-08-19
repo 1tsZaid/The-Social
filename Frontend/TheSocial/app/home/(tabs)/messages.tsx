@@ -1,70 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { MessageItem } from '@/components/MessageItem';
 import { MessageInput } from '@/components/MessageInput';
 import { useScrollHandler } from '@/hooks/useScrollHandler';
 import { DateSeparator } from '@/components/DateSeparator';
+import { useCommunities } from '@/components/CommunitiesContext';
 
-import { subscribeToMessages, unsubscribeFromMessages, sendMessage } from '@/services/message';
+import { subscribeToMessages, unsubscribeFromMessages, sendMessage, RecieveMessagePayload, SendMessagePayload } from '@/services/message';
 
-interface Message {
-  id?: string;
-  communityId: string;
-  senderId: string;
-  senderName: string;
-  banner?: string;
-  imageUrl?: string;
-  timestamp?: string;
-  message: string;
-}
 
 export default function MessagesScreen({ communityId }: { communityId: string }) {
   // Messages mapped by communityId
-  const [messagesByCommunity, setMessagesByCommunity] = useState<Record<string, Message[]>>({});
+  const [messagesByCommunity, setMessagesByCommunity] = useState<Record<string, RecieveMessagePayload[]>>({});
+  const { selectedCommunityId, communities } = useCommunities();
   const { onScroll } = useScrollHandler();
-
+  
   // Get messages for the current communityId
-  const messages = messagesByCommunity[communityId] || [];
+  const community = selectedCommunityId 
+    ? communities.find(c => c.communityId === selectedCommunityId) 
+    : null;
+  const messages = selectedCommunityId ? (messagesByCommunity[selectedCommunityId] || []) : [];
 
   useEffect(() => {
+    if (!selectedCommunityId) return;
+
     // Subscribe to incoming messages for this community
-    subscribeToMessages(communityId, (msg) => {
+    subscribeToMessages(selectedCommunityId, (msg) => {
+      console.log('Received message:', msg);
+
       setMessagesByCommunity((prev) => {
-        const existing = prev[communityId] || [];
+        const existing = prev[selectedCommunityId] || [];
         return {
           ...prev,
-          [communityId]: [...existing, msg],
+          [selectedCommunityId]: [...existing, msg],
         };
       });
     });
-
-    // Cleanup on unmount
+    
+    // Cleanup on unmount or community change
     return () => {
-      unsubscribeFromMessages(communityId);
+      unsubscribeFromMessages(selectedCommunityId);
     };
-  }, [communityId]);
+  }, [selectedCommunityId]);
+  
+  if (!selectedCommunityId) {
+    return (
+      <ThemedView style={styles.container} backgroundType="background">
+        <ThemedText style={{ padding: 20 }}>Please select a community to view messages.</ThemedText>
+      </ThemedView>
+    );
+  }
 
   const handleSendMessage = (newMessage: string) => {
-    const message: Message = {
-      communityId,
-      senderId: 'you', // real userId will come from backend JWT
-      senderName: 'You',
-      message: newMessage,
-    };
+    if (!selectedCommunityId) return;
 
-    // Optimistic update in UI
-    setMessagesByCommunity((prev) => {
-      const existing = prev[communityId] || [];
-      return {
-        ...prev,
-        [communityId]: [...existing, message],
-      };
-    });
+    console.log('Sending message:', newMessage);
 
-    // Send through socket
     sendMessage({
-      communityId,
+      communityId: selectedCommunityId,
       content: newMessage,
     });
   };
@@ -84,11 +79,11 @@ export default function MessagesScreen({ communityId }: { communityId: string })
         {messages.map((msg, index) => (
           <MessageItem
             key={index}
-            senderName={msg.senderName}
+            senderName={msg.username}
             banner={msg.banner || '#ff0000'}
-            imageUrl={msg.imageUrl}
-            timestamp={msg.timestamp!}
-            message={msg.message}
+            imageUrl={msg.userImage}
+            timestamp={msg.createdAt!}
+            message={msg.content}
           />
         ))}
       </ScrollView>

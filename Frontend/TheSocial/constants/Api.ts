@@ -1,5 +1,6 @@
 export const API_CONFIG = {
   BASE_URL: 'http://localhost:3000/api',
+  SOCKET_BASE_URL: 'http://localhost:3000',
   STATIC_BASE_URL: 'http://localhost:3000/uploads/',
   ENDPOINTS: {
     AUTH: {

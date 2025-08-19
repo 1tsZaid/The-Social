@@ -16,13 +16,12 @@ class SocketService {
    */
   connect({ namespace = this.DEFAULT_NAMESPACE, authToken, query }: SocketOptions) {
     if (!this.sockets.has(namespace)) {
-      const socketUrl = `${API_CONFIG.BASE_URL}${namespace}`;
+      const socketUrl = `${API_CONFIG.SOCKET_BASE_URL}${namespace}`;
 
       const socket = io(socketUrl, {
         transports: ["websocket"],
         autoConnect: true,
         auth: authToken ? { token: authToken } : undefined,
-        query,
       });
 
       socket.on("connect", () => {

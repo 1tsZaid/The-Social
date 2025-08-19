@@ -23,6 +23,10 @@ export function MessageItem({
   avatarSize = 45 
 }: MessageItemProps) {
 
+  // Split into date and time parts
+  const [date, timeWithMs] = timestamp.split("T");
+  // Remove milliseconds and timezone (everything after '.')
+  const time = timeWithMs.split(".")[0];
 
   const styles = StyleSheet.create({
     container: {
@@ -48,14 +52,14 @@ export function MessageItem({
     headerRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 10,
+      gap: 8,
     },
   }); 
 
   return (
     <ThemedView style={styles.container} backgroundType="background">
       <View style={styles.avatarContainer}>
-        <MessageAvatar size={avatarSize} />
+        <MessageAvatar imageUrl={imageUrl} size={avatarSize} />
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.headerRow}>
@@ -69,7 +73,7 @@ export function MessageItem({
             colorType="textSecondary"
             variant="caption"
           >
-            🞄   {timestamp}
+            🞄  {time}  🞄  {date}
           </ThemedText>
         </View>
         <ThemedText 
