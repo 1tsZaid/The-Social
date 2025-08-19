@@ -117,9 +117,22 @@ export const subscribeToMessages = async (
     authToken: tokens.accessToken,
   });
   
-  // join community room
-  socket.emit('join_community', communityId, '/chat');
-  console.log(`📥 User ${tokens.accessToken} joined community ${communityId}`);
+  if (!socket.isConnected('/chat')) {
+    // wait for connect event, then join community
+    socket.on(
+      'connect',
+      () => {
+        console.log(`✅ Connected, now joining community ${communityId}`);
+        socket.emit('join_community', communityId, '/chat');
+        console.log(`📥 User ${tokens.accessToken} joined community ${communityId}`);
+      },
+      '/chat'
+    );
+  } else {
+    // already connected, just join directly
+    socket.emit('join_community', communityId, '/chat');
+    console.log(`📥 User ${tokens.accessToken} joined community ${communityId}`);
+  }
 
   // listen for messages
   socket.on('message_received', callback, '/chat');
