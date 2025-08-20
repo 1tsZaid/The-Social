@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location'; // ✅ new import
 
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -20,8 +21,8 @@ interface CommunityFormData {
   name: string;
   description: string;
   locationName: string;
-  longitude: string;
-  latitude: string;
+  // longitude: string;
+  // latitude: string;
 }
 
 export default function CreateCommunityScreen() {
@@ -30,24 +31,21 @@ export default function CreateCommunityScreen() {
     name: '',
     description: '',
     locationName: '',
-    longitude: '',
-    latitude: '',
+    // longitude: '', 
+    // latitude: '',  
   });
 
   const handleIconUpload = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
     if (!permissionResult.granted) {
       Alert.alert('Permission Required', 'You need to allow access to photos.');
       return;
     }
-    
-    // Open picker
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
-
 
     if (!result.canceled) {
       setCommunityImageUrl(result.assets[0].uri);
@@ -55,7 +53,6 @@ export default function CreateCommunityScreen() {
   };
 
   const handleGuidelinesPress = () => {
-    // TODO: Navigate to community guidelines
     Alert.alert('Community Guidelines', 'Navigate to guidelines page');
   };
 
@@ -75,20 +72,17 @@ export default function CreateCommunityScreen() {
       return;
     }
 
-    if (!formData.longitude.trim() || !formData.latitude.trim()) {
-      Alert.alert('Error', 'Please enter valid longitude and latitude');
-      return;
-    }
-
-    const lng = parseFloat(formData.longitude);
-    const lat = parseFloat(formData.latitude);
-
-    if (isNaN(lng) || isNaN(lat)) {
-      Alert.alert('Error', 'Longitude and Latitude must be valid numbers');
-      return;
-    }
-
     try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Denied', 'Location permission is required to create a community.');
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      const lng = location.coords.longitude;
+      const lat = location.coords.latitude;
+
       const profileBannerColors = Object.values(Colors.community);
       const randomIndex = Math.floor(Math.random() * profileBannerColors.length);
       const banner = profileBannerColors[randomIndex];
@@ -104,7 +98,7 @@ export default function CreateCommunityScreen() {
       };
 
       if (communityImageUrl) {
-        payload.communityImageInBase64 = await imageUriToBase64(communityImageUrl); // handle base64 conversion in the upload function
+        payload.communityImageInBase64 = await imageUriToBase64(communityImageUrl);
       }
 
       setCommunityImageUrl(null);
@@ -128,9 +122,7 @@ export default function CreateCommunityScreen() {
   const isFormValid =
     !!formData.name.trim() &&
     !!formData.description.trim() &&
-    !!formData.locationName.trim() &&
-    formData.longitude !== null &&
-    formData.latitude !== null;
+    !!formData.locationName.trim();
 
   return (
     <ThemedView style={styles.container}>
@@ -177,21 +169,6 @@ export default function CreateCommunityScreen() {
             onChangeText={(text) => setFormData((prev) => ({ ...prev, locationName: text }))}
           />
 
-          {/* Separate Longitude and Latitude */}
-          <CommunityFormField
-            label="Longitude"
-            placeholder="Enter longitude (e.g. 12.34)"
-            value={formData.longitude}
-            onChangeText={(text) => setFormData((prev) => ({ ...prev, longitude: text }))}
-          />
-
-          <CommunityFormField
-            label="Latitude"
-            placeholder="Enter latitude (e.g. 56.78)"
-            value={formData.latitude}
-            onChangeText={(text) => setFormData((prev) => ({ ...prev, latitude: text }))}
-          />
-
           {/* Guidelines Link */}
           <CommunityGuidelinesLink onPress={handleGuidelinesPress} />
 
@@ -204,29 +181,11 @@ export default function CreateCommunityScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingTop: 32,
-    paddingBottom: 40,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  subtitle: {
-    textAlign: 'center',
-  },
-  mainContent: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  scrollView: { flex: 1 },
+  scrollContent: { paddingHorizontal: 16, paddingTop: 32, paddingBottom: 40 },
+  header: { alignItems: 'center', marginBottom: 12 },
+  title: { textAlign: 'center', marginBottom: 8 },
+  subtitle: { textAlign: 'center' },
+  mainContent: { flex: 1 },
 });
