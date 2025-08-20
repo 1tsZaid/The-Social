@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 
 import { ThemedView } from '@/components/ThemedView';
 import { Typography } from '@/constants/Typography';
 import { useThemeColor } from '../hooks/useThemeColor';
+import { createPost } from '@/services/post';
+import { useCommunities } from '@/components/CommunitiesContext';
+import { imageUriToBase64 } from '@/utils/imageUriToBase64';
+
 
 const PostScreen = () => {
   const router = useRouter();
   const [text, setText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [imageUri, setImageUri] = useState<string | undefined>(undefined);
+
   const color = useThemeColor({}, 'textPrimary');
   const placeholderTextColor = useThemeColor({}, 'borderDivider');
+
+  const { selectedCommunityId } = useCommunities();
 
   const styles = StyleSheet.create({
     container: {
@@ -33,23 +43,84 @@ const PostScreen = () => {
       color,
       borderWidth: 0,
     },
+    previewImage: {
+      width: 100,
+      height: 100,
+      borderRadius: 8,
+      marginLeft: 16,
+      marginBottom: 10,
+    },
   });
+
+  // Handle post creation
+  const handleSend = async () => {
+    if (!text.trim()) {
+      Alert.alert('Empty Post', 'Please type something before sending.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // Example: you’ll need to pass the current communityId from props/context
+      const payload = {
+        communityId: selectedCommunityId!,
+        content: text,
+        attachImage: await imageUriToBase64(imageUri), // <-- send image URI (or base64 if backend requires)
+      };
+
+      await createPost(payload);
+
+      Alert.alert('Success', 'Your post has been created!');
+      setText('');
+      setImageUri(undefined);
+      router.back();
+    } catch (error) {
+      Alert.alert('Error', 'Failed to create post.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle image picking
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Required', 'We need access to your gallery to attach images.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
 
   return (
     <ThemedView style={styles.container} backgroundType="background">
       <ThemedView style={styles.header} backgroundType="background">
-        <TouchableOpacity>
-          <Ionicons name="close" size={24} color={color} onPress={() => router.back()} />
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="close" size={24} color={color} />
         </TouchableOpacity>
         <View style={styles.headerIcons}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={pickImage}>
             <Ionicons name="attach" size={24} color={color} />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="send" size={24} color={color} />
+          <TouchableOpacity disabled={loading} onPress={handleSend}>
+            {loading ? (
+              <ActivityIndicator size="small" color={color} />
+            ) : (
+              <Ionicons name="send" size={24} color={color} />
+            )}
           </TouchableOpacity>
         </View>
       </ThemedView>
+
       <TextInput
         style={[styles.textInput, Typography.body]}
         multiline
@@ -58,9 +129,17 @@ const PostScreen = () => {
         placeholder="Type a message..."
         placeholderTextColor={placeholderTextColor}
       />
+
+      {imageUri && (
+        <View>
+          <Image source={{ uri: imageUri }} style={styles.previewImage} />
+          <TouchableOpacity onPress={() => setImageUri(undefined)} style={{ marginLeft: 16 }}>
+            <Ionicons name="close-circle" size={20} color="red" />
+          </TouchableOpacity>
+        </View>
+      )}
     </ThemedView>
   );
 };
-
 
 export default PostScreen;
