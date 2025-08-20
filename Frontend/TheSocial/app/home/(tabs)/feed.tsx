@@ -11,6 +11,9 @@ import { useCommunities } from '@/components/CommunitiesContext';
 
 import { getCommunityPosts, likePostHandler } from '@/services/post';
 
+import { checkTokens } from '@/utils/checkTokens';
+import { deleteTokens } from '@/utils/tokenStorage';
+
 // Types
 import { RecieveMessagePayload } from '@/services/post';
 
@@ -53,6 +56,11 @@ export default function FeedScreen() {
   // Like handler
   const handleLike = async (postId: string) => {
     try {
+      const tokenFlag = await checkTokens()
+      if (!tokenFlag) {
+        deleteTokens();
+        router.replace('/login');
+      }
       await likePostHandler(postId);
     } catch (error) {
       console.error('Error liking post:', error);
@@ -62,7 +70,10 @@ export default function FeedScreen() {
 
   const handleAddToPhotoPress = () => {
     if (!selectedCommunityId) return;
-    router.push('/post');
+    router.push({
+      pathname: '/post',
+      params: { selectedCommunityId: selectedCommunityId },
+    });
   };
 
   if (!selectedCommunityId) {

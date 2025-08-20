@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { API_CONFIG } from '@/constants/Api'
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -79,7 +80,7 @@ export function PostHeader({ name, imageUrl, timestamp, onOptions }: PostHeaderP
         {imageUrl ? (
           <View style={styles.profileImagePlaceholder}>
             <Image
-              source={{ uri: imageUrl }} 
+              source={{ uri: API_CONFIG.STATIC_BASE_URL + imageUrl }} 
               style={{ width: 50, height: 50, borderRadius: 45 }} 
             />
           </View>

@@ -32,6 +32,7 @@ export function PostCard({
   onLike,
 }: PostCardProps) {
   const [isLike, setIsLike] = useState(false);
+  console.log('banner: ', banner);
 
   return (
     <ThemedView

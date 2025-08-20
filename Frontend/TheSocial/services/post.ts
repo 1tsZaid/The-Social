@@ -1,5 +1,6 @@
 import api from './api';
 import { API_CONFIG } from '../constants/Api';
+import { getTokens } from '../utils/tokenStorage';
 
 interface PostUser {
   username: string; // unique identifier for the user
@@ -51,7 +52,12 @@ interface PostsResponse {
 // This creates a new post in the community by the current user
 export const createPost = async (payload: CreatePostPayload): Promise<RecieveMessagePayload> => {
   try {
-    const response = await api.post(API_CONFIG.ENDPOINTS.POSTS.CREATE, payload);
+    const tokens = await getTokens();
+    const response = await api.post(API_CONFIG.ENDPOINTS.POSTS.CREATE, payload, {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -61,7 +67,12 @@ export const createPost = async (payload: CreatePostPayload): Promise<RecieveMes
 
 export const likePostHandler = async (postId: string): Promise<void> => {
   try {
-    await api.post(API_CONFIG.ENDPOINTS.POSTS.LIKE(postId));
+    const tokens = await getTokens();
+    await api.post(API_CONFIG.ENDPOINTS.POSTS.LIKE(postId), {}, {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
   } catch (error) {
     console.error(error);
     throw error;

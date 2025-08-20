@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedText } from './ThemedText';
+import { API_CONFIG } from '@/constants/Api'
 
 interface PostContentProps {
   content: string;
@@ -54,7 +55,7 @@ export function PostContent({ content, imageUrl }: PostContentProps) {
       
       {imageUrl && (
         <View style={styles.mediaContainer}>
-          <Image source={{ uri: imageUrl }} style={{ width: '100%', height: '100%' }} />
+          <Image source={{ uri: API_CONFIG.STATIC_BASE_URL + imageUrl }} style={{ width: '100%', height: '100%' }} />
         </View>
       )}
     </View>

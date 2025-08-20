@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 
 import { ThemedView } from '@/components/ThemedView';
@@ -10,9 +10,11 @@ import { useThemeColor } from '../hooks/useThemeColor';
 import { createPost } from '@/services/post';
 import { useCommunities } from '@/components/CommunitiesContext';
 import { imageUriToBase64 } from '@/utils/imageUriToBase64';
-
+import { checkTokens } from '@/utils/checkTokens';
+import { deleteTokens } from '@/utils/tokenStorage';
 
 const PostScreen = () => {
+  const { selectedCommunityId } = useLocalSearchParams<{ selectedCommunityId: string }>();
   const router = useRouter();
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,8 +22,6 @@ const PostScreen = () => {
 
   const color = useThemeColor({}, 'textPrimary');
   const placeholderTextColor = useThemeColor({}, 'borderDivider');
-
-  const { selectedCommunityId } = useCommunities();
 
   const styles = StyleSheet.create({
     container: {
@@ -69,6 +69,11 @@ const PostScreen = () => {
         attachImage: await imageUriToBase64(imageUri), // <-- send image URI (or base64 if backend requires)
       };
 
+      const tokenFlag = await checkTokens()
+      if (!tokenFlag) {
+        deleteTokens();
+        router.replace('/login');
+      }
       await createPost(payload);
 
       Alert.alert('Success', 'Your post has been created!');
