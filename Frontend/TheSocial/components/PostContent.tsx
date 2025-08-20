@@ -55,7 +55,7 @@ export function PostContent({ content, imageUrl }: PostContentProps) {
       
       {imageUrl && (
         <View style={styles.mediaContainer}>
-          <Image source={{ uri: API_CONFIG.STATIC_BASE_URL + imageUrl }} style={{ width: '100%', height: '100%' }} />
+          <Image source={{ uri: API_CONFIG.STATIC_BASE_URL + imageUrl }} style={{ width: '100%', height: 240 }} />
         </View>
       )}
     </View>

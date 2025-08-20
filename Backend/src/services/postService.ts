@@ -75,6 +75,19 @@ export class PostService {
 
     if (!user) throw new Error('user not found');
 
+    let postImageUrl = profileUploadService.getFileWithPng(post.postId) || undefined;
+    if (payload.attachImage) {
+      try {
+        if (postImageUrl) {
+          await profileUploadService.deleteImage(postImageUrl);
+        }
+
+        postImageUrl = await postUploadService.saveBase64Image(post.postId, payload.attachImage);
+      } catch (error) {
+        throw new Error(`Image upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+
     const response: RecieveMessagePayload = {
       id: post.postId,
       communityId: post.communityId,
@@ -142,7 +155,7 @@ export class PostService {
       author: {
         username: post.user.username,
         profileImage: profileUploadService.getFileWithPng(post.user.id) || undefined,
-        bannerImage: post.user.banner ?? '',
+        banner: post.user.banner ?? '',
       },
       stats: {
         likes: post.likes.length,

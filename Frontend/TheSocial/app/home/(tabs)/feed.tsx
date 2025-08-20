@@ -118,6 +118,6 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   constainerNull: {  flex: 1, justifyContent: 'center', alignItems: 'center'},
-  scrollView: { flex: 1, paddingTop: 40 },
+  scrollView: { flex: 1, paddingTop: 25 },
   scrollContent: { paddingVertical: 15 },
 });

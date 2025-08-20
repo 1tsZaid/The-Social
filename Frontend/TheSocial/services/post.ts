@@ -53,6 +53,7 @@ interface PostsResponse {
 export const createPost = async (payload: CreatePostPayload): Promise<RecieveMessagePayload> => {
   try {
     const tokens = await getTokens();
+    console.log("Payload: ", payload);
     const response = await api.post(API_CONFIG.ENDPOINTS.POSTS.CREATE, payload, {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
@@ -78,6 +79,8 @@ export const likePostHandler = async (postId: string): Promise<void> => {
     throw error;
   }
 }
+
+//Todo: add a like check handler
 
 // Get posts in a community
 export const getCommunityPosts = async (

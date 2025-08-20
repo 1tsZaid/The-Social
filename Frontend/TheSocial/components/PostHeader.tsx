@@ -19,6 +19,11 @@ export function PostHeader({ name, imageUrl, timestamp, onOptions }: PostHeaderP
   const dotColor = useThemeColor({}, 'textSecondary');
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
+
+  // Split into date and time parts
+  const [date, timeWithMs] = timestamp.split("T");
+  // Remove milliseconds and timezone (everything after '.')
+  const time = timeWithMs.split(".")[0];
   
   const styles = StyleSheet.create({
     container: {
@@ -86,7 +91,7 @@ export function PostHeader({ name, imageUrl, timestamp, onOptions }: PostHeaderP
           </View>
         ) : (
           <View style={styles.profileImagePlaceholder}>
-            <Ionicons name="person" size={45} color={textSecondaryColor} />
+            <Ionicons name="person" size={30} color={textSecondaryColor} />
           </View>
         )}
         
@@ -104,7 +109,7 @@ export function PostHeader({ name, imageUrl, timestamp, onOptions }: PostHeaderP
               colorType="textSecondary"
               variant="caption"
             >
-              {timestamp}
+              {time}  🞄  {date}
             </ThemedText>
           </View>
         </View>

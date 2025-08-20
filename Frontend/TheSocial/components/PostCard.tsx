@@ -32,14 +32,13 @@ export function PostCard({
   onLike,
 }: PostCardProps) {
   const [isLike, setIsLike] = useState(false);
-  console.log('banner: ', banner);
 
   return (
     <ThemedView
       style={[
         styles.container,
         {
-          borderColor: banner,
+          borderColor: banner + '50',
           borderWidth: 1,
         },
       ]}
