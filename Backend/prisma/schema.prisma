@@ -15,21 +15,55 @@ model User {
   createdAt DateTime @default(now())
   banner    String   @default("#000000")
 
+  // Relations
   communities Community[] @relation("UserCommunities")
+  posts       Post[]      // 1 - m relation (User -> Post)
+  likes       Like[]      // User can like many posts
 }
 
 model Community {
-  communityId     String   @id @default(cuid())
-  name            String   @unique
-  description     String
-  banner          String   @default("#ffffff")
-  locationName    String
-  location        Unsupported("geometry(Point, 4326)")
-  ownerId         String
+  communityId  String   @id @default(cuid())
+  name         String   @unique
+  description  String
+  banner       String   @default("#ffffff")
+  locationName String
+  location     Unsupported("geometry(Point, 4326)")
+  ownerId      String
   
   // Relations
   members User[] @relation("UserCommunities")
-  
+  posts   Post[] // 1 - m relation (Community -> Post)
+
   // Indexes for location-based queries
   @@index([location], type: Gist)
+}
+
+model Post {
+  postId     String   @id @default(cuid())
+  content    String
+  postTime   DateTime @default(now())
+
+  // Foreign keys
+  userId      String
+  communityId String
+
+  // Relations
+  user      User      @relation(fields: [userId], references: [id])
+  community Community @relation(fields: [communityId], references: [communityId])
+  likes     Like[]    // Post can be liked by many users
+}
+
+model Like {
+  id     String   @id @default(cuid())
+
+  // Foreign keys
+  userId String
+  postId String
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [postId])
+
+  // Prevent duplicate likes from the same user on the same post
+  @@unique([userId, postId])
 }

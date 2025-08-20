@@ -32,7 +32,8 @@ export const API_CONFIG = {
     POSTS: {
       BASE: '/posts', // Creates new posts with content and attachments
       BY_COMMUNITY: (communityId: string) => `/posts/community/${communityId}`, // Gets all posts for a specific community with pagination
-      BY_USER: (userId: string) => `/posts/user/${userId}` // Gets all posts by a specific user (currently commented out in implementation)
+      BY_USER: (userId: string) => `/posts/user/${userId}`, // Gets all posts by a specific user (currently commented out in implementation)
+      LIKE: (postId: string) => `/posts/${postId}/like`, 
     },
     PROFILE: {
       BASE: '/profile', // Gets current user's profile information

@@ -9,6 +9,7 @@ import { Server } from 'socket.io';
 import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
 import communityRoutes from './routes/communityRouter';
+import postRoutes from './routes/postRoutes';
 import { setupChatSocket } from './sockets/chatSocket';
 
 // Load environment variables
@@ -62,6 +63,7 @@ app.use('/uploads', (req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/communities', communityRoutes);
+app.use('/api/posts', postRoutes);
 
 // Setup chat socket handlers
 setupChatSocket(io);
@@ -88,6 +90,7 @@ server.listen(PORT, () => {
   console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
   console.log(`👤 Profile API: http://localhost:${PORT}/api/profile`);
   console.log(`👤 Community API: http://localhost:${PORT}/api/communities`);
+  console.log(`📝 Post API: http://localhost:${PORT}/api/posts`);
   console.log(`💬 Chat Socket: ws://localhost:${PORT}/chat`);
 });
 

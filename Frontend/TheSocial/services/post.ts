@@ -4,23 +4,18 @@ import { API_CONFIG } from '../constants/Api';
 interface PostUser {
   username: string; // unique identifier for the user
   profileImage?: string;
-  bannerImage: string;
+  banner: string;
 }
 
 interface PostStats {
   likes: number;
 }
 
-interface PostAttachedImg {
-  id?: string; // unique identifier for the attachment set by the backend
-  image: string; // url or the actual image file
-}
-
 interface Post {
-  id: number; // unique identifier for the post
+  id: string;
   communityId: string; // unique identifier for the community
   content: string;
-  attachments?: PostAttachedImg[];
+  attachImage?: string;
 }
 
 interface CreatePostPayload extends Omit<Post, 'id'>  {
@@ -63,6 +58,15 @@ export const createPost = async (payload: CreatePostPayload): Promise<RecieveMes
     throw error;
   }
 };
+
+export const likePostByUserId = async (postId: string): Promise<void> => {
+  try {
+    await api.post(API_CONFIG.ENDPOINTS.POSTS.LIKE(postId));
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 // Get posts in a community
 export const getCommunityPosts = async (
