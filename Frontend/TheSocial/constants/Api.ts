@@ -30,10 +30,11 @@ export const API_CONFIG = {
       BASE: '/messages' // Gets chat messages for a community with pagination and sends new messages
     },
     POSTS: {
-      BASE: '/posts', // Creates new posts with content and attachments
-      BY_COMMUNITY: (communityId: string) => `/posts/community/${communityId}`, // Gets all posts for a specific community with pagination
-      BY_USER: (userId: string) => `/posts/user/${userId}`, // Gets all posts by a specific user (currently commented out in implementation)
-      LIKE: (postId: string) => `/posts/${postId}/like`, 
+      CREATE: '/posts/create', // Creates new posts with content and attachments
+      BY_COMMUNITY: (communityId: string) => `/posts/${communityId}`, // Gets all posts for a specific community with pagination
+      BY_COMMUNITY_POST_BEFORE: (communityId: string) => `/posts/before/${communityId}`, // Gets posts before a specific post ID
+      // BY_USER: (userId: string) => `/posts/user/${userId}`, // Gets all posts by a specific user (currently commented out in implementation)
+      LIKE: (postId: string) => `/posts/like/${postId}`, 
     },
     PROFILE: {
       BASE: '/profile', // Gets current user's profile information

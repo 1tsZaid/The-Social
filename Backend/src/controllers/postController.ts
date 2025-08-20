@@ -18,6 +18,11 @@ export class PostController {
         const post = await postService.createPost(userId, req.body);
         res.status(201).json(post);
     } catch (err) {
+        if (err instanceof Error) {
+            res.status(404).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
         res.status(500).json({ error: 'Failed to create post' });
     }
     };
@@ -33,6 +38,11 @@ export class PostController {
         await postService.likePostByUserId(postId, userId);
         res.status(200).json({ message: 'Post liked' });
     } catch (err) {
+        if (err instanceof Error) {
+            res.status(404).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
         res.status(500).json({ error: 'Failed to like post' });
     }
     };
@@ -52,6 +62,11 @@ export class PostController {
         const posts = await postService.getCommunityPosts(communityId, params);
         res.status(200).json(posts);
     } catch (err) {
+        if (err instanceof Error) {
+            res.status(404).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
         res.status(500).json({ error: 'Failed to fetch posts' });
     }
     };
@@ -75,6 +90,11 @@ export class PostController {
         res.json(posts);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch posts before ID' });
+        if (err instanceof Error) {
+            res.status(404).json({ error: err.message });
+        } else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
     };
 }

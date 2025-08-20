@@ -29,7 +29,7 @@ export default function FeedScreen() {
     try {
       setLoading(true);
       const data = await getCommunityPosts(selectedCommunityId, { limit: 20, page: 1 });
-      setPosts( (prev) => ({ ...prev, [data.posts[0].communityId]: data.posts }) );
+      setPosts( (prev) => ({ ...prev, [data.posts[0]?.communityId]: data.posts }) );
     } catch (error) {
       console.error('Error fetching posts:', error);
       Alert.alert('Error', 'Failed to load posts.');

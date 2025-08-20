@@ -51,7 +51,7 @@ interface PostsResponse {
 // This creates a new post in the community by the current user
 export const createPost = async (payload: CreatePostPayload): Promise<RecieveMessagePayload> => {
   try {
-    const response = await api.post(API_CONFIG.ENDPOINTS.POSTS.BASE, payload);
+    const response = await api.post(API_CONFIG.ENDPOINTS.POSTS.CREATE, payload);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -94,7 +94,7 @@ export const getCommunityPostsBeforeId = async (
   params: Omit<GetBeforePostsParams, 'communityId'>
 ): Promise<PostsResponse> => {
   try {
-    const response = await api.get(API_CONFIG.ENDPOINTS.POSTS.BY_COMMUNITY(communityId), {
+    const response = await api.get(API_CONFIG.ENDPOINTS.POSTS.BY_COMMUNITY_POST_BEFORE(communityId), {
       params: {
         beforePostId: params.beforePostId,
         limit: params.limit || 20,
