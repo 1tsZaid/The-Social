@@ -3,24 +3,22 @@ import { View, StyleSheet } from 'react-native';
 import { InteractionButton } from './InteractionButton';
 
 interface PostFooterProps {
-  interactions: {
-    likes: number;
-    comments: number;
-    shares: number;
-  };
+  likes: number;
+  isLike?: boolean;
+
   isBookmarked?: boolean;
+
   onLike?: () => void;
-  onComment?: () => void;
-  onShare?: () => void;
+  // onComment?: () => void;
+  // onShare?: () => void;
   onBookmark?: () => void;
 }
 
 export function PostFooter({
-  interactions,
+  likes = 0,
+  isLike = false,
   isBookmarked = false,
   onLike,
-  onComment,
-  onShare,
   onBookmark,
 }: PostFooterProps) {
   return (
@@ -28,7 +26,8 @@ export function PostFooter({
       <View style={styles.interactionsContainer}>
         <InteractionButton
           type="like"
-          count={interactions.likes}
+          count={likes}
+          isActive={isLike}
           onPress={onLike}
         />
         {/* <InteractionButton

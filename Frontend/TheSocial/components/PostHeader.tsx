@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { ThemedText } from './ThemedText';
@@ -7,17 +7,17 @@ import { ThemedView } from './ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface PostHeaderProps {
-  user: {
-    name: string;
-    avatar?: string;
-  };
+  name: string;
+  imageUrl?: string;
   timestamp: string;
   onOptions?: () => void;
 }
 
-export function PostHeader({ user, timestamp, onOptions }: PostHeaderProps) {
+export function PostHeader({ name, imageUrl, timestamp, onOptions }: PostHeaderProps) {
   const iconColor = useThemeColor({}, 'borderDivider');
   const dotColor = useThemeColor({}, 'textSecondary');
+  const surfaceColor = useThemeColor({}, 'surface');
+  const textSecondaryColor = useThemeColor({}, 'textSecondary');
   
   const styles = StyleSheet.create({
     container: {
@@ -34,11 +34,13 @@ export function PostHeader({ user, timestamp, onOptions }: PostHeaderProps) {
       flex: 1,
       gap: 10,
     },
-    avatar: {
+    profileImagePlaceholder: {
       width: 50,
       height: 50,
-      borderRadius: 10,
-      backgroundColor: '#99A2AD',
+      borderRadius: 45,
+      backgroundColor: surfaceColor,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     userDetails: {
       flex: 1,
@@ -72,15 +74,27 @@ export function PostHeader({ user, timestamp, onOptions }: PostHeaderProps) {
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
+
         {/* Avatar placeholder */}
-        <View style={styles.avatar} />
+        {imageUrl ? (
+          <View style={styles.profileImagePlaceholder}>
+            <Image
+              source={{ uri: imageUrl }} 
+              style={{ width: 50, height: 50, borderRadius: 45 }} 
+            />
+          </View>
+        ) : (
+          <View style={styles.profileImagePlaceholder}>
+            <Ionicons name="person" size={45} color={textSecondaryColor} />
+          </View>
+        )}
         
         <View style={styles.userDetails}>
           <ThemedText
             colorType="textPrimary"
             variant="body"
           >
-            {user.name}
+            {name}
           </ThemedText>
           
           <View style={styles.timestampContainer}>

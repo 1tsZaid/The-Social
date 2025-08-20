@@ -61,7 +61,7 @@ export default function MessagesScreen() {
   
   if (!selectedCommunityId) {
     return (
-      <ThemedView style={styles.container} backgroundType="background">
+      <ThemedView style={styles.constainerNull} backgroundType="background">
         <ThemedText style={{ padding: 20 }}>Please select a community to view messages.</ThemedText>
       </ThemedView>
     );
@@ -78,7 +78,7 @@ export default function MessagesScreen() {
         {/* Date separator */}
         {/* <DateSeparator date="Yesterday" /> */}
 
-        {messagesByCommunity[selectedCommunityId] ? messagesByCommunity[selectedCommunityId].map((msg, index) => (
+        {selectedCommunityId && messagesByCommunity[selectedCommunityId] ? messagesByCommunity[selectedCommunityId].map((msg, index) => (
           <MessageItem
             key={index}
             senderName={msg.username}
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  constainerNull: {  flex: 1, justifyContent: 'center', alignItems: 'center'},
   scrollView: {
     flex: 1,
     paddingTop: 60,

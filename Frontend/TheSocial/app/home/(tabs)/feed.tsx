@@ -1,95 +1,77 @@
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, StyleSheet, Alert, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 
-
 import { ThemedView } from '@/components/ThemedView';
-import { PostCard, type PostData } from '@/components/PostCard';
+import { ThemedText } from '@/components/ThemedText';
+import { PostCard } from '@/components/PostCard';
 import AddToPhotoIcon from '@/components/AddToPhotoIcon';
 import { useScrollHandler } from '@/hooks/useScrollHandler';
+import { useCommunities } from '@/components/CommunitiesContext';
 
-// Mock data for demonstration
-const mockPosts: PostData[] = [
-  {
-    id: '1',
-    user: {
-      name: 'Name',
-      avatar: undefined,
-    },
-    timestamp: '8d',
-    content: {
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      media: 'placeholder-image.jpg',
-    },
-    interactions: {
-      likes: 1500,
-      comments: 25,
-      shares: 9,
-    },
-    isBookmarked: false,
-    borderColor: 'blue',
-  },
-  {
-    id: '2',
-    user: {
-      name: 'Name',
-      avatar: undefined,
-    },
-    timestamp: '8d',
-    content: {
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      media: 'placeholder-image.jpg',
-    },
-    interactions: {
-      likes: 1500,
-      comments: 25,
-      shares: 9,
-    },
-    isBookmarked: false,
-    borderColor: 'red',
-  },
-];
+import { getCommunityPosts, likePostHandler } from '@/services/post';
+
+// Types
+import { RecieveMessagePayload } from '@/services/post';
 
 export default function FeedScreen() {
   const router = useRouter();
-  const [posts, setPosts] = useState<PostData[]>(mockPosts);
   const { onScroll } = useScrollHandler();
+  const { selectedCommunityId } = useCommunities();
 
-  const handleLike = (postId: string) => {
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
-        post.id === postId
-          ? { ...post, interactions: { ...post.interactions, likes: post.interactions.likes + 1 } }
-          : post
-      )
-    );
+  const [posts, setPosts] = useState<Record<string, RecieveMessagePayload[]>>({});
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Fetch posts
+  const fetchPosts = async () => {
+    if (!selectedCommunityId) return;
+    try {
+      setLoading(true);
+      const data = await getCommunityPosts(selectedCommunityId, { limit: 20, page: 1 });
+      setPosts( (prev) => ({ ...prev, [data.posts[0].communityId]: data.posts }) );
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      Alert.alert('Error', 'Failed to load posts.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleComment = (postId: string) => {
-    Alert.alert('Comment', `Comment on post ${postId}`);
+  // Refresh
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchPosts();
+    setRefreshing(false);
   };
 
-  const handleShare = (postId: string) => {
-    Alert.alert('Share', `Share post ${postId}`);
-  };
+  useEffect(() => {
+    if (!selectedCommunityId) return;
+    fetchPosts();
+  }, [selectedCommunityId]);
 
-  const handleBookmark = (postId: string) => {
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
-        post.id === postId
-          ? { ...post, isBookmarked: !post.isBookmarked }
-          : post
-      )
-    );
-  };
-
-  const handleOptions = (postId: string) => {
-    Alert.alert('Options', `Options for post ${postId}`);
+  // Like handler
+  const handleLike = async (postId: string) => {
+    try {
+      await likePostHandler(postId);
+    } catch (error) {
+      console.error('Error liking post:', error);
+      Alert.alert('Error', 'Could not like post.');
+    }
   };
 
   const handleAddToPhotoPress = () => {
+    if (!selectedCommunityId) return;
     router.push('/post');
   };
+
+  if (!selectedCommunityId) {
+      return (
+        <ThemedView style={styles.constainerNull} backgroundType="background">
+          <ThemedText style={{ padding: 20 }}>Please select a community to view posts.</ThemedText>
+        </ThemedView>
+      );
+    }
 
   return (
     <ThemedView style={styles.container} backgroundType="background">
@@ -99,16 +81,21 @@ export default function FeedScreen() {
         showsVerticalScrollIndicator={false}
         onScroll={onScroll}
         scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        {posts.map((post) => (
+        {selectedCommunityId && posts[selectedCommunityId]?.map((post) => (
           <PostCard
             key={post.id}
-            post={post}
-            onLike={handleLike}
-            onComment={handleComment}
-            onShare={handleShare}
-            onBookmark={handleBookmark}
-            onOptions={handleOptions}
+            username={post.author.username}
+            imageUrl={post.author.profileImage}
+            timestamp={post.createdAt}
+            banner={post.author.banner}
+            content={post.content}
+            contentImageUrl={post.attachImage}
+            likes={post.stats.likes}
+            onLike={() => handleLike(post.id)}
           />
         ))}
       </ScrollView>
@@ -118,14 +105,8 @@ export default function FeedScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-    paddingTop: 40,
-  },
-  scrollContent: {
-    paddingVertical: 15,
-  },
+  container: { flex: 1 },
+  constainerNull: {  flex: 1, justifyContent: 'center', alignItems: 'center'},
+  scrollView: { flex: 1, paddingTop: 40 },
+  scrollContent: { paddingVertical: 15 },
 });

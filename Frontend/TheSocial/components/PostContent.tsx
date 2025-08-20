@@ -1,19 +1,17 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedText } from './ThemedText';
 
 interface PostContentProps {
-  content: {
-    text: string;
-    media?: string;
-  };
+  content: string;
+  imageUrl?: string;
 }
 
-export function PostContent({ content }: PostContentProps) {
-  const truncatedText = content.text.length > 100 
-  ? `${content.text.substring(0, 100)}...` 
-  : content.text;
+export function PostContent({ content, imageUrl }: PostContentProps) {
+  const truncatedText = content.length > 100 
+  ? `${content.substring(0, 100)}...` 
+  : content;
 
   const moreColor = useThemeColor({}, 'borderDivider');
   
@@ -32,12 +30,6 @@ export function PostContent({ content }: PostContentProps) {
       width: '100%',
       height: 240,
     },
-    mediaPlaceholder: {
-      width: '100%',
-      height: '100%',
-      backgroundColor: '#99A2AD',
-      borderRadius: 10,
-    },
   }); 
 
   return (
@@ -49,7 +41,7 @@ export function PostContent({ content }: PostContentProps) {
         >
           {truncatedText}
         </ThemedText>
-        {content.text.length > 100 && (
+        {content.length > 100 && (
           <ThemedText
             style={styles.seeMore}
             colorType="textSecondary"
@@ -60,9 +52,9 @@ export function PostContent({ content }: PostContentProps) {
         )}
       </View>
       
-      {content.media && (
+      {imageUrl && (
         <View style={styles.mediaContainer}>
-          <View style={styles.mediaPlaceholder} />
+          <Image source={{ uri: imageUrl }} style={{ width: '100%', height: '100%' }} />
         </View>
       )}
     </View>

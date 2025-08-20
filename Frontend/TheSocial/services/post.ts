@@ -21,7 +21,7 @@ interface Post {
 interface CreatePostPayload extends Omit<Post, 'id'>  {
 }
 
-interface RecieveMessagePayload extends Post {
+export interface RecieveMessagePayload extends Post {
   author: PostUser;
   stats: PostStats;
   createdAt: string; // year, month, day, time: using isoString format
@@ -59,7 +59,7 @@ export const createPost = async (payload: CreatePostPayload): Promise<RecieveMes
   }
 };
 
-export const likePostByUserId = async (postId: string): Promise<void> => {
+export const likePostHandler = async (postId: string): Promise<void> => {
   try {
     await api.post(API_CONFIG.ENDPOINTS.POSTS.LIKE(postId));
   } catch (error) {
