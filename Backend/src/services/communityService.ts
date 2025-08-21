@@ -21,6 +21,7 @@ interface Community extends Omit<CreateCommunityPayload, 'communityImageInBase64
   communityImageUrl?: string; // URL to the community image
   members: number;
   nearby: boolean;
+  owner: boolean;
 }
 
 export interface FindCommunitiesParams {
@@ -90,13 +91,72 @@ class CommunityService {
         },
         banner: community.banner,
         members: 1,
-        nearby: false
+        nearby: true,
+        owner: true,
       };
     } catch (error) {
       console.error('Error creating community:', error);
       throw new Error('Failed to create community');
     }
   }
+
+  async deleteCommunity(userId: string, communityId: string): Promise<boolean> {
+    try {
+      // 1. Verify ownership
+      const community = await prisma.community.findUnique({
+        where: { communityId },
+      });
+
+      if (!community) {
+        throw new Error('Community not found');
+      }
+
+      if (community.ownerId !== userId) {
+        throw new Error('You are not authorized to delete this community');
+      }
+
+      // 2. Delete related likes -> posts -> memberships -> community
+      await prisma.$transaction(async (tx) => {
+        // Delete likes for posts in this community
+        await tx.like.deleteMany({
+          where: {
+            post: {
+              communityId,
+            },
+          },
+        });
+
+        // Delete posts in this community
+        await tx.post.deleteMany({
+          where: { communityId },
+        });
+
+        // Disconnect members from this community
+        await tx.community.update({
+          where: { communityId },
+          data: {
+            members: {
+              set: [], // remove all members from relation table
+            },
+          },
+        });
+
+        // Delete the community itself
+        await tx.community.delete({
+          where: { communityId },
+        });
+      });
+
+      // 3. Delete stored image if exists
+      await communityUploadService.deleteImage(communityId);
+
+      return true;
+    } catch (error) {
+      console.error('Error deleting community:', error);
+      throw new Error('Failed to delete community');
+    }
+  }
+
 
   async getCommunitiesNearby(userId: string, params: FindCommunitiesParams): Promise<Community[]> {
     try {
@@ -118,6 +178,7 @@ class CommunityService {
           c."description",
           c."locationName",
           c."banner",
+          c."ownerId",
           ST_X(c."location") as lng,
           ST_Y(c."location") as lat,
           COUNT(m."B") as member_count,
@@ -154,7 +215,8 @@ class CommunityService {
         banner: community.banner,
         communityImageUrl: communityUploadService.getFileWithPng(community.communityId) || undefined,
         members: parseInt(community.member_count) || 0,
-        nearby: true // All results are nearby by definition
+        nearby: true,
+        owner: userId === community.ownerId
       }));
     } catch (error) {
       console.error('Error fetching nearby communities:', error);
@@ -162,7 +224,7 @@ class CommunityService {
     }
   }
 
-  async getCommunity(communityId: string): Promise<Community | null> {
+  async getCommunity(communityId: string): Promise<(Omit<Community, 'owner'> & { ownerId: string }) | null>  {
     try {
       const community = await prisma.$queryRaw<any[]>`
         SELECT 
@@ -171,6 +233,7 @@ class CommunityService {
           c."description",
           c."locationName",
           c."banner",
+          c."ownerId",
           ST_X(c."location") as lng,
           ST_Y(c."location") as lat,
           COUNT(m."B") as member_count
@@ -196,7 +259,8 @@ class CommunityService {
         banner: communityData.banner,
         communityImageUrl: communityUploadService.getFileWithPng(communityData.communityId) || undefined,
         members: parseInt(communityData.member_count) || 0,
-        nearby: false
+        nearby: false,
+        ownerId: communityData.ownerId
       };
     } catch (error) {
       console.error('Error fetching community:', error);
@@ -239,98 +303,111 @@ class CommunityService {
   }
 
   async getUserCommunities(userId: string, params?: FindCommunitiesParams): Promise<Community[]> {
-  try {
-    console.log('Getting communities for user:', userId);
-    
-    const limit = Math.min(params?.limit ?? this.DEFAULT_LIMIT, this.MAX_LIMIT);
-    const skip = params?.page ? (params.page - 1) * limit : 0;
+    try {
+      console.log('Getting communities for user:', userId);
+      
+      const limit = Math.min(params?.limit ?? this.DEFAULT_LIMIT, this.MAX_LIMIT);
+      const skip = params?.page ? (params.page - 1) * limit : 0;
 
-    // First, get the user with their communities using Prisma relations
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        communities: {
-          take: limit,
-          skip: skip,
-          orderBy: { name: 'asc' }
-        }
-      }
-    });
-
-    console.log('User found:', user ? 'Yes' : 'No');
-    console.log('Communities count:', user?.communities?.length || 0);
-
-    if (!user || !user.communities) {
-      return [];
-    }
-
-    // Convert to the format expected by your interface
-    const communities: Community[] = [];
-    
-    for (const community of user.communities) {
-      // Get member count for each community
-      const memberCount = await prisma.user.count({
-        where: {
+      // First, get the user with their communities using Prisma relations
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
           communities: {
-            some: {
-              communityId: community.communityId
+            take: limit,
+            skip: skip,
+            orderBy: { name: 'asc' },
+            select: {
+              communityId: true,
+              name: true,
+              description: true,
+              locationName: true,
+              banner: true,
+              ownerId: true
             }
           }
         }
       });
 
-      console.log(`Processing community: ${community.name}, Members: ${memberCount}`);
+      console.log('User found:', user ? 'Yes' : 'No');
+      console.log('Communities count:', user?.communities?.length || 0);
 
-      // Extract coordinates using raw query for this specific community
-      const locationData = await prisma.$queryRaw<any[]>`
-        SELECT ST_X(location) as lng, ST_Y(location) as lat
-        FROM "Community"
-        WHERE "communityId" = ${community.communityId}
-      `;
+      if (!user || !user.communities) {
+        return [];
+      }
 
-      const coords = locationData[0] || { lng: 0, lat: 0 };
-
-      console.log(`Coordinates for ${community.name}:`, coords);
+      // Convert to the format expected by your interface
+      const communities: Community[] = [];
       
-      let nearby = false;
-      if (params?.latitude && params?.longitude) {
-        // Calculate distance if coordinates provided
-        const distanceResult = await prisma.$queryRaw<any[]>`
-          SELECT ST_Distance(
-            location::geography,
-            ST_SetSRID(ST_MakePoint(${params.longitude}, ${params.latitude}), 4326)::geography
-          ) as distance_meters
+      for (const community of user.communities) {
+        // Get member count for each community
+        const memberCount = await prisma.user.count({
+          where: {
+            communities: {
+              some: {
+                communityId: community.communityId
+              }
+            }
+          }
+        });
+
+        console.log(`Processing community: ${community.name}, Members: ${memberCount}`);
+
+        // Extract coordinates using raw query for this specific community
+        const locationData = await prisma.$queryRaw<any[]>`
+          SELECT ST_X(location) as lng, ST_Y(location) as lat
           FROM "Community"
           WHERE "communityId" = ${community.communityId}
         `;
+
+        const coords = locationData[0] || { lng: 0, lat: 0 };
+
+        console.log(`Coordinates for ${community.name}:`, coords);
+        console.log(`Coordinates for user:`, params?.longitude, params?.latitude);
         
-        const distance = distanceResult[0]?.distance_meters || Infinity;
-        nearby = distance <= this.NEARBY_DISTANCE_M;
+        let nearby = false;
+        let distance;
+        if (params?.latitude && params?.longitude) {
+          // Calculate distance if coordinates provided
+          const distanceResult = await prisma.$queryRaw<any[]>`
+            SELECT ST_Distance(
+              location::geography,
+              ST_SetSRID(ST_MakePoint(${params.longitude}, ${params.latitude}), 4326)::geography
+            ) as distance_meters
+            FROM "Community"
+            WHERE "communityId" = ${community.communityId}
+          `;
+          
+          console.log('distanceResult: ', distanceResult);
+          distance = distanceResult[0]?.distance_meters;
+          nearby = distance <= this.NEARBY_DISTANCE_M;
+        }
+
+        console.log(`Is ${community.name} nearby?`, nearby);
+        console.log("distance is: ", distance);
+
+        communities.push({
+          communityId: community.communityId,
+          name: community.name,
+          description: community.description,
+          location: {
+            coordinates: [coords.lng, coords.lat],
+            name: community.locationName
+          },
+          banner: community.banner,
+          communityImageUrl: communityUploadService.getFileWithPng(community.communityId) || undefined,
+          members: memberCount,
+          nearby,
+          owner: userId === community.ownerId
+        });
       }
 
-      console.log(`Is ${community.name} nearby?`, nearby);
-
-      communities.push({
-        communityId: community.communityId,
-        name: community.name,
-        description: community.description,
-        location: {
-          coordinates: [coords.lng, coords.lat],
-          name: community.locationName
-        },
-        banner: community.banner,
-        communityImageUrl: communityUploadService.getFileWithPng(community.communityId) || undefined,
-        members: memberCount,
-        nearby
-      });
+      return communities;
+    } catch (error) {
+      console.error('Error fetching user communities:', error);
+      throw error;
     }
-
-    return communities;
-  } catch (error) {
-    console.error('Error fetching user communities:', error);
-    throw error;
   }
-}
 }
 
 export const communityService = new CommunityService();

@@ -68,11 +68,11 @@ export class FileUploadService {
   }
 
   async deleteImage(id: string): Promise<void> {
-    if (!id.startsWith(this.subDir)) {
+    if (!this.getFileWithPng(id)) {
       return;
     }
 
-    const filename = path.basename(id);
+    const filename = `${id}.png`;
     const filepath = path.join(this.uploadDir, filename);
 
     try {

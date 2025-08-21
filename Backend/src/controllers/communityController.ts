@@ -150,8 +150,22 @@ export class CommunityController {
       }
 
       const communityId: string = req.params.communityId;
-      const leave = await communityService.leaveCommunity(req.user.userId, communityId);
-      res.status(200).json(leave);
+      console.log(communityId);
+
+      const community = await communityService.getCommunity(communityId);
+
+      if (community === null) {
+        res.status(404).json({ error: 'Community not found' });
+        return;
+      }
+
+      let result;
+      if (req.user.userId !== community.ownerId) {
+        result = await communityService.leaveCommunity(req.user.userId, communityId);
+      } else {
+        result = await communityService.deleteCommunity(req.user.userId, communityId);
+      }
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {

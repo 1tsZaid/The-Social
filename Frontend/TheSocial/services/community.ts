@@ -19,6 +19,7 @@ export interface Community extends Omit<CreateCommunityPayload, 'communityImageI
   communityId: string; // unique identifier for the community set by the backend
   communityImageUrl?: string; // URL to the community image
   members: number;
+  owner: boolean;
   nearby: boolean;
 }
 
@@ -90,10 +91,10 @@ export const findNearbyCommunities = async (params: FindCommunitiesParams): Prom
   }
 };
 
-export const getCommunity = async (id: string): Promise<Community | null> => {
+export const getCommunity = async (id: string): Promise<(Omit<Community, 'owner'> & { ownerId: string }) | null> => {
   try {
     const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.GET_ONE(id));
-    return normalizeCommunity(response.data);
+    return normalizeGetCommunity(response.data);
   } catch (error) {
     console.error(error);
     throw error;
@@ -144,4 +145,19 @@ const normalizeCommunity = (data: any): Community => ({
     ? `${API_CONFIG.STATIC_BASE_URL}${data.communityImageUrl}`
     : undefined,
   nearby: data.nearby,
+  owner: data.owner
+});
+
+const normalizeGetCommunity = (data: any): (Omit<Community, 'owner'> & { ownerId: string }) => ({
+  communityId: data.communityId,
+  name: data.name,
+  description: data.description,
+  location: data.location,
+  banner: data.banner,
+  members: data.members,
+  communityImageUrl: data.communityImageUrl
+    ? `${API_CONFIG.STATIC_BASE_URL}${data.communityImageUrl}`
+    : undefined,
+  nearby: data.nearby,
+  ownerId: data.ownerId
 });
