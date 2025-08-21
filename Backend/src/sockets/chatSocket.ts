@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import { authenticateSocket, AuthenticatedSocket } from '../middleware/socketAuth';
 import { profileService } from '../services/profileService'
+import { moderateText } from '../utils/moderation';
 
 interface Message {
   communityId: string;
@@ -57,6 +58,13 @@ export const setupChatSocket = (io: Server) => {
       try {
         if (!messageData.communityId || !messageData.content) {
           socket.emit('error', { message: 'Invalid message data' });
+          return;
+        }
+
+        const moderationResult = await moderateText(messageData.content);
+        if (!moderationResult.allowed) {
+          console.log(`🚫 Blocked message due to moderation: ${moderationResult.category}`);
+          // socket.emit('error', { message: 'Message violates community guidelines', category: moderationResult.category });
           return;
         }
 
