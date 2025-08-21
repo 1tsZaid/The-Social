@@ -1,5 +1,6 @@
 import prisma from '../config/database';
 import { profileUploadService, postUploadService } from '../utils/fileUpload';
+import { moderateText } from '../utils/moderation';
 
 interface PostUser { 
   username: string; // unique identifier for the user 
@@ -55,6 +56,28 @@ export class PostService {
     userId: string,
     payload: CreatePostPayload
   ): Promise<RecieveMessagePayload> {
+    const moderationResult = await moderateText(payload.content);
+    if (!moderationResult.allowed) {
+      console.log(`🚫 Blocked message due to moderation: ${moderationResult.category}`);
+      // socket.emit('error', { message: 'Message violates community guidelines', category: moderationResult.category });
+      const response: RecieveMessagePayload = {
+        id: "",
+        communityId: "",
+        content: "",
+        attachImage: undefined,
+        createdAt: "",
+        author: {
+          username: "",
+          profileImage: undefined,
+          banner: "",
+        },
+        stats: {
+          likes: 0,
+        },
+      };
+      return response;
+    }
+
     const post = await prisma.post.create({
       data: {
         content: payload.content,
