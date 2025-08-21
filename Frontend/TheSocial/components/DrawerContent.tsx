@@ -9,6 +9,9 @@ import { CommunityItem } from './CommunityItem';
 import { useModal } from '@/components/ModalContext';
 import { useCommunities } from '@/components/CommunitiesContext';
 
+import { leaveCommunity } from '@/services/community';
+import { checkTokens } from '@/utils/checkTokens';
+
 export function DrawerContent() {
   const { openModal } = useModal();
   const { 
@@ -102,8 +105,10 @@ export function DrawerContent() {
                   imageUri={community.communityImageUrl}
                   location={community.location.name}
                   memberCount={community.members}
+                  owner={community.owner}
                   isSelected={selectedCommunityId === community.communityId}
                   onPress={() => handleCommunityPress(community.communityId)}
+                  onActionPress={async () => {await checkTokens(); await leaveCommunity(community.communityId); await refreshCommunities();} }
                 />
                 ) : null
               ))

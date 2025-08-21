@@ -12,6 +12,8 @@ interface CommunityItemProps {
   memberCount: number;
   isSelected: boolean;
   onPress: () => void;
+  owner: boolean;
+  onActionPress?: () => void;
   style?: ViewStyle;
 }
 
@@ -21,7 +23,9 @@ export function CommunityItem({
   location,
   memberCount,
   isSelected = false,
+  owner = false,
   onPress,
+  onActionPress,
   style,
 }: CommunityItemProps) {
   const surfaceColor = useThemeColor({}, 'surface');
@@ -41,6 +45,7 @@ export function CommunityItem({
       onPress={onPress}
       activeOpacity={0.7}
     >
+      {/* Left: community image */}
       <View style={styles.imageContainer}>
         {imageUri ? (
           <Image
@@ -60,6 +65,7 @@ export function CommunityItem({
         )}
       </View>
       
+      {/* Middle: text details */}
       <View style={styles.content}>
         <ThemedText
           style={styles.name}
@@ -88,6 +94,18 @@ export function CommunityItem({
             {memberCount} members
           </ThemedText>
         </View>
+
+      {/* Right: Action text */}
+      {isSelected && (
+        <TouchableOpacity
+          onPress={onActionPress}
+          activeOpacity={0.7}
+        >
+          <ThemedText variant="bodySmall" colorType="red">
+            {owner ? 'Delete' : 'Leave'}
+          </ThemedText>
+        </TouchableOpacity>
+      )}
       </View>
     </TouchableOpacity>
   );
