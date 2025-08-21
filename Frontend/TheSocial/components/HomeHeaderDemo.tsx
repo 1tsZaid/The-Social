@@ -25,11 +25,15 @@ export function HomeHeaderDemo() {
   const selectedCommunity = (c: string): boolean => c === selectedCommunityId ? true : false;
 
   const createDataForCommunity = () => {
-    const data = communities.map((community) => ({
-      id: community.communityId,
-      imageUrl: community.communityImageUrl || undefined,
-      isActive: selectedCommunity(community.communityId),
-    }));
+    const data = communities.flatMap((community) =>
+      community.nearby
+        ? [{
+            id: community.communityId,
+            imageUrl: community.communityImageUrl || undefined,
+            isActive: selectedCommunity(community.communityId),
+          }]
+        : []
+    );
     return data;
   };
 

@@ -95,7 +95,9 @@ export function DrawerContent() {
               </ThemedView>
             ) : (
               communities.map((community) => (
+                community.nearby ? (
                 <CommunityItem
+                  key={community.communityId}
                   name={community.name}
                   imageUri={community.communityImageUrl}
                   location={community.location.name}
@@ -103,6 +105,7 @@ export function DrawerContent() {
                   isSelected={selectedCommunityId === community.communityId}
                   onPress={() => handleCommunityPress(community.communityId)}
                 />
+                ) : null
               ))
             )}
           </ThemedView>
