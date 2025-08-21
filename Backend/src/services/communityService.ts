@@ -33,7 +33,7 @@ export interface FindCommunitiesParams {
 class CommunityService {
   private readonly DEFAULT_LIMIT = 10;
   private readonly MAX_LIMIT = 100;
-  private readonly NEARBY_DISTANCE_M = 50000000; // 5000 meters = 5 kilometers and in meters for PostGIS
+  private readonly NEARBY_DISTANCE_M = 5000; // 5000 meters = 5 kilometers and in meters for PostGIS
 
   async createCommunity(userId: string, payload: CreateCommunityPayload): Promise<Community> {
     try {
