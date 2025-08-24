@@ -40,7 +40,7 @@ export function MessageItem({
     avatarContainer: {
       flexDirection: 'column',
       justifyContent: 'flex-start',
-      height: 70,
+      height: 80,
       borderRadius: 30,
       padding: 2,
       backgroundColor: banner + '50',
