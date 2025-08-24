@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { router } from 'expo-router';
 import { View, StyleSheet, ScrollView, Alert, RefreshControl, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
+import { Video, ResizeMode } from "expo-av";
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { SearchInput } from '@/components/SearchInput';
 import { CommunityCard } from '@/components/CommunityCard';
+
+import { useColorScheme } from '@/hooks/useColorScheme';
+
 import { findNearbyCommunities, joinCommunity, Community } from '@/services/community';
 
 import { checkTokens } from '@/utils/checkTokens';
@@ -20,6 +24,7 @@ export default function DiscoverScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
+  const theme = useColorScheme() ?? 'light';
 
   // Get device location
   const getLocation = async () => {
@@ -240,6 +245,24 @@ export default function DiscoverScreen() {
             Nearby Communities ({filteredCommunities.length})
           </ThemedText>
           
+          {/* Video Placeholder */}
+          {filteredCommunities.length === 0 && <ThemedView style={styles.containerNull} backgroundType="background">
+              <ThemedView style={styles.videoWrapper}>
+                <Video
+                  source={theme === "dark"
+                ? require("@/assets/videos/discover.dark.mp4")
+                : require("@/assets/videos/discover.light.mp4")}
+                  style={styles.video}
+                  videoStyle={{ width: 300, height: 300 }}
+                  resizeMode={ResizeMode.STRETCH}   // keeps full video visible
+                  shouldPlay
+                  isLooping
+                  isMuted
+                />
+              </ThemedView>
+            </ThemedView>
+          }
+
           {/* Community Cards */}
           <View style={styles.cardsContainer}>
             {filteredCommunities.length === 0 ? (
@@ -279,8 +302,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 40,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   header: {
     alignItems: 'center',
@@ -331,9 +354,25 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingTop: 40,
   },
   emptyText: {
     textAlign: 'center',
+  },
+  containerNull: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  videoWrapper: {
+    width: "100%",       // take full width
+    aspectRatio: 1,      // keep square
+    maxWidth: 300,       // optional limit
+    alignSelf: "center", // keep centered
+  },
+  video: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 12,
   },
 });

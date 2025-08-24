@@ -1,5 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { API_CONFIG } from "../constants/Api";
+import { getTokens } from '../utils/tokenStorage';
+import { checkTokens } from '../utils/checkTokens';
 
 interface SocketOptions {
   namespace?: string; // optional namespace, defaults to "/"
@@ -14,14 +16,18 @@ class SocketService {
   /**
    * Connect to a socket namespace with optional authentication and query params
    */
-  connect({ namespace = this.DEFAULT_NAMESPACE, authToken, query }: SocketOptions) {
+  connect({ namespace = this.DEFAULT_NAMESPACE, query }: SocketOptions) {
     if (!this.sockets.has(namespace)) {
       const socketUrl = `${API_CONFIG.SOCKET_BASE_URL}${namespace}`;
 
       const socket = io(socketUrl, {
         transports: ["websocket"],
         autoConnect: true,
-        auth: authToken ? { token: authToken } : undefined,
+        auth: async (cb) => {
+          await checkTokens();
+          const tokens = await getTokens();
+          cb({ token: tokens.accessToken });
+        },
       });
 
       socket.on("connect", () => {

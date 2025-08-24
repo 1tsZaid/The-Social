@@ -1,8 +1,7 @@
 // import api from './api';
 // import { API_CONFIG } from '../constants/Api';
 import socket from './socket';
-import { getTokens } from '../utils/tokenStorage';
-import { checkTokens } from '../utils/checkTokens';
+
 
 interface Message {
   id?: number; // unique identifier for the message
@@ -108,13 +107,10 @@ export const subscribeToMessages = async (
   communityId: string,
   callback: (message: RecieveMessagePayload) => void
 ) => {
-  await checkTokens();
-  const tokens = await getTokens();
 
   // connect to /chat namespace with token
   socket.connect({
     namespace: '/chat',
-    authToken: tokens.accessToken,
   });
   
   if (!socket.isConnected('/chat')) {
@@ -124,14 +120,14 @@ export const subscribeToMessages = async (
       () => {
         console.log(`✅ Connected, now joining community ${communityId}`);
         socket.emit('join_community', communityId, '/chat');
-        console.log(`📥 User ${tokens.accessToken} joined community ${communityId}`);
+        console.log(`📥 User joined community ${communityId}`);
       },
       '/chat'
     );
   } else {
     // already connected, just join directly
     socket.emit('join_community', communityId, '/chat');
-    console.log(`📥 User ${tokens.accessToken} joined community ${communityId}`);
+    console.log(`📥 User joined community ${communityId}`);
   }
 
   // listen for messages

@@ -12,8 +12,8 @@ interface MessageAvatarProps {
 }
 
 export function MessageAvatar({ imageUrl, size = 36 }: MessageAvatarProps) {
-  const iconColor = useThemeColor({}, 'textPrimary');
-  const surfaceColor = useThemeColor({}, 'surface');
+  const iconColor = useThemeColor({}, 'textSecondary');
+  const surfaceColor = useThemeColor({}, 'textPrimary');
 
   const styles = StyleSheet.create({
     container: {

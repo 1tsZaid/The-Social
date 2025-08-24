@@ -11,6 +11,8 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 import { deleteTokens, getTokens } from '@/utils/tokenStorage';
 import { checkTokens } from '@/utils/checkTokens';
+
+import socket from '@/services/socket';
 import { getProfile, Profile } from '@/services/profile';
 
 export default function ProfileScreen() {
@@ -93,9 +95,13 @@ export default function ProfileScreen() {
             // Handle logout logic here
             const tokens = await getTokens();
             console.log('Tokens before logout:', tokens);
+
+            socket.disconnect('/chat');
+
             console.log('User logged out');
             await deleteTokens();
             console.log('Tokens after logout:', await getTokens());
+            
             router.replace('/login');
     //       },
     //     },

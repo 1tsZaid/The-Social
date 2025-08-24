@@ -35,7 +35,7 @@ export const Colors = {
   dark: {
     // Background colors
     background: '#000000',
-    surface: '#111111',
+    surface: '#131313',
     
     // Text colors
     textPrimary: '#FFFFFF',

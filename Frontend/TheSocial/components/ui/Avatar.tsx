@@ -19,7 +19,7 @@ export function Avatar({
   onPress, 
   isActive = false 
 }: AvatarProps) {
-  const backgroundColor = useThemeColor({}, 'surface');
+  const backgroundColor = useThemeColor({}, 'background');
   const borderColor = useThemeColor({}, 'borderDivider');
   const iconColor = useThemeColor({}, 'textPrimary');
 

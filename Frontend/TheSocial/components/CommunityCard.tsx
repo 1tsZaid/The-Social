@@ -30,8 +30,85 @@ export function CommunityCard({
 }: CommunityCardProps) {
   const backgroundColor = useThemeColor({}, 'surface');
   const borderColor = useThemeColor({}, 'borderDivider');
-  const buttonBackgroundColor = useThemeColor({}, 'textSecondary');
+  const buttonBackgroundColor = useThemeColor({}, 'textPrimary');
   const iconColor = useThemeColor({}, 'textSecondary');
+  
+  const logoIconColor = useThemeColor({}, 'textPrimary');
+  const logoBackground = useThemeColor({}, 'background');
+  
+  const styles = StyleSheet.create({
+    container: {
+      borderRadius: 12,
+      borderWidth: 1,
+      marginBottom: 20,
+      overflow: 'hidden',
+    },
+    banner: {
+      height: 96,
+      width: '100%',
+    },
+    iconContainer: {
+      position: 'absolute',
+      top: 48,
+      alignSelf: 'center',
+      width: 96,
+      height: 96,
+      borderRadius: 20,
+      borderWidth: 4,
+      borderColor: logoBackground,
+      backgroundColor: logoBackground,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    iconText: {
+      marginTop: 4,
+      fontSize: 8,
+    },
+    content: {
+      paddingTop: 60,
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+    },
+    title: {
+      textAlign: 'center',
+      marginBottom: 12,
+    },
+    metaContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginBottom: 12,
+      gap: 20,
+    },
+    metaItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    metaText: {
+      marginLeft: 4,
+    },
+    description: {
+      textAlign: 'center',
+      marginBottom: 12,
+      lineHeight: 20,
+    },
+    locationContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+      gap: 4,
+    },
+    locationText: {
+      marginLeft: 4,
+    },
+    joinButton: {
+      height: 44,
+      borderRadius: 25,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  }); 
 
   return (
     <ThemedView style={[styles.container, { backgroundColor, borderColor }]} backgroundType="surface">
@@ -44,11 +121,8 @@ export function CommunityCard({
           <Image source={{ uri: imageUrl }} style={{ width: 96, height: 96, borderRadius: 20, }} />
         </View>
       ) : (
-        <View style={[styles.iconContainer, { backgroundColor: '#F5F5F5' }]}>
-          <Ionicons name={iconName as any} size={32} color="#666" />
-          <ThemedText style={styles.iconText} variant="caption" colorType="textSecondary">
-            COMMUNITY
-          </ThemedText> 
+        <View style={styles.iconContainer}>
+          <Ionicons name={iconName as any} size={32} color={logoIconColor} />
         </View> 
       )}
       
@@ -100,84 +174,3 @@ export function CommunityCard({
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 15,
-    elevation: 5,
-    overflow: 'hidden',
-  },
-  banner: {
-    height: 96,
-    width: '100%',
-  },
-  iconContainer: {
-    position: 'absolute',
-    top: 48,
-    alignSelf: 'center',
-    width: 96,
-    height: 96,
-    borderRadius: 20,
-    borderWidth: 4,
-    borderColor: '#FAFAFA',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconText: {
-    marginTop: 4,
-    fontSize: 8,
-  },
-  content: {
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  metaContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 12,
-    gap: 20,
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  metaText: {
-    marginLeft: 4,
-  },
-  description: {
-    textAlign: 'center',
-    marginBottom: 12,
-    lineHeight: 20,
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-    gap: 4,
-  },
-  locationText: {
-    marginLeft: 4,
-  },
-  joinButton: {
-    height: 44,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-}); 

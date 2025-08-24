@@ -30,6 +30,8 @@ export function CommunityItem({
 }: CommunityItemProps) {
   const surfaceColor = useThemeColor({}, 'surface');
   const backgroundColor = useThemeColor({}, 'background');
+
+  const iconColor = useThemeColor({}, 'textPrimary');
   const iconBackgroundColor = useThemeColor({}, 'background');
 
   return (
@@ -60,7 +62,7 @@ export function CommunityItem({
               { backgroundColor: iconBackgroundColor },
             ]}
           >
-            <Ionicons name="people" size={20} color="white" />
+            <Ionicons name="people" size={20} color={iconColor} />
           </View>
         )}
       </View>

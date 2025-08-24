@@ -1,11 +1,14 @@
 import api from './api';
 import { API_CONFIG } from '../constants/Api';
-import { getTokens } from '../utils/tokenStorage';
+import { getTokens } from '../utils/tokenStorage';\
+
+// create a normializing function
 
 interface LeaderboardEntry {
   userId: string;
   username: string; // unique identifier for the player
   userImage?: string;
+  userbanner: string;
   score: number;
   rank: number;
 }
@@ -30,10 +33,10 @@ interface PlayerLeaderboardFetch {
 }
 
 // get leaderboard for a specific game
-export const getLeaderboard = async (game: string, limit: number = 3): Promise<GameLeaderboardPayload> => {
+export const getLeaderboard = async (communityId: string, game: string, limit: number = 3): Promise<GameLeaderboardPayload> => {
   try {
     const response = await api.get(
-      API_CONFIG.ENDPOINTS.GAMES.LEADERBOARD(game),
+      API_CONFIG.ENDPOINTS.GAMES.LEADERBOARD({ communityId, game }),
       { params: { limit } }
     );
     return response.data;
@@ -44,11 +47,11 @@ export const getLeaderboard = async (game: string, limit: number = 3): Promise<G
 };
 
 // get player leaderboard stats for a specific game
-export const getPlayerLeaderboardStats = async (game: string): Promise<PlayerLeaderboardFetch> => {
+export const getPlayerLeaderboardStats = async (communityId: string, game: string): Promise<PlayerLeaderboardFetch> => {
   try {
     const tokens = await getTokens();
     const response = await api.get(
-      API_CONFIG.ENDPOINTS.GAMES.PLAYER_STATS(game), {
+      API_CONFIG.ENDPOINTS.GAMES.PLAYER_STATS({communityId, game}), {
         headers: {
           Authorization: `Bearer ${tokens.accessToken}`,
         },
@@ -67,7 +70,7 @@ export const updatePlayerScore = async (playerLeaderboardStats: PlayerLeaderboar
     const tokens = await getTokens();
     const response = await api.post(
       API_CONFIG.ENDPOINTS.GAMES.UPDATE_SCORE(playerLeaderboardStats.game),
-      { score: playerLeaderboardStats.scoreAchieved }, {
+      { score: playerLeaderboardStats.scoreAchieved, communityId: playerLeaderboardStats.communityId }, {
         headers: {
           Authorization: `Bearer ${tokens.accessToken}`,
         },

@@ -17,8 +17,8 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
   const styles = StyleSheet.create({
     container: {
       paddingHorizontal: 24,
-      marginTop: 32,
-      marginBottom: 16,
+      marginTop: 10,
+      marginBottom: 0,
     },
     button: {
       height: 52,

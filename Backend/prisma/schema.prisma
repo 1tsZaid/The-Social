@@ -19,6 +19,7 @@ model User {
   communities Community[] @relation("UserCommunities")
   posts       Post[]      // 1 - m relation (User -> Post)
   likes       Like[]      // User can like many posts
+  leaderboards Leaderboard[] 
 }
 
 model Community {
@@ -33,6 +34,7 @@ model Community {
   // Relations
   members User[] @relation("UserCommunities")
   posts   Post[] // 1 - m relation (Community -> Post)
+  leaderboards Leaderboard[] 
 
   // Indexes for location-based queries
   @@index([location], type: Gist)
@@ -66,4 +68,19 @@ model Like {
 
   // Prevent duplicate likes from the same user on the same post
   @@unique([userId, postId])
+}
+
+model Leaderboard {
+  id          String   @id @default(cuid())
+  userId      String
+  communityId String
+  game        String
+  score       Int      @default(0)
+
+  // Relations
+  user      User      @relation(fields: [userId], references: [id])
+  community Community @relation(fields: [communityId], references: [communityId])
+
+  // Ensure each user has only one entry per game in a community
+  @@unique([userId, communityId, game])
 }

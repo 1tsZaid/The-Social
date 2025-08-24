@@ -29,6 +29,7 @@ export function MessageInput({
   const placeholderTextColor = useThemeColor({}, 'borderDivider');
   const borderColor = useThemeColor({}, 'borderDivider');
   const color = useThemeColor({}, 'textPrimary');
+  const backgroundColor = useThemeColor({}, 'surface');
   const buttonBackground = useThemeColor({}, 'textPrimary');
   
   const theme = useColorScheme() ?? 'light';
@@ -45,13 +46,21 @@ export function MessageInput({
       gap: 10,
       paddingHorizontal: 16,
     },
+    inputArea: {
+      flex: 1,
+      paddingVertical: 0,
+      paddingHorizontal: 14,
+      height: 40,
+      backgroundColor,
+      borderColor,
+      borderWidth: 1,
+      borderRadius: 50,
+    },
     textInput: {
       flex: 1,
-      height: 44,
-      borderWidth: 1,
       borderColor,
-      borderRadius: 50,
-      paddingHorizontal: 14,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
       color,
       ...Typography.body,
     },
@@ -72,14 +81,17 @@ export function MessageInput({
   return (
     <ThemedView style={styles.container} backgroundType="background">
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          value={message}
-          onChangeText={setMessage}
-          placeholder={placeholder}
-          placeholderTextColor={placeholderTextColor}
-          multiline={false}
-        />
+        <View style={styles.inputArea}>
+          <TextInput
+            style={styles.textInput}
+            value={message}
+            onChangeText={setMessage}
+            placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
+            multiline={false}
+            onSubmitEditing={handleSend}
+          />
+        </View>
         <TouchableOpacity 
           style={styles.sendButton}
           onPress={handleSend}

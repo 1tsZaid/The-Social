@@ -25,6 +25,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onNotification,
 }) => {
   const profileBorderColor = useThemeColor({}, 'background');
+  const profileSurfaceColor = useThemeColor({}, 'textPrimary');
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
   
@@ -50,16 +51,16 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       height: 96,
       borderRadius: 45,
       borderWidth: 4,
-      backgroundColor: surfaceColor,
+      backgroundColor: profileSurfaceColor,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: -65, // Overlap with banner
+      marginTop: -70, // Overlap with banner
     },
     profileImagePlaceholder: {
       width: 88,
       height: 88,
       borderRadius: 45,
-      backgroundColor: surfaceColor,
+      backgroundColor: profileSurfaceColor,
       justifyContent: 'center',
       alignItems: 'center',
     },

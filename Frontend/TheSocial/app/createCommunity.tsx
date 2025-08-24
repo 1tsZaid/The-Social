@@ -183,7 +183,7 @@ export default function CreateCommunityScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollView: { flex: 1 },
-  scrollContent: { paddingHorizontal: 16, paddingTop: 32, paddingBottom: 40 },
+  scrollContent: { paddingHorizontal: 16, paddingTop: 10, paddingBottom: 40 },
   header: { alignItems: 'center', marginBottom: 12 },
   title: { textAlign: 'center', marginBottom: 8 },
   subtitle: { textAlign: 'center' },
