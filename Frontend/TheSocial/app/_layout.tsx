@@ -56,6 +56,7 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <ModalProvider>
           <Stack 
+            initialRouteName="home"
             screenOptions={{ 
               headerShown: false,
             }}

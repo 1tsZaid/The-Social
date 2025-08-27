@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 
 import { ThemedView } from '@/components/ThemedView';
@@ -24,6 +25,9 @@ const PostScreen = () => {
   const placeholderTextColor = useThemeColor({}, 'borderDivider');
 
   const styles = StyleSheet.create({
+    SafeArea: {
+      flex: 1,
+    },
     container: {
       flex: 1,
     },
@@ -107,43 +111,45 @@ const PostScreen = () => {
   };
 
   return (
-    <ThemedView style={styles.container} backgroundType="background">
-      <ThemedView style={styles.header} backgroundType="background">
-        <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="close" size={24} color={color} />
-        </TouchableOpacity>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity onPress={pickImage}>
-            <Ionicons name="attach" size={24} color={color} />
+     <SafeAreaView style={styles.SafeArea} >
+      <ThemedView style={styles.container} backgroundType="background">
+        <ThemedView style={styles.header} backgroundType="background">
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="close" size={24} color={color} />
           </TouchableOpacity>
-          <TouchableOpacity disabled={loading} onPress={handleSend}>
-            {loading ? (
-              <ActivityIndicator size="small" color={color} />
-            ) : (
-              <Ionicons name="send" size={24} color={color} />
-            )}
-          </TouchableOpacity>
-        </View>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity onPress={pickImage}>
+              <Ionicons name="attach" size={24} color={color} />
+            </TouchableOpacity>
+            <TouchableOpacity disabled={loading} onPress={handleSend}>
+              {loading ? (
+                <ActivityIndicator size="small" color={color} />
+              ) : (
+                <Ionicons name="send" size={24} color={color} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </ThemedView>
+
+        <TextInput
+          style={[styles.textInput, Typography.body]}
+          multiline
+          value={text}
+          onChangeText={setText}
+          placeholder="Type a message..."
+          placeholderTextColor={placeholderTextColor}
+        />
+
+        {imageUri && (
+          <View>
+            <Image source={{ uri: imageUri }} style={styles.previewImage} />
+            <TouchableOpacity onPress={() => setImageUri(undefined)} style={{ marginLeft: 16 }}>
+              <Ionicons name="close-circle" size={20} color="red" />
+            </TouchableOpacity>
+          </View>
+        )}
       </ThemedView>
-
-      <TextInput
-        style={[styles.textInput, Typography.body]}
-        multiline
-        value={text}
-        onChangeText={setText}
-        placeholder="Type a message..."
-        placeholderTextColor={placeholderTextColor}
-      />
-
-      {imageUri && (
-        <View>
-          <Image source={{ uri: imageUri }} style={styles.previewImage} />
-          <TouchableOpacity onPress={() => setImageUri(undefined)} style={{ marginLeft: 16 }}>
-            <Ionicons name="close-circle" size={20} color="red" />
-          </TouchableOpacity>
-        </View>
-      )}
-    </ThemedView>
+     </SafeAreaView>
   );
 };
 

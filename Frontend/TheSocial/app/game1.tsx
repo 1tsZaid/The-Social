@@ -1,13 +1,17 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
+import { router } from 'expo-router';
 
 import GameLogo from '@/components/GameLogo';
 import GameInfoCard from '@/components/GameInfoCard';
 import Leaderboard from '@/components/Leaderboard';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { ThemedView } from '@/components/ThemedView';
+import { useThemeColor } from '@/hooks/useThemeColor';
+
+import { useModal } from '@/components/ModalContext';
 
 const GameScreen: React.FC = () => {
+  const { closeModal } = useModal();
   const accentColor = useThemeColor({}, 'accent');
   
   const leaderboardData = [
@@ -19,6 +23,9 @@ const GameScreen: React.FC = () => {
   
   const handlePlayPress = () => {
     console.log('Play button pressed');
+
+    closeModal();
+    router.push('/flappyBird');
     // Add your game launch logic here
   };
   

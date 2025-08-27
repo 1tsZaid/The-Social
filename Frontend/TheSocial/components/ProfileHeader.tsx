@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -51,14 +50,14 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       height: 96,
       borderRadius: 45,
       borderWidth: 4,
-      backgroundColor: profileSurfaceColor,
+      backgroundColor: profileBorderColor,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: -70, // Overlap with banner
+      marginTop: Platform.OS === 'web' ? -70 : -55, // Overlap with banner
     },
     profileImagePlaceholder: {
-      width: 88,
-      height: 88,
+      width: 96,
+      height: 96,
       borderRadius: 45,
       backgroundColor: profileSurfaceColor,
       justifyContent: 'center',
@@ -112,12 +111,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <View style={styles.profilePictureContainer}>
           <View style={[styles.profilePicture, { borderColor: profileBorderColor }]}>
             {profileImage ? (
-              <View style={styles.profileImagePlaceholder}>
-                <Image
-                  source={{ uri: `${profileImage}?cache=${Math.random()}` }} 
-                  style={{ width: 88, height: 88, borderRadius: 45 }} 
-                />
-              </View>
+              <Image
+                source={{ uri: `${profileImage}?cache=${Math.random()}` }} 
+                style={{ width: 88, height: 88, borderRadius: 45 }} 
+              />
             ) : (
               <View style={styles.profileImagePlaceholder}>
                 <Ionicons name="person" size={45} color={textSecondaryColor} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Alert, RefreshControl } from 'react-native';
+import { ScrollView, StyleSheet, Alert, RefreshControl, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Video, ResizeMode } from "expo-av";
 
@@ -99,6 +99,7 @@ export default function FeedScreen() {
             isMuted
           />
         </ThemedView>
+        <ThemedText style={{ padding: 20, textAlign: 'center' }}>Please select a community to view posts.</ThemedText>
       </ThemedView>
     );
   }
@@ -152,6 +153,6 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 12,
   },
-  scrollView: { flex: 1, paddingTop: 25 },
+  scrollView: { flex: 1, paddingTop: Platform.OS === 'web' ? 25 : 50 },
   scrollContent: { paddingVertical: 15 },
 });

@@ -14,7 +14,7 @@ export default function IndexScreen() {
         const tokenFlag = await checkTokens();
         if (tokenFlag) {
           console.log('Tokens found, going to home');
-          router.replace('/home/messages');
+          router.replace('/home/(tabs)/messages');
         } else {
           deleteTokens();
           console.log('Tokens not found, going to login');

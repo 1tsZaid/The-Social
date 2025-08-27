@@ -22,9 +22,9 @@ export const API_CONFIG = {
     GAMES: {
       // BASE: '/games', // Gets information about all available games
       // GET_ONE: (game: string) => `/games/${game}`, // Gets detailed information about a specific game
-      LEADERBOARD: (game: string) => `/games/${game}/leaderboard`, // Gets top players leaderboard for a specific game
-      PLAYER_STATS: (game: string) => `/games/${game}/player-stats`, // Gets current user's stats for a specific game
-      UPDATE_SCORE: (game: string) => `/games/${game}/update-score` // Updates player's score and play time for a game
+      LEADERBOARD: (game: string, communityId: string) => `/games/${game}/leaderboard/${communityId}`, // Gets top players leaderboard for a specific game
+      PLAYER_STATS: (game: string, communityId: string) => `/games/${game}/player-stats/${communityId}`, // Gets current user's stats for a specific game
+      UPDATE_SCORE: (game: string, communityId: string) => `/games/${game}/update-score/${communityId}` // Updates player's score and play time for a game
     },
     MESSAGES: {
       BASE: '/messages' // Gets chat messages for a community with pagination and sends new messages

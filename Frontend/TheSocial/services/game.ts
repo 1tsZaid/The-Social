@@ -1,6 +1,6 @@
 import api from './api';
 import { API_CONFIG } from '../constants/Api';
-import { getTokens } from '../utils/tokenStorage';\
+import { getTokens } from '../utils/tokenStorage';
 
 // create a normializing function
 
@@ -26,17 +26,17 @@ interface PlayerLeaderboardStatsUpdate {
   scoreAchieved: number;
 }
 
-interface PlayerLeaderboardFetch {
+interface PlayerLeaderboardPayload {
   communityId: string
   game: string;
   player: LeaderboardEntry;
 }
 
 // get leaderboard for a specific game
-export const getLeaderboard = async (communityId: string, game: string, limit: number = 3): Promise<GameLeaderboardPayload> => {
+export const getLeaderboard = async (game: string, communityId: string, limit: number = 3): Promise<GameLeaderboardPayload> => {
   try {
     const response = await api.get(
-      API_CONFIG.ENDPOINTS.GAMES.LEADERBOARD({ communityId, game }),
+      API_CONFIG.ENDPOINTS.GAMES.LEADERBOARD(game, communityId),
       { params: { limit } }
     );
     return response.data;
@@ -47,11 +47,11 @@ export const getLeaderboard = async (communityId: string, game: string, limit: n
 };
 
 // get player leaderboard stats for a specific game
-export const getPlayerLeaderboardStats = async (communityId: string, game: string): Promise<PlayerLeaderboardFetch> => {
+export const getPlayerLeaderboardStats = async (game: string, communityId: string): Promise<PlayerLeaderboardPayload> => {
   try {
     const tokens = await getTokens();
     const response = await api.get(
-      API_CONFIG.ENDPOINTS.GAMES.PLAYER_STATS({communityId, game}), {
+      API_CONFIG.ENDPOINTS.GAMES.PLAYER_STATS(game, communityId), {
         headers: {
           Authorization: `Bearer ${tokens.accessToken}`,
         },
@@ -65,12 +65,12 @@ export const getPlayerLeaderboardStats = async (communityId: string, game: strin
 };
 
 // update player leaderboard stats for a specific game
-export const updatePlayerScore = async (playerLeaderboardStats: PlayerLeaderboardStatsUpdate): Promise<PlayerLeaderboardFetch> => {
+export const updatePlayerScore = async (playerLeaderboardStats: PlayerLeaderboardStatsUpdate): Promise<PlayerLeaderboardPayload> => {
   try {
     const tokens = await getTokens();
     const response = await api.post(
-      API_CONFIG.ENDPOINTS.GAMES.UPDATE_SCORE(playerLeaderboardStats.game),
-      { score: playerLeaderboardStats.scoreAchieved, communityId: playerLeaderboardStats.communityId }, {
+      API_CONFIG.ENDPOINTS.GAMES.UPDATE_SCORE(playerLeaderboardStats.game, playerLeaderboardStats.communityId),
+      { score: playerLeaderboardStats.scoreAchieved  }, {
         headers: {
           Authorization: `Bearer ${tokens.accessToken}`,
         },

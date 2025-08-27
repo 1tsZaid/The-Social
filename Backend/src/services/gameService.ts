@@ -23,7 +23,7 @@ interface PlayerLeaderboardStatsUpdate {
   scoreAchieved: number;
 }
 
-interface PlayerLeaderboardFetch {
+interface PlayerLeaderboardPayload {
   communityId: string
   game: string;
   player: LeaderboardEntry;
@@ -64,7 +64,7 @@ export async function getPlayerLeaderboardStats(
   userId: string,
   communityId: string,
   game: string
-): Promise<PlayerLeaderboardFetch> {
+): Promise<PlayerLeaderboardPayload> {
   const entries = await prisma.leaderboard.findMany({
     where: { communityId, game },
     orderBy: { score: 'desc' },
@@ -100,13 +100,13 @@ export async function updatePlayerScore(
   communityId: string,
   game: string,
   score: number
-): Promise<PlayerLeaderboardFetch> {
+): Promise<PlayerLeaderboardPayload> {
   // Upsert leaderboard entry
   const entry = await prisma.leaderboard.upsert({
     where: {
       userId_communityId_game: { userId, communityId, game }, // matches @@unique
     },
-    update: { score: { increment: score } },
+    update: { score: score }, // for increment update: { score: { increment: score } },
     create: { userId, communityId, game, score },
     include: { user: true },
   });

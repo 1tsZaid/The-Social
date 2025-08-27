@@ -41,7 +41,7 @@ export default function TabLayout() {
   });
 
   return (
-    <Tabs
+    <Tabs initialRouteName="messages"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,

@@ -84,6 +84,7 @@ export default function MessagesScreen() {
             isMuted
           />
         </ThemedView>
+        <ThemedText style={{ padding: 20, textAlign: 'center' }}>Please select a community to view messages.</ThemedText>
       </ThemedView>
     );
   }
