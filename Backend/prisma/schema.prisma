@@ -83,4 +83,5 @@ model Leaderboard {
 
   // Ensure each user has only one entry per game in a community
   @@unique([userId, communityId, game])
+  @@index([communityId, game, score])
 }

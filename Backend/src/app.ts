@@ -10,6 +10,7 @@ import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
 import communityRoutes from './routes/communityRouter';
 import postRoutes from './routes/postRoutes';
+import gameRoutes from './routes/gameRouter';
 import { setupChatSocket } from './sockets/chatSocket';
 
 // Load environment variables
@@ -64,6 +65,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/communities', communityRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/games', gameRoutes);
 
 // Setup chat socket handlers
 setupChatSocket(io);
@@ -92,6 +94,7 @@ server.listen(PORT, () => {
   console.log(`👤 Community API: http://localhost:${PORT}/api/communities`);
   console.log(`📝 Post API: http://localhost:${PORT}/api/posts`);
   console.log(`💬 Chat Socket: ws://localhost:${PORT}/chat`);
+  console.log(`🎮 Game API: http://localhost:${PORT}/api/games`);
 });
 
 export default app;

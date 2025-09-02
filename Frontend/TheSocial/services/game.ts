@@ -2,13 +2,15 @@ import api from './api';
 import { API_CONFIG } from '../constants/Api';
 import { getTokens } from '../utils/tokenStorage';
 
+// flappy-bird
+
 // create a normializing function
 
 interface LeaderboardEntry {
   userId: string;
   username: string; // unique identifier for the player
   userImage?: string;
-  userbanner: string;
+  userBanner: string;
   score: number;
   rank: number;
 }
