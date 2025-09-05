@@ -1,69 +1,91 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { API_CONFIG } from '@/constants/Api'
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { isSearchBarAvailableForCurrentPlatform } from 'react-native-screens';
 
 export type PlayerRowProps = {
   name: string;
-  rank: string;
+  rank: number;
+  userImage?: string;
   isCurrentUser?: boolean;
   rankColor?: string;
 };
 
-export function PlayerRow({ name, rank, isCurrentUser = false, rankColor }: PlayerRowProps) {
+// helper to add ordinal suffix
+const formatRank = (rank: number): string => {
+  const suffixes = ["th", "st", "nd", "rd"];
+  const v = rank % 100;
+  return rank + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
+};
+
+export function PlayerRow({ name, userImage, rank, isCurrentUser = false, rankColor }: PlayerRowProps) {
   const blueColor = useThemeColor({}, 'blue');
   const borderDivider = useThemeColor({}, 'borderDivider');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
-  
+  const textPrimaryColor = useThemeColor({}, 'textPrimary');
+
+  const gold = useThemeColor({}, 'gold');
+  const silver = useThemeColor({}, 'silver');
+  const bronze = useThemeColor({}, 'bronze');
+
   const getRankColor = () => {
     if (rankColor) return rankColor;
-    if (rank.includes('1st')) return useThemeColor({}, 'gold');
-    if (rank.includes('2nd')) return useThemeColor({}, 'silver');
-    if (rank.includes('3rd')) return useThemeColor({}, 'bronze');
+    if (rank === 1) return gold;
+    if (rank === 2) return silver;
+    if (rank === 3) return bronze;
     return textSecondaryColor;
   };
 
-    const styles = StyleSheet.create({
+  const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 4,
-        height: 32,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 4,
+      height: 32,
     },
     currentUserContainer: {
-        borderTopWidth: 0.8,
-        borderTopColor: borderDivider,
-        paddingTop: 8,
+      borderTopWidth: 0.8,
+      borderTopColor: borderDivider,
+      paddingTop: 8,
     },
     avatarContainer: {
-        marginRight: 8,
+      marginRight: 8,
     },
     avatar: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     contentContainer: {
-        flex: 1,
+      flex: 1,
     },
     rankContainer: {
-        alignItems: 'flex-end',
+      alignItems: 'flex-end',
     },
     rank: {
-        fontWeight: '400',
+      fontWeight: '400',
     },
-    }); 
-return (
+  });
+
+  return (
     <View style={[styles.container, isCurrentUser && styles.currentUserContainer]}>
       <View style={styles.avatarContainer}>
-        <ThemedView style={[styles.avatar, { backgroundColor: blueColor }]}>
-          <ThemedText variant='bodySmall' colorType='textPrimary'>👤</ThemedText>
-        </ThemedView>
+          {userImage ? (
+            <Image
+              source={{ uri: API_CONFIG.STATIC_BASE_URL + userImage }} 
+              style={{ width: 24, height: 24, borderRadius: 45 }} 
+            />
+          ) : (
+            <ThemedView style={[styles.avatar, { backgroundColor: blueColor }]}>
+              <Ionicons name="person" size={15} color={textPrimaryColor} />
+            </ThemedView>
+          )}
       </View>
       
       <View style={styles.contentContainer}>
@@ -80,7 +102,7 @@ return (
           style={[styles.rank, { color: getRankColor() }]}
           variant="bodySmall"
         >
-          {rank}
+          {formatRank(rank)}
         </ThemedText>
       </View>
     </View>

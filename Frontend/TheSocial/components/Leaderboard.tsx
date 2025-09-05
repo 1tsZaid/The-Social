@@ -6,11 +6,13 @@ import { ThemedText } from '@/components/ThemedText';
 import LeaderboardEntry from '@/components/LeaderboardEntry';
 
 interface LeaderboardData {
-  rank: number;
+  userId: string;
   username: string;
-  score: string;
+  userImage?: string;
+  userBanner: string;
+  score: number;
+  rank: number;
   isCurrentUser?: boolean;
-  avatarUrl?: string;
 }
 
 interface LeaderboardProps {
@@ -43,7 +45,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
           username={entry.username}
           score={entry.score}
           isCurrentUser={entry.isCurrentUser}
-          avatarUrl={entry.avatarUrl}
+          avatarUrl={entry.userImage}
         />
       ))}
     </ThemedView>

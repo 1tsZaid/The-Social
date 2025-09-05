@@ -9,7 +9,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 interface LeaderboardEntryProps {
   rank: number;
   username: string;
-  score: string;
+  score: number;
   isCurrentUser?: boolean;
   avatarUrl?: string;
   avatarSize?: number;

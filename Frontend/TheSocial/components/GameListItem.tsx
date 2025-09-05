@@ -8,13 +8,51 @@ export type GameListItemProps = {
   title: string;
   description: string;
   icon: string;
+  banner: string;
   onPress?: () => void;
 };
 
-export function GameListItem({ title, description, icon, onPress }: GameListItemProps) {
+export function GameListItem({ title, description, icon, banner, onPress }: GameListItemProps) {
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
   
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 8,
+      padding: 16,
+      marginBottom: 8,
+    },
+    iconContainer: {
+      marginRight: 16,
+    },
+    iconBackground: {
+      width: 48,
+      height: 48,
+      borderRadius: 8,
+      backgroundColor: banner + '80',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    icon: {
+      fontSize: 24,
+    },
+    contentContainer: {
+      flex: 1,
+    },
+    title: {
+      marginBottom: 4,
+    },
+    chevronContainer: {
+      marginLeft: 8,
+    },
+    chevron: {
+      fontSize: 30,
+      fontWeight: '400',
+    },
+  }); 
+
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
       <ThemedView 
@@ -55,40 +93,3 @@ export function GameListItem({ title, description, icon, onPress }: GameListItem
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 8,
-  },
-  iconContainer: {
-    marginRight: 16,
-  },
-  iconBackground: {
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-    backgroundColor: '#3A3A3A',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  icon: {
-    fontSize: 24,
-  },
-  contentContainer: {
-    flex: 1,
-  },
-  title: {
-    marginBottom: 4,
-  },
-  chevronContainer: {
-    marginLeft: 8,
-  },
-  chevron: {
-    fontSize: 30,
-    fontWeight: '400',
-  },
-}); 

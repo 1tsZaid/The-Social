@@ -9,17 +9,13 @@ import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 import { useModal } from '@/components/ModalContext';
+import { useLeaderboard } from '@/components/LeaderboardContext';
 
 const GameScreen: React.FC = () => {
   const { closeModal } = useModal();
   const accentColor = useThemeColor({}, 'accent');
-  
-  const leaderboardData = [
-    { rank: 1, username: 'GalacticGamer', score: '3K' },
-    { rank: 2, username: 'NovaNebula', score: '2.1K' },
-    { rank: 3, username: 'StellarPilot', score: '2K' },
-    { rank: 99, username: 'You', score: '0.9K', isCurrentUser: true },
-  ];
+
+  const { leaderboard } = useLeaderboard();
   
   const handlePlayPress = () => {
     console.log('Play button pressed');
@@ -52,11 +48,32 @@ const GameScreen: React.FC = () => {
         </ThemedView>
         
         {/* Leaderboard */}
-        <Leaderboard
+        {leaderboard && <Leaderboard
             title="Leaderboard"
-            data={leaderboardData}
+            data={
+              (() => {
+                const topPlayers = leaderboard.topPlayers || [];
+                const currentUser = leaderboard.currentUser;
+                // Check if current user is already in topPlayers
+                const isCurrentUserInTop = currentUser
+                  ? topPlayers.some((p) => p.userId === currentUser.userId)
+                  : false;
+                // Mark current user in topPlayers if present
+                const playersWithFlag = topPlayers.map((p) =>
+                  currentUser && p.userId === currentUser.userId
+                    ? { ...p, isCurrentUser: true }
+                    : p
+                );
+                // If not in topPlayers, add currentUser at the end
+                if (currentUser && !isCurrentUserInTop) {
+                  return [...playersWithFlag, { ...currentUser, isCurrentUser: true }];
+                }
+                return playersWithFlag;
+              })()
+            }
             maxEntries={10}
         />
+        }
       </ThemedView>
     </ScrollView>
   );

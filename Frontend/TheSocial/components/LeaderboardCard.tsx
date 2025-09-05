@@ -7,22 +7,54 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type Player = {
   name: string;
-  rank: string;
+  rank: number;
+  userImage?: string;
   isCurrentUser?: boolean;
 };
 
 export type LeaderboardCardProps = {
   players: Player[];
+  gameImage?: string;
+  gameBanner?: string;
 };
 
-export function LeaderboardCard({ players }: LeaderboardCardProps) {
+export function LeaderboardCard({ players, gameImage, gameBanner }: LeaderboardCardProps,) {
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
   
+  const styles = StyleSheet.create({
+    container: {
+      borderRadius: 8,
+      padding: 16,
+    },
+    contentContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    playerListContainer: {
+      flex: 1,
+      marginRight: 16,
+    },
+    controllerContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    controllerBackground: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: gameBanner + '80',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    controllerIcon: {
+      fontSize: 48,
+    },
+  }); 
+
   return (
     <ThemedView 
       style={[styles.container, { backgroundColor: surfaceColor }]}
-      backgroundType="surface"
     >
       <View style={styles.contentContainer}>
         <View style={styles.playerListContainer}>
@@ -31,7 +63,8 @@ export function LeaderboardCard({ players }: LeaderboardCardProps) {
               key={index}
               name={player.name}
               rank={player.rank}
-              isCurrentUser={player.isCurrentUser}
+              userImage={player.userImage}
+              isCurrentUser={player.isCurrentUser && player.rank > 3}
             />
           ))}
         </View>
@@ -39,7 +72,7 @@ export function LeaderboardCard({ players }: LeaderboardCardProps) {
         <View style={styles.controllerContainer}>
           <ThemedView style={styles.controllerBackground}>
             <ThemedText style={[styles.controllerIcon, { color: textSecondaryColor }]}>
-              🎮
+              {gameImage}
             </ThemedText>
           </ThemedView>
         </View>
@@ -47,33 +80,3 @@ export function LeaderboardCard({ players }: LeaderboardCardProps) {
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 8,
-    padding: 16,
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  playerListContainer: {
-    flex: 1,
-    marginRight: 16,
-  },
-  controllerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  controllerBackground: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#3A3A3A',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  controllerIcon: {
-    fontSize: 48,
-  },
-}); 

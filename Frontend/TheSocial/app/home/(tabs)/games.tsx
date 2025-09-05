@@ -1,62 +1,127 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
+import { Video, ResizeMode } from "expo-av";
+import { router } from 'expo-router';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { LeaderboardCard } from '@/components/LeaderboardCard';
 import { GameCard } from '@/components/GameCard';
 import { GameListItem } from '@/components/GameListItem';
+
+import { useLeaderboard } from '@/components/LeaderboardContext';
+import { useCommunities } from '@/components/CommunitiesContext';
 import { useModal } from '@/components/ModalContext';
+
 import { useScrollHandler } from '@/hooks/useScrollHandler';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { deleteTokens } from '@/utils/tokenStorage';
+import { getProfile } from '@/services/profile';
+
+import { checkTokens } from '@/utils/checkTokens';
 
 export default function GamesScreen() {
+  const [player, setPlayer] = useState<string | null>(null);
+
+  const { selectedCommunityId } = useCommunities();
   const { openModal } = useModal();
   const { onScroll } = useScrollHandler();
-  
-  // Mock data for the leaderboard
-  const leaderboardPlayers = [
-    { name: 'Player Name 1', rank: '1st' },
-    { name: 'Player Name 2', rank: '2nd' },
-    { name: 'Player Name 3', rank: '3rd' },
-    { name: 'You', rank: '80th', isCurrentUser: true },
-  ];
+
+  const theme = useColorScheme() ?? 'light';
 
   // Mock data for currently playing games
-  const playingGames = [
-    { title: 'Game Alpha', subtitle: '8 inside', icon: '🎮' },
-    { title: 'Game Beta', subtitle: '2 inside', icon: '🎲' },
-  ];
+  // const playingGames = [
+  //   { title: 'Game Alpha', subtitle: '8 inside', icon: '🎮' },
+  //   { title: 'Game Beta', subtitle: '2 inside', icon: '🎲' },
+  // ];
 
   // Mock data for recent games
   const recentGames = [
-    { title: 'Game Gamma', subtitle: '30min ago', icon: '🎯' },
-    { title: 'Game Delta', subtitle: '1hr 31min ago', icon: '🧩' },
+    { title: 'Flappy Bird', subtitle: '20sec avg', icon: '🚀' },
+    { title: 'Epic Quest', subtitle: '40sec avg', icon: '🧩' },
   ];
 
   // Mock data for available games
   const availableGames = [
     {
-      title: 'Space Voyager',
-      description: 'Explore distant galaxies...',
+      title: 'Flappy Bird',
+      description: 'One-tap arcade game where the player controls a bird to fly through gaps in green pipes, scoring a point for each successful passage',
+      subtitle: '20sec avg',
+      banner: '#8AC048',
       icon: '🚀',
     },
     {
       title: 'Epic Quest',
       description: 'Embark on a grand adventure...',
-      icon: '⚔️',
+      subtitle: '40sec avg',
+      banner: '#F9DC35',
+      icon: '🧩',
     },
     {
       title: 'Firefight Arena',
       description: 'Battle it out in intense combat...',
-      icon: '🔥',
+      subtitle: '1min avg',
+      banner: '#FE5F55',
+      icon: '⚔️',
     },
   ];
+
+  const { leaderboard, fetchLeaderboard } = useLeaderboard();
+
+  useEffect(() => {
+    fetchLeaderboardData();
+  }, [selectedCommunityId]);
+
+  const fetchLeaderboardData = async () => {
+    if (selectedCommunityId) {
+      if (!player) {
+        fetchProfileData();
+      }
+      await fetchLeaderboard("flappy-bird", selectedCommunityId, "current-user-id", 3);
+    }
+  }
+
+  const fetchProfileData = async () => {
+    const tokenFlag = await checkTokens();
+    if (tokenFlag) {
+      const profileData = await getProfile();
+      setPlayer(profileData.username);
+      console.log('Profile data fetched:', profileData);
+    } else {
+      deleteTokens();
+      router.replace('/login');
+    }
+  };
 
   const handleGamePress = (gameTitle: string) => {
     console.log(`Pressed: ${gameTitle}`);
     // Add navigation logic here
     openModal('game1');
   };
+
+  if (!selectedCommunityId) {  
+    const videoSource =
+      theme === "dark"
+      ? require("@/assets/videos/home.dark.mp4")
+      : require("@/assets/videos/home.light.mp4");
+
+    return (
+      <ThemedView style={styles.containerNull} backgroundType="background">
+        <ThemedView style={styles.videoWrapper}>
+          <Video
+            source={videoSource}
+            style={styles.video}
+            videoStyle={{ width: 300, height: 300 }}
+            resizeMode={ResizeMode.STRETCH}   // keeps full video visible
+            shouldPlay
+            isLooping
+            isMuted
+          />
+        </ThemedView>
+        <ThemedText style={{ padding: 20, textAlign: 'center' }}>Please select a community to view games.</ThemedText>
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={styles.container} backgroundType="background">
@@ -70,11 +135,18 @@ export default function GamesScreen() {
         {/* Leaderboard Section */}
         <View style={styles.section}>
           <ThemedText style={styles.headings} variant="h2" colorType='textPrimary'>LeaderBoard</ThemedText>
-          <LeaderboardCard players={leaderboardPlayers} />
+          {leaderboard &&
+            <LeaderboardCard players={leaderboard.topPlayers.map((p) => ({
+              name: p.username,
+              rank: p.rank,
+              userImage: p.userImage,
+              isCurrentUser: player === p.username,
+            }))} gameImage={availableGames[0].icon} gameBanner={availableGames[0].banner}/>
+          }
         </View>
 
         {/* Playing Section */}
-        <View style={styles.section}>
+        {/* <View style={styles.section}>
           <ThemedText style={styles.headings} variant='h3' colorType='textPrimary' >Playing</ThemedText>
           <View style={styles.horizontalCardsContainer}>
             {playingGames.map((game, index) => (
@@ -88,7 +160,7 @@ export default function GamesScreen() {
               </View>
             ))}
           </View>
-        </View>
+        </View> */}
 
         {/* Recent Section */}
         <View style={styles.section}>
@@ -100,6 +172,7 @@ export default function GamesScreen() {
                   title={game.title}
                   subtitle={game.subtitle}
                   icon={game.icon}
+                  banner={availableGames.find(g => g.title === game.title)?.banner}
                   onPress={() => handleGamePress(game.title)}
                 />
               </View>
@@ -117,6 +190,7 @@ export default function GamesScreen() {
                 title={game.title}
                 description={game.description}
                 icon={game.icon}
+                banner={game.banner}
                 onPress={() => handleGamePress(game.title)}
               />
             ))}
@@ -153,5 +227,21 @@ const styles = StyleSheet.create({
   },
   gamesListContainer: {
     gap: 8,
+  },
+  containerNull: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  videoWrapper: {
+    width: "100%",       // take full width
+    aspectRatio: 1,      // keep square
+    maxWidth: 300,       // optional limit
+    alignSelf: "center", // keep centered
+  },
+  video: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 12,
   },
 });

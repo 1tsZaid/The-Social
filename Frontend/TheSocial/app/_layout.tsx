@@ -15,13 +15,17 @@ import {
   Poppins_600SemiBold,
 } from '@expo-google-fonts/poppins';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { ModalProvider, useModal } from '@/components/ModalContext';
 import BottomModal from '@/components/BottomModal';
 import CustomBackButton from '@/components/CustomBackButton';
+
+import { ModalProvider, useModal } from '@/components/ModalContext';
+import { LeaderboardProvider } from '@/components/LeaderboardContext';
+
 import CreateCommunityScreen from './createCommunity';
 import DiscoverScreen from './discover';
 import GameScreen from './game1';
+
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 function ModalRoot() {
   const { modal, closeModal } = useModal();
@@ -54,30 +58,34 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <ModalProvider>
-          <Stack 
-            initialRouteName="home"
-            screenOptions={{ 
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen 
-              name="profile" 
-              options={{ 
-                headerShown: true,
-                title: '',
-                headerTransparent: true,
-                headerLeft: () => <CustomBackButton />,
-                headerTitleStyle: {
-                  fontWeight: '600',
-                },
-              }} 
-            />
+        <LeaderboardProvider>
+          <ModalProvider>
+
+            <Stack 
+              initialRouteName="home"
+              screenOptions={{ 
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen 
+                name="profile" 
+                options={{ 
+                  headerShown: true,
+                  title: '',
+                  headerTransparent: true,
+                  headerLeft: () => <CustomBackButton />,
+                  headerTitleStyle: {
+                    fontWeight: '600',
+                  },
+                }} 
+              />
+              
+            </Stack>
+            <ModalRoot />
             
-          </Stack>
-          <ModalRoot />
-        </ModalProvider>
-        <StatusBar style="auto" />
+          </ModalProvider>
+          <StatusBar style="auto" />
+        </LeaderboardProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );
