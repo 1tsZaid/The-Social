@@ -210,7 +210,9 @@ const styles = StyleSheet.create({
   },
   gameEngine: {
     position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'pink',
+    top: 60, left: 0, right: 0, bottom: 0,
+    width: 400, height: 400,
   },
   overlay: {
     flex: 1,
