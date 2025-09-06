@@ -20,6 +20,8 @@ import { useLeaderboard } from '@/components/LeaderboardContext';
 import entities from '@/games/flappyBird/entities';
 import Physics from '@/games/flappyBird/physics';
 
+import { GAME_FLAPPY_BIRD } from '@/services/game';
+
 export default function App() {
   const [username, setUsername] = useState('');
   const { game, communityId } = useLocalSearchParams();
@@ -28,7 +30,7 @@ export default function App() {
   const [currentPoints, setCurrentPoints] = useState(0);
   const [highestPoints, setHighestPoints] = useState(0);
   const [showHighScoreBanner, setShowHighScoreBanner] = useState(false);
-  const { leaderboard, updateScore, fetchLeaderboard } = useLeaderboard();
+  const { leaderboards, updateScore, fetchLeaderboard } = useLeaderboard();
 
   useEffect(() => {
     // Lock to portrait when this screen mounts
@@ -45,17 +47,17 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!username || !leaderboard) return;
+    if (!username || !leaderboards[GAME_FLAPPY_BIRD]) return;
     // Prefer currentUser if available, else check topPlayers
-    if (leaderboard.currentUser) {
-      setHighestPoints(leaderboard.currentUser.score);
-    } else if (leaderboard.topPlayers) {
-      const userInTop = leaderboard.topPlayers.find(p => p.username === username);
+    if (leaderboards[GAME_FLAPPY_BIRD].currentUser) {
+      setHighestPoints(leaderboards[GAME_FLAPPY_BIRD].currentUser.score);
+    } else if (leaderboards[GAME_FLAPPY_BIRD].topPlayers) {
+      const userInTop = leaderboards[GAME_FLAPPY_BIRD].topPlayers.find(p => p.username === username);
       if (userInTop) {
         setHighestPoints(userInTop.score);
       }
     }
-  }, [leaderboard, username]);
+  }, [leaderboards[GAME_FLAPPY_BIRD], username]);
 
   async function leaderboardUpdate() {
     const username = await fetchUsername();

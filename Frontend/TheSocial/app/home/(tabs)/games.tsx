@@ -20,11 +20,12 @@ import { getProfile } from '@/services/profile';
 
 import { checkTokens } from '@/utils/checkTokens';
 
-import { GAME_FLAPPY_BIRD } from '@/services/game';
+import { GAME_FLAPPY_BIRD, GAME_SNAKE } from '@/services/game';
 import { Colors } from '@/constants/Colors';
 
 export default function GamesScreen() {
   const [username, setUsername] = useState<string | null>(null);
+  const [currentLeaderboardGame, setCurrentLeaderboardGame] = useState<'Flappy Bird' | 'Snake'>('Flappy Bird');
 
   const { selectedCommunityId } = useCommunities();
   const { openModal } = useModal();
@@ -41,7 +42,7 @@ export default function GamesScreen() {
   // Mock data for recent games
   const featuredGames = [
     { title: 'Flappy Bird', subtitle: '20sec avg', icon: '🚀' },
-    { title: 'Epic Quest', subtitle: '40sec avg', icon: '🧩' },
+    { title: 'Snake', subtitle: '1min avg', icon: '⚔️' },
   ];
 
   // Mock data for recent games
@@ -60,39 +61,57 @@ export default function GamesScreen() {
       icon: '🚀',
     },
     {
-      title: 'Epic Quest',
-      description: 'Embark on a grand adventure...',
-      subtitle: '40sec avg',
-      banner: '#F9DC35',
-      icon: '🧩',
-    },
-    {
-      title: 'Firefight Arena',
-      description: 'Battle it out in intense combat...',
+      title: 'Snake',
+      description: 'A classic video game where the player controls a line that grows longer by consuming food items while avoiding collisions with the boundaries of the game area or its own body',
       subtitle: '1min avg',
-      banner: '#FE5F55',
+      banner: Colors.games.snake,
       icon: '⚔️',
     },
   ];
 
-  const { leaderboard, fetchLeaderboard } = useLeaderboard();
+  const { leaderboards, fetchLeaderboard } = useLeaderboard();
 
+  // Add a state to store the leaderboard for each game
+  const [leaderboard, setLeaderboard] = useState<any>(null);
+
+  // Switch leaderboard game every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentLeaderboardGame(prev =>
+        prev === 'Flappy Bird' ? 'Snake' : 'Flappy Bird'
+      );
+    }, 10000); // 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch leaderboard when selectedCommunityId, username, or currentLeaderboardGame changes
   useEffect(() => {
     fetchLeaderboardData();
-  }, [selectedCommunityId]);
+  }, [selectedCommunityId, username, currentLeaderboardGame]);
+
+  useEffect(() => {
+    const gameKey =
+      currentLeaderboardGame === 'Flappy Bird'
+        ? GAME_FLAPPY_BIRD
+        : GAME_SNAKE;
+    setLeaderboard(leaderboards[gameKey]);
+  }, [leaderboards, currentLeaderboardGame]);
 
   const fetchLeaderboardData = async () => {
     if (selectedCommunityId) {
-      // check profile data
       if (!username) {
         await fetchUsername();
       }
-      // get leaderboard for that profile
       if (username) {
-        await fetchLeaderboard(GAME_FLAPPY_BIRD, selectedCommunityId, username, 3);
+        const gameKey =
+          currentLeaderboardGame === 'Flappy Bird'
+            ? GAME_FLAPPY_BIRD
+            : GAME_SNAKE;
+        await fetchLeaderboard(gameKey, selectedCommunityId, username, 3);
       }
     }
-  }
+  };
 
   const fetchUsername = async () => {
     const tokenFlag = await checkTokens();
@@ -149,7 +168,7 @@ export default function GamesScreen() {
       >
         {/* Leaderboard Section */}
         <View style={styles.section}>
-          <ThemedText style={styles.headings} variant="h2" colorType='textPrimary'>LeaderBoard</ThemedText>
+          <ThemedText style={styles.headings} variant="h2" colorType='textPrimary'>LeaderBoard - {currentLeaderboardGame}</ThemedText>
           {leaderboard && (
             <LeaderboardCard
               players={[
@@ -170,8 +189,8 @@ export default function GamesScreen() {
                   isCurrentUser: true,
                 }] : [])
               ]}
-              gameImage={availableGames[0].icon}
-              gameBanner={availableGames[0].banner}
+              gameImage={availableGames.find(g => g.title === currentLeaderboardGame)?.icon}
+              gameBanner={availableGames.find(g => g.title === currentLeaderboardGame)?.banner}
             />
           )}
         </View>

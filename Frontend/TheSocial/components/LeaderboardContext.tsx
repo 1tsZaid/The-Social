@@ -20,24 +20,43 @@ export interface GameLeaderboard {
 
 // ---- Context Props ---- //
 interface LeaderboardContextProps {
-  leaderboard: GameLeaderboard | null;
-  fetchLeaderboard: (game: string, communityId: string, username: string, limit?: number) => Promise<void>;
-  updateScore: (game: string, communityId: string, username: string, score: number, limit?: number) => Promise<void>;
-  resetLeaderboard: () => void;
+  leaderboards: Record<string, GameLeaderboard>; // key = game
+  fetchLeaderboard: (
+    game: string,
+    communityId: string,
+    username: string,
+    limit?: number
+  ) => Promise<void>;
+  updateScore: (
+    game: string,
+    communityId: string,
+    username: string,
+    score: number,
+    limit?: number
+  ) => Promise<void>;
+  resetLeaderboard: (game?: string) => void;
 }
 
-const LeaderboardContext = createContext<LeaderboardContextProps | undefined>(undefined);
+const LeaderboardContext = createContext<LeaderboardContextProps | undefined>(
+  undefined
+);
 
 export const LeaderboardProvider = ({ children }: { children: ReactNode }) => {
-  const [leaderboard, setLeaderboard] = useState<GameLeaderboard | null>(null);
+  const [leaderboards, setLeaderboards] = useState<Record<string, GameLeaderboard>>({});
 
-  const fetchLeaderboard = async (game: string, communityId: string, username: string, limit: number = 3) => {
+  const fetchLeaderboard = async (
+    game: string,
+    communityId: string,
+    username: string,
+    limit: number = 3
+  ) => {
     try {
       const data = await getLeaderboard(game, communityId, limit);
 
-      let currentUser: LeaderboardEntry | undefined = data.topPlayers.find(p => p.username === username);
+      let currentUser: LeaderboardEntry | undefined = data.topPlayers.find(
+        (p) => p.username === username
+      );
 
-      // If the user is not already in leaderboard, fetch their stats
       if (!currentUser) {
         try {
           const playerData = await getPlayerLeaderboardStats(game, communityId);
@@ -47,35 +66,52 @@ export const LeaderboardProvider = ({ children }: { children: ReactNode }) => {
         }
       }
 
-      setLeaderboard({
-        ...data,
-        currentUser,
-      });
+      setLeaderboards((prev) => ({
+        ...prev,
+        [game]: {
+          ...data,
+          currentUser,
+        },
+      }));
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
     }
   };
 
-  const updateScore = async (game: string, communityId: string, username: string, score: number, limit: number = 3) => {
+  const updateScore = async (
+    game: string,
+    communityId: string,
+    username: string,
+    score: number,
+    limit: number = 3
+  ) => {
     try {
-      // update the player's score
       await updatePlayerScore({ game, communityId, scoreAchieved: score });
-      resetLeaderboard();
-
-      // refresh leaderboard so ranks are correct
+      // reset just this game leaderboard
+      resetLeaderboard(game);
       await fetchLeaderboard(game, communityId, username, limit);
-
     } catch (error) {
       console.error("Error updating score:", error);
     }
   };
 
-  const resetLeaderboard = () => {
-    setLeaderboard(null);
+  const resetLeaderboard = (game?: string) => {
+    if (game) {
+      // reset single game
+      setLeaderboards((prev) => {
+        const { [game]: _, ...rest } = prev;
+        return rest;
+      });
+    } else {
+      // reset all
+      setLeaderboards({});
+    }
   };
 
   return (
-    <LeaderboardContext.Provider value={{ leaderboard, fetchLeaderboard, updateScore, resetLeaderboard }}>
+    <LeaderboardContext.Provider
+      value={{ leaderboards, fetchLeaderboard, updateScore, resetLeaderboard }}
+    >
       {children}
     </LeaderboardContext.Provider>
   );
@@ -83,6 +119,7 @@ export const LeaderboardProvider = ({ children }: { children: ReactNode }) => {
 
 export const useLeaderboard = () => {
   const context = useContext(LeaderboardContext);
-  if (!context) throw new Error("useLeaderboard must be used inside LeaderboardProvider");
+  if (!context)
+    throw new Error("useLeaderboard must be used inside LeaderboardProvider");
   return context;
 };

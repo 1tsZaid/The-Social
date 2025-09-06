@@ -80,6 +80,7 @@ export const Colors = {
 
   games: {
     flappyBird: '#8AC048',
+    snake: '#FE5F55',
   },
 };
 

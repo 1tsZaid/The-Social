@@ -4,6 +4,7 @@ import { getTokens } from '../utils/tokenStorage';
 
 // flappy-bird
 export const GAME_FLAPPY_BIRD = 'flappy-bird';
+export const GAME_SNAKE = 'snake';
 
 // create a normializing function
 

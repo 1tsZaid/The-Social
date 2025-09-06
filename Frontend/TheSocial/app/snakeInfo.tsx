@@ -19,7 +19,7 @@ import { Colors } from '@/constants/Colors';
 const GameInfoScreen: React.FC = () => {
   const { closeModal } = useModal();
 
-  const { leaderboards } = useLeaderboard();
+  const { leaderboard } = useLeaderboard();
   const { selectedCommunityId } = useCommunities();
   
   const handlePlayPress = () => {
@@ -56,11 +56,10 @@ const GameInfoScreen: React.FC = () => {
         </ThemedView>
         
         {/* Leaderboard */}
-        {leaderboards[GAME_FLAPPY_BIRD] && <Leaderboard
+        {leaderboard && <Leaderboard
             title="Leaderboard"
             data={
               (() => {
-                const leaderboard = leaderboards[GAME_FLAPPY_BIRD];
                 const topPlayers = leaderboard.topPlayers || [];
                 const currentUser = leaderboard.currentUser;
                 // Check if current user is already in topPlayers
