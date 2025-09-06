@@ -59,6 +59,7 @@ export default function GamesScreen() {
       subtitle: '20sec avg',
       banner: Colors.games.flappyBird,
       icon: '🚀',
+      handleGamePress: () => openModal('flappyBirdInfo'),
     },
     {
       title: 'Snake',
@@ -66,6 +67,7 @@ export default function GamesScreen() {
       subtitle: '1min avg',
       banner: Colors.games.snake,
       icon: '⚔️',
+      handleGamePress: () => openModal('snakeInfo'),
     },
   ];
 
@@ -127,12 +129,6 @@ export default function GamesScreen() {
     }
   };
 
-  const handleGamePress = (gameTitle: string) => {
-    console.log(`Pressed: ${gameTitle}`);
-    // Add navigation logic here
-    openModal('flappyBirdInfo');
-  };
-
   if (!selectedCommunityId) {  
     const videoSource =
       theme === "dark"
@@ -168,7 +164,7 @@ export default function GamesScreen() {
       >
         {/* Leaderboard Section */}
         <View style={styles.section}>
-          <ThemedText style={styles.headings} variant="h2" colorType='textPrimary'>LeaderBoard - {currentLeaderboardGame}</ThemedText>
+          <ThemedText style={styles.headings} variant="h2" colorType='textPrimary'>LeaderBoard</ThemedText>
           {leaderboard && (
             <LeaderboardCard
               players={[
@@ -223,7 +219,7 @@ export default function GamesScreen() {
                   subtitle={game.subtitle}
                   icon={game.icon}
                   banner={availableGames.find(g => g.title === game.title)?.banner}
-                  onPress={() => handleGamePress(game.title)}
+                  onPress={() => availableGames.find(g => g.title === game.title)?.handleGamePress()}
                 />
               </View>
             ))}
@@ -259,7 +255,7 @@ export default function GamesScreen() {
                 description={game.description}
                 icon={game.icon}
                 banner={game.banner}
-                onPress={() => handleGamePress(game.title)}
+                onPress={() => game.handleGamePress()}
               />
             ))}
           </View>

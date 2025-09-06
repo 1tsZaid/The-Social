@@ -24,7 +24,8 @@ import { CommunitiesProvider } from '@/components/CommunitiesContext';
 
 import CreateCommunityScreen from './createCommunity';
 import DiscoverScreen from './discover';
-import GameInfoScreen from './flappyBirdInfo';
+import FlappyBirdInfo from './flappyBirdInfo';
+import SnakeInfo from './snakeInfo';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -34,7 +35,8 @@ function ModalRoot() {
     <BottomModal isVisible={!!modal} onClose={closeModal}>
       {modal === 'createCommunity' && <CreateCommunityScreen />}
       {modal === 'discover' && <DiscoverScreen />}
-      {modal === 'flappyBirdInfo' && <GameInfoScreen />}
+      {modal === 'flappyBirdInfo' && <FlappyBirdInfo />}
+      {modal === 'snakeInfo' && <SnakeInfo />}
     </BottomModal>
   );
 }

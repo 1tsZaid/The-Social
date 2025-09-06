@@ -13,13 +13,13 @@ import { useLeaderboard } from '@/components/LeaderboardContext';
 import { useCommunities } from '@/components/CommunitiesContext';
 
 import { getProfile } from '@/services/profile';
-import { GAME_FLAPPY_BIRD } from '@/services/game';
+import { GAME_SNAKE,  } from '@/services/game';
 import { Colors } from '@/constants/Colors';
 
 const GameInfoScreen: React.FC = () => {
   const { closeModal } = useModal();
 
-  const { leaderboard } = useLeaderboard();
+  const { leaderboards } = useLeaderboard();
   const { selectedCommunityId } = useCommunities();
   
   const handlePlayPress = () => {
@@ -27,8 +27,8 @@ const GameInfoScreen: React.FC = () => {
 
     closeModal();
     router.push({
-      pathname: "/flappyBird",
-      params: { game: GAME_FLAPPY_BIRD, communityId: selectedCommunityId },
+      pathname: "/snake",
+      params: { game: GAME_SNAKE, communityId: selectedCommunityId },
     })
     // Add your game launch logic here
   };
@@ -37,7 +37,7 @@ const GameInfoScreen: React.FC = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <ThemedView backgroundType='background'>
         {/* Banner */}
-        <View style={[styles.banner, { backgroundColor: Colors.games.flappyBird }]}>
+        <View style={[styles.banner, { backgroundColor: Colors.games.snake }]}>
             <View style={styles.bannerContent}>
               <GameLogo size="medium" />
             </View>
@@ -46,9 +46,9 @@ const GameInfoScreen: React.FC = () => {
         {/* Game Info Card */}
         <ThemedView style={styles.cardContainer} backgroundType='background'>
             <GameInfoCard
-            title="Flappy Bird"
-            description="One-tap arcade game where the player controls a bird to fly through gaps in green pipes, scoring a point for each successful passage."
-            playtime="20 sec"
+            title="Snake"
+            description="A classic video game where the player controls a line that grows longer by consuming food items while avoiding collisions with the boundaries of the game area or its own body."
+            playtime="1 min"
             onPlayPress={handlePlayPress}
             playButtonText="Play"
             disabled={false}
@@ -56,10 +56,11 @@ const GameInfoScreen: React.FC = () => {
         </ThemedView>
         
         {/* Leaderboard */}
-        {leaderboard && <Leaderboard
+        {leaderboards[GAME_SNAKE] && <Leaderboard
             title="Leaderboard"
             data={
               (() => {
+                const leaderboard = leaderboards[GAME_SNAKE];
                 const topPlayers = leaderboard.topPlayers || [];
                 const currentUser = leaderboard.currentUser;
                 // Check if current user is already in topPlayers
@@ -80,7 +81,7 @@ const GameInfoScreen: React.FC = () => {
               })()
             }
             maxEntries={10}
-            gameBanner={Colors.games.flappyBird}
+            gameBanner={Colors.games.snake}
         />
         }
       </ThemedView>

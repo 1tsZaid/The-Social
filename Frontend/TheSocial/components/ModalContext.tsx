@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-type ModalType = 'createCommunity' | 'discover' | 'flappyBirdInfo' | null;
+type ModalType = 'createCommunity' | 'discover' | 'flappyBirdInfo' | 'snakeInfo' | null;
 
 type ModalContextType = {
   modal: ModalType;
