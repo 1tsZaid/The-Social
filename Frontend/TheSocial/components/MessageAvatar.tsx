@@ -1,18 +1,18 @@
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import { ThemedView } from './ThemedView';
-import { Ionicons } from '@expo/vector-icons';
+import { ThemedText } from './ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 import { API_CONFIG } from '@/constants/Api'
 
 interface MessageAvatarProps {
+  username: string;
   imageUrl?: string;
+  userBanner: string;
   size?: number;
 }
 
-export function MessageAvatar({ imageUrl, size = 36 }: MessageAvatarProps) {
-  const iconColor = useThemeColor({}, 'textSecondary');
+export function MessageAvatar({ username, imageUrl, userBanner, size = 36 }: MessageAvatarProps) {
   const surfaceColor = useThemeColor({}, 'textPrimary');
 
   const styles = StyleSheet.create({
@@ -40,7 +40,12 @@ export function MessageAvatar({ imageUrl, size = 36 }: MessageAvatarProps) {
         </View>
       ) : (
         <View style={styles.profileImagePlaceholder}>
-          <Ionicons name="person" size={20} color={iconColor} />
+          <ThemedText 
+            variant="h2"
+            style={{ fontWeight: 'bold', fontSize: 20, color: userBanner }}
+          >
+            {username?.charAt(0).toUpperCase()}
+          </ThemedText>
         </View>
       )}
     </View>

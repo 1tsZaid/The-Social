@@ -48,7 +48,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
           score={entry.score}
           isCurrentUser={entry.isCurrentUser}
           avatarUrl={entry.userImage}
-          avatarBanner={gameBanner}
+          avatarBanner={entry.userBanner}
         />
       ))}
     </ThemedView>

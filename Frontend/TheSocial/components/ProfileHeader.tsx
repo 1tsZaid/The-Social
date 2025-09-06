@@ -56,8 +56,8 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       marginTop: Platform.OS === 'web' ? -70 : -55, // Overlap with banner
     },
     profileImagePlaceholder: {
-      width: 96,
-      height: 96,
+      width: 88,
+      height: 88,
       borderRadius: 45,
       backgroundColor: profileSurfaceColor,
       justifyContent: 'center',
@@ -117,7 +117,12 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               />
             ) : (
               <View style={styles.profileImagePlaceholder}>
-                <Ionicons name="person" size={45} color={textSecondaryColor} />
+                <ThemedText 
+                  variant="h2"
+                  style={{ fontWeight: 'bold', fontSize: 45, color: bannerColor }}
+                >
+                  {username?.charAt(0).toUpperCase()}
+                </ThemedText>
               </View>
             )}
           </View>

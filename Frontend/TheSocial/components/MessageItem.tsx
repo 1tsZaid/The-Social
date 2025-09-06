@@ -59,7 +59,7 @@ export function MessageItem({
   return (
     <ThemedView style={styles.container} backgroundType="background">
       <View style={styles.avatarContainer}>
-        <MessageAvatar imageUrl={imageUrl} size={avatarSize} />
+        <MessageAvatar username={senderName} imageUrl={imageUrl} userBanner={banner} size={avatarSize} />
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.headerRow}>

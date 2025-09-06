@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, TextInput, Image, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import MainButton from '@/components/MainButton';
 import { Typography } from '@/constants/Typography';
@@ -136,7 +137,12 @@ export const EditProfileHeader: React.FC<EditProfileHeaderProps> = ({
                 />
             ) : (
               <View style={styles.profileImagePlaceholder}>
-                <Ionicons name="person" size={45} color={textSecondaryColor} />
+                <ThemedText 
+                  variant="h2"
+                  style={{ fontWeight: 'bold', fontSize: 45, color: bannerColor }}
+                >
+                  {username?.charAt(0).toUpperCase()}
+                </ThemedText>
               </View>
             )}
           </View>

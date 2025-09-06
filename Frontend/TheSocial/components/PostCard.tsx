@@ -47,6 +47,7 @@ export function PostCard({
       <PostHeader
         name={username}
         imageUrl={imageUrl}
+        banner={banner}
         timestamp={timestamp}
         onOptions={() => {console.log('Options pressed for post');}}
       />

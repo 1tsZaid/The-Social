@@ -10,15 +10,15 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 interface PostHeaderProps {
   name: string;
   imageUrl?: string;
+  banner: string,
   timestamp: string;
   onOptions?: () => void;
 }
 
-export function PostHeader({ name, imageUrl, timestamp, onOptions }: PostHeaderProps) {
+export function PostHeader({ name, imageUrl, banner, timestamp, onOptions }: PostHeaderProps) {
   const iconColor = useThemeColor({}, 'borderDivider');
   const dotColor = useThemeColor({}, 'textSecondary');
-  const surfaceColor = useThemeColor({}, 'surface');
-  const textSecondaryColor = useThemeColor({}, 'textSecondary');
+  const textPrimary = useThemeColor({}, 'textPrimary');
 
   // Split into date and time parts
   const [date, timeWithMs] = timestamp.split("T");
@@ -44,7 +44,7 @@ export function PostHeader({ name, imageUrl, timestamp, onOptions }: PostHeaderP
       width: 50,
       height: 50,
       borderRadius: 45,
-      backgroundColor: surfaceColor,
+      backgroundColor: textPrimary,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -91,7 +91,12 @@ export function PostHeader({ name, imageUrl, timestamp, onOptions }: PostHeaderP
           </View>
         ) : (
           <View style={styles.profileImagePlaceholder}>
-            <Ionicons name="person" size={30} color={textSecondaryColor} />
+            <ThemedText 
+              variant="h2"
+              style={{ fontWeight: 'bold', fontSize: 30, color: banner }}
+            >
+              {name?.charAt(0).toUpperCase()}
+            </ThemedText>
           </View>
         )}
         

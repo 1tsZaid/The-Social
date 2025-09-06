@@ -31,7 +31,7 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
   const scoreColor = isCurrentUser ? 'accent' : 'textPrimary';
   const starColor = useThemeColor({}, 'gold')
   const borderColor = useThemeColor({}, 'borderDivider');
-  const avatarIconColor = useThemeColor({}, 'textPrimary');
+  const avatarBackground = useThemeColor({}, 'textPrimary');
   
   const styles = StyleSheet.create({
     leaderboardEntry: {
@@ -52,7 +52,7 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
       marginRight: 12,
     },
     avatar: {
-      backgroundColor: avatarBanner,
+      backgroundColor: avatarBackground,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -87,8 +87,13 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
           {avatarUrl ? (
             <Image source={{ uri: API_CONFIG.STATIC_BASE_URL + avatarUrl }} style={styles.avatarImage} />
           ) : (
-            <ThemedView style={[styles.avatar, { backgroundColor: avatarBanner }]}>
-              <Ionicons name="person" size={18} color={avatarIconColor} />
+            <ThemedView style={[styles.avatar, { backgroundColor: avatarBackground }]}>
+              <ThemedText 
+                variant="h2"
+                style={{ fontWeight: 'bold', fontSize: 18, color: avatarBanner }}
+              >
+                {username?.charAt(0).toUpperCase()}
+              </ThemedText>
             </ThemedView>
           )}
         </View>

@@ -148,6 +148,7 @@ export default function GamesScreen() {
               name: p.username,
               rank: p.rank,
               userImage: p.userImage,
+              userBanner: p.userBanner,
               isCurrentUser: player === p.username,
             }))} gameImage={availableGames[0].icon} gameBanner={availableGames[0].banner}/>
           }

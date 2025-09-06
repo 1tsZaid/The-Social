@@ -9,6 +9,7 @@ export type Player = {
   name: string;
   rank: number;
   userImage?: string;
+  userBanner: string,
   isCurrentUser?: boolean;
 };
 
@@ -64,7 +65,7 @@ export function LeaderboardCard({ players, gameImage, gameBanner }: LeaderboardC
               name={player.name}
               rank={player.rank}
               userImage={player.userImage}
-              userBackground={gameBanner}
+              userBanner={player.userBanner}
               isCurrentUser={player.isCurrentUser && player.rank > 3}
             />
           ))}

@@ -11,7 +11,7 @@ export type PlayerRowProps = {
   name: string;
   rank: number;
   userImage?: string;
-  userBackground?: string,
+  userBanner: string,
   isCurrentUser?: boolean;
   rankColor?: string;
 };
@@ -23,8 +23,7 @@ const formatRank = (rank: number): string => {
   return rank + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
 };
 
-export function PlayerRow({ name, userImage, rank, isCurrentUser = false, rankColor, userBackground }: PlayerRowProps) {
-  const blueColor = useThemeColor({}, 'blue');
+export function PlayerRow({ name, userImage, rank, isCurrentUser = false, rankColor, userBanner }: PlayerRowProps) {
   const borderDivider = useThemeColor({}, 'borderDivider');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
   const textPrimaryColor = useThemeColor({}, 'textPrimary');
@@ -83,8 +82,13 @@ export function PlayerRow({ name, userImage, rank, isCurrentUser = false, rankCo
               style={{ width: 24, height: 24, borderRadius: 45 }} 
             />
           ) : (
-            <ThemedView style={[styles.avatar, { backgroundColor: userBackground || blueColor }]}>
-              <Ionicons name="person" size={15} color={textPrimaryColor} />
+            <ThemedView style={[styles.avatar, { backgroundColor: textPrimaryColor }]}>
+              <ThemedText 
+                variant="h2"
+                style={{ fontWeight: 'bold', fontSize: 15, color: userBanner }}
+              >
+                {name?.charAt(0).toUpperCase()}
+              </ThemedText>
             </ThemedView>
           )}
       </View>
