@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type GameListItemProps = {
@@ -45,11 +47,11 @@ export function GameListItem({ title, description, icon, banner, onPress }: Game
       marginBottom: 4,
     },
     chevronContainer: {
-      marginLeft: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     chevron: {
-      fontSize: 30,
-      fontWeight: '400',
+      fontSize: 22,
     },
   }); 
 
@@ -85,9 +87,12 @@ export function GameListItem({ title, description, icon, banner, onPress }: Game
         </View>
         
         <View style={styles.chevronContainer}>
-          <ThemedText style={styles.chevron} colorType='textSecondary'>
-            ›
-          </ThemedText>
+          <Ionicons
+            name="chevron-forward"
+            size={20}
+            color="gray"
+            style={styles.chevron}
+          />
         </View>
       </ThemedView>
     </TouchableOpacity>

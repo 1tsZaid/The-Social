@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-
 import { SettingItem } from '@/components/SettingItem';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
@@ -30,12 +29,26 @@ export const SettingsList: React.FC<SettingsListProps> = ({
 
   return (
     <View style={styles.container}>
+      {/* My Account with dropdown */}
       <SettingItem
         icon="person-sharp"
         color={blueColor}
         title="My Account"
-        onPress={onMyAccount}
-      />
+      >
+        <SettingItem
+          icon="key"
+          color={blueColor}
+          title="Change Password"
+          onPress={() => console.log('Change Password pressed')}
+        />
+        <SettingItem
+          icon="trash"
+          color={blueColor}
+          title="Delete Account"
+          onPress={() => console.log('Delete Account pressed')}
+        />
+      </SettingItem>
+
       <SettingItem
         icon="color-palette"
         color={magentaColor}

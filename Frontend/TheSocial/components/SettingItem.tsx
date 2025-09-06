@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -10,7 +10,8 @@ interface SettingItemProps {
   icon: keyof typeof Ionicons.glyphMap;
   color: string;
   title: string;
-  onPress: () => void;
+  onPress?: () => void;
+  children?: React.ReactNode; // for dropdown items
 }
 
 export const SettingItem: React.FC<SettingItemProps> = ({
@@ -18,22 +19,25 @@ export const SettingItem: React.FC<SettingItemProps> = ({
   color,
   title,
   onPress,
+  children,
 }) => {
+  const [expanded, setExpanded] = useState(false);
   const iconBackgroundColor = useThemeColor({}, 'background');
-  
+
   const styles = StyleSheet.create({
     container: {
       marginBottom: 8,
+      borderRadius: 8, // rounded corners for the whole block
+      overflow: 'hidden', // ensures children respect radius
     },
     item: {
       height: 52,
-      borderRadius: 8,
+      justifyContent: 'center',
     },
     content: {
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: 16,
-      paddingVertical: 14,
       height: '100%',
     },
     icon: {
@@ -50,39 +54,63 @@ export const SettingItem: React.FC<SettingItemProps> = ({
       flex: 1,
     },
     chevronContainer: {
-      marginLeft: 8,
-      marginBottom: 3,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     chevron: {
-      fontSize: 30,
-      fontWeight: '400',
+      fontSize: 22,
+      transform: [{ rotate: expanded ? '90deg' : '0deg' }],
+    },
+    dropdown: {
+      borderTopWidth: 1,
+      paddingBottom: 10,
+      paddingTop: 10,
     },
   });
 
+  const handlePress = () => {
+    if (children) {
+      setExpanded(!expanded);
+    } else if (onPress) {
+      onPress();
+    }
+  };
+
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
-      <ThemedView backgroundType="surface" style={styles.item}>
-        <View style={styles.content}>
-          <Ionicons 
-            name={icon} 
-            size={25} 
-            color={color} 
-            style={styles.icon}
-          />
-          <ThemedText 
-            variant="body" 
-            colorType="textPrimary"
-            style={styles.title}
-          >
-            {title}
-          </ThemedText>
-          <View style={styles.chevronContainer}>
-          <ThemedText style={styles.chevron} colorType='textSecondary'>
-            ›
-          </ThemedText>
-        </View>
-        </View>
-      </ThemedView>
-    </TouchableOpacity>
+    <ThemedView style={styles.container} backgroundType="surface">
+      <TouchableOpacity onPress={handlePress}>
+        <ThemedView backgroundType="surface" style={styles.item}>
+          <View style={styles.content}>
+            <Ionicons
+              name={icon}
+              size={25}
+              color={color}
+              style={styles.icon}
+            />
+            <ThemedText
+              variant="body"
+              colorType="textPrimary"
+              style={styles.title}
+            >
+              {title}
+            </ThemedText>
+            {children && (
+              <View style={styles.chevronContainer}>
+                <Ionicons
+                  name="chevron-forward"
+                  size={20}
+                  color="gray"
+                  style={styles.chevron}
+                />
+              </View>
+            )}
+          </View>
+        </ThemedView>
+      </TouchableOpacity>
+
+      {expanded && children && (
+        <View style={styles.dropdown}>{children}</View>
+      )}
+    </ThemedView>
   );
 };
