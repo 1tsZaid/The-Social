@@ -11,7 +11,9 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useModal } from '@/components/ModalContext';
 import { useLeaderboard } from '@/components/LeaderboardContext';
 
-const GameScreen: React.FC = () => {
+import { Colors } from '@/constants/Colors';
+
+const GameInfoScreen: React.FC = () => {
   const { closeModal } = useModal();
   const accentColor = useThemeColor({}, 'accent');
 
@@ -29,18 +31,18 @@ const GameScreen: React.FC = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <ThemedView backgroundType='background'>
         {/* Banner */}
-        <View style={[styles.banner, { backgroundColor: accentColor }]}>
+        <View style={[styles.banner, { backgroundColor: Colors.games.flappyBird }]}>
             <View style={styles.bannerContent}>
-            <GameLogo size="medium" />
+              <GameLogo size="medium" />
             </View>
         </View>
         
         {/* Game Info Card */}
         <ThemedView style={styles.cardContainer} backgroundType='background'>
             <GameInfoCard
-            title="Cosmic Conquest"
-            description="Embark on an epic journey across galaxies, build your empire, and conquer new worlds in this thrilling space strategy game."
-            playtime="731 min"
+            title="Flappy Bird"
+            description="One-tap arcade game where the player controls a bird to fly through gaps in green pipes, scoring a point for each successful passage."
+            playtime="20 sec"
             onPlayPress={handlePlayPress}
             playButtonText="Play"
             disabled={false}
@@ -72,6 +74,7 @@ const GameScreen: React.FC = () => {
               })()
             }
             maxEntries={10}
+            gameBanner={Colors.games.flappyBird}
         />
         }
       </ThemedView>
@@ -99,4 +102,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GameScreen;
+export default GameInfoScreen;

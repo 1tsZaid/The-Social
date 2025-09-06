@@ -18,6 +18,7 @@ interface LeaderboardData {
 interface LeaderboardProps {
   title?: string;
   data: LeaderboardData[];
+  gameBanner: string;
   currentUserId?: string;
   maxEntries?: number;
 }
@@ -25,6 +26,7 @@ interface LeaderboardProps {
 const Leaderboard: React.FC<LeaderboardProps> = ({ 
   title = 'Leaderboard',
   data,
+  gameBanner,
   currentUserId,
   maxEntries
 }) => {
@@ -46,6 +48,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
           score={entry.score}
           isCurrentUser={entry.isCurrentUser}
           avatarUrl={entry.userImage}
+          avatarBanner={gameBanner}
         />
       ))}
     </ThemedView>

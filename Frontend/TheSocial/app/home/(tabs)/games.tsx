@@ -20,6 +20,8 @@ import { getProfile } from '@/services/profile';
 
 import { checkTokens } from '@/utils/checkTokens';
 
+import { Colors } from '@/constants/Colors';
+
 export default function GamesScreen() {
   const [player, setPlayer] = useState<string | null>(null);
 
@@ -36,10 +38,16 @@ export default function GamesScreen() {
   // ];
 
   // Mock data for recent games
-  const recentGames = [
+  const featuredGames = [
     { title: 'Flappy Bird', subtitle: '20sec avg', icon: '🚀' },
     { title: 'Epic Quest', subtitle: '40sec avg', icon: '🧩' },
   ];
+
+  // Mock data for recent games
+  // const recentGames = [
+  //   { title: 'Flappy Bird', subtitle: '20sec avg', icon: '🚀' },
+  //   { title: 'Epic Quest', subtitle: '40sec avg', icon: '🧩' },
+  // ];
 
   // Mock data for available games
   const availableGames = [
@@ -47,7 +55,7 @@ export default function GamesScreen() {
       title: 'Flappy Bird',
       description: 'One-tap arcade game where the player controls a bird to fly through gaps in green pipes, scoring a point for each successful passage',
       subtitle: '20sec avg',
-      banner: '#8AC048',
+      banner: Colors.games.flappyBird,
       icon: '🚀',
     },
     {
@@ -96,7 +104,7 @@ export default function GamesScreen() {
   const handleGamePress = (gameTitle: string) => {
     console.log(`Pressed: ${gameTitle}`);
     // Add navigation logic here
-    openModal('game1');
+    openModal('flappyBirdInfo');
   };
 
   if (!selectedCommunityId) {  
@@ -162,8 +170,26 @@ export default function GamesScreen() {
           </View>
         </View> */}
 
-        {/* Recent Section */}
+        {/* Featured Section */}
         <View style={styles.section}>
+          <ThemedText style={styles.headings} variant='h3'colorType='textPrimary'>Featured</ThemedText>
+          <View style={styles.horizontalCardsContainer}>
+            {featuredGames.map((game, index) => (
+              <View key={index} style={styles.horizontalCard}>
+                <GameCard
+                  title={game.title}
+                  subtitle={game.subtitle}
+                  icon={game.icon}
+                  banner={availableGames.find(g => g.title === game.title)?.banner}
+                  onPress={() => handleGamePress(game.title)}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Recent Section */}
+        {/* <View style={styles.section}>
           <ThemedText style={styles.headings} variant='h3'colorType='textPrimary'>Recent</ThemedText>
           <View style={styles.horizontalCardsContainer}>
             {recentGames.map((game, index) => (
@@ -178,7 +204,7 @@ export default function GamesScreen() {
               </View>
             ))}
           </View>
-        </View>
+        </View> */}
 
         {/* Games Section */}
         <View style={styles.section}>

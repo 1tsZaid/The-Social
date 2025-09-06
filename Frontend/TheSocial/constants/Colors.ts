@@ -77,6 +77,10 @@ export const Colors = {
     blue: '#2196F3',
     red: '#CE2029',
   },
+
+  games: {
+    flappyBird: '#8AC048',
+  },
 };
 
 // Theme type definitions for better TypeScript support

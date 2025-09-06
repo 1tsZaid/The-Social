@@ -64,6 +64,7 @@ export function LeaderboardCard({ players, gameImage, gameBanner }: LeaderboardC
               name={player.name}
               rank={player.rank}
               userImage={player.userImage}
+              userBackground={gameBanner}
               isCurrentUser={player.isCurrentUser && player.rank > 3}
             />
           ))}

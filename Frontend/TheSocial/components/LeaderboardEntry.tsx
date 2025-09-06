@@ -6,12 +6,15 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
+import { API_CONFIG } from '@/constants/Api';
+
 interface LeaderboardEntryProps {
   rank: number;
   username: string;
   score: number;
   isCurrentUser?: boolean;
   avatarUrl?: string;
+  avatarBanner: string;
   avatarSize?: number;
 }
 
@@ -21,12 +24,14 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
   score, 
   isCurrentUser = false,
   avatarUrl,
+  avatarBanner,
   avatarSize = 40
 }) => {
   
   const scoreColor = isCurrentUser ? 'accent' : 'textPrimary';
   const starColor = useThemeColor({}, 'gold')
   const borderColor = useThemeColor({}, 'borderDivider');
+  const avatarIconColor = useThemeColor({}, 'textPrimary');
   
   const styles = StyleSheet.create({
     leaderboardEntry: {
@@ -47,7 +52,7 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
       marginRight: 12,
     },
     avatar: {
-      backgroundColor: 'white',
+      backgroundColor: avatarBanner,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -78,13 +83,13 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
       </ThemedText>
       
       <View style={styles.avatarContainer}>
-        <View style={[styles.avatar, { width: avatarSize, height: avatarSize, borderRadius: avatarSize / 2 }]}>
+        <View style={[styles.avatar, { width: avatarSize, height: avatarSize, borderRadius: avatarSize / 2, }]}>
           {avatarUrl ? (
-            <Image source={{ uri: avatarUrl }} style={styles.avatarImage} />
+            <Image source={{ uri: API_CONFIG.STATIC_BASE_URL + avatarUrl }} style={styles.avatarImage} />
           ) : (
-            <ThemedText variant="caption" colorType="textSecondary">
-              👤
-            </ThemedText>
+            <ThemedView style={[styles.avatar, { backgroundColor: avatarBanner }]}>
+              <Ionicons name="person" size={18} color={avatarIconColor} />
+            </ThemedView>
           )}
         </View>
       </View>

@@ -23,7 +23,7 @@ import { LeaderboardProvider } from '@/components/LeaderboardContext';
 
 import CreateCommunityScreen from './createCommunity';
 import DiscoverScreen from './discover';
-import GameScreen from './game1';
+import GameInfoScreen from './flappyBirdInfo';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -33,7 +33,7 @@ function ModalRoot() {
     <BottomModal isVisible={!!modal} onClose={closeModal}>
       {modal === 'createCommunity' && <CreateCommunityScreen />}
       {modal === 'discover' && <DiscoverScreen />}
-      {modal === 'game1' && <GameScreen />}
+      {modal === 'flappyBirdInfo' && <GameInfoScreen />}
     </BottomModal>
   );
 }
@@ -82,7 +82,7 @@ export default function RootLayout() {
               
             </Stack>
             <ModalRoot />
-            
+
           </ModalProvider>
           <StatusBar style="auto" />
         </LeaderboardProvider>
