@@ -8,6 +8,7 @@ interface AvatarProps {
   id: string;
   size: number;
   imageUrl?: string;
+  banner: string;
   onPress: (communityId: string) => void;
   isActive: boolean;
 }
@@ -15,7 +16,8 @@ interface AvatarProps {
 export function Avatar({ 
   id,
   size = 40, 
-  imageUrl, 
+  imageUrl,
+  banner,
   onPress, 
   isActive = false 
 }: AvatarProps) {
@@ -48,7 +50,7 @@ export function Avatar({
               <Ionicons 
                 name="people" 
                 size={size * 0.5}
-                color={iconColor} 
+                color={banner} 
           />
             )}
           </ThemedView>

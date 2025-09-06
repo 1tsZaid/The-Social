@@ -32,8 +32,7 @@ export function CommunityCard({
   const borderColor = useThemeColor({}, 'borderDivider');
   const buttonBackgroundColor = useThemeColor({}, 'textPrimary');
   const iconColor = useThemeColor({}, 'textSecondary');
-  
-  const logoIconColor = useThemeColor({}, 'textPrimary');
+
   const logoBackground = useThemeColor({}, 'background');
   
   const styles = StyleSheet.create({
@@ -122,7 +121,7 @@ export function CommunityCard({
         </View>
       ) : (
         <View style={styles.iconContainer}>
-          <Ionicons name={iconName as any} size={32} color={logoIconColor} />
+          <Ionicons name={iconName as any} size={32} color={bannerColor} />
         </View> 
       )}
       

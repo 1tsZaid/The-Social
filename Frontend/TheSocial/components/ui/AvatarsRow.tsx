@@ -5,6 +5,7 @@ import { Avatar } from './Avatar';
 interface Data {
   id: string;
   imageUrl?: string;
+  banner: string;
   isActive: boolean;
 }
 
@@ -31,6 +32,7 @@ export function AvatarsRow({
             size={avatarSize}
             id={user.id}
             imageUrl={user.imageUrl}
+            banner={user.banner}
             isActive={user.isActive}
             onPress={onAvatarPress}
           />

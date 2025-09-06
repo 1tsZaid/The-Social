@@ -8,6 +8,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 interface CommunityItemProps {
   name: string;
   imageUri?: string;
+  banner: string,
   location: string;
   memberCount: number;
   isSelected: boolean;
@@ -20,6 +21,7 @@ interface CommunityItemProps {
 export function CommunityItem({
   name,
   imageUri,
+  banner,
   location,
   memberCount,
   isSelected = false,
@@ -31,7 +33,6 @@ export function CommunityItem({
   const surfaceColor = useThemeColor({}, 'surface');
   const backgroundColor = useThemeColor({}, 'background');
 
-  const iconColor = useThemeColor({}, 'textPrimary');
   const iconBackgroundColor = useThemeColor({}, 'background');
 
   return (
@@ -62,7 +63,7 @@ export function CommunityItem({
               { backgroundColor: iconBackgroundColor },
             ]}
           >
-            <Ionicons name="people" size={20} color={iconColor} />
+            <Ionicons name="people" size={20} color={banner} />
           </View>
         )}
       </View>

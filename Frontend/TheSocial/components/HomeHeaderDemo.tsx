@@ -32,6 +32,7 @@ export function HomeHeaderDemo() {
         ? [{
             id: community.communityId,
             imageUrl: community.communityImageUrl || undefined,
+            banner: community.banner,
             isActive: selectedCommunity(community.communityId),
           }]
         : []

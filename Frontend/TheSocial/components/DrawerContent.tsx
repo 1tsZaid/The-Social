@@ -103,6 +103,7 @@ export function DrawerContent() {
                   key={community.communityId}
                   name={community.name}
                   imageUri={community.communityImageUrl}
+                  banner={community.banner}
                   location={community.location.name}
                   memberCount={community.members}
                   owner={community.owner}
