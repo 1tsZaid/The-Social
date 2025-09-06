@@ -119,18 +119,19 @@ export default function App() {
 
   // Change direction logic (prevent reverse)
   function changeDirection(newDir: string) {
-    const opposite = {
-      UP: 'DOWN',
-      DOWN: 'UP',
-      LEFT: 'RIGHT',
-      RIGHT: 'LEFT',
-    };
-    if (directionRef.current !== opposite[newDir]) {
-      directionRef.current = newDir;
-      // Pass newDir to your game engine or state
-      // e.g., setDirection(newDir) or gameEngine.dispatch({ type: 'change_direction', direction: newDir })
+  const opposite = {
+    UP: 'DOWN',
+    DOWN: 'UP',
+    LEFT: 'RIGHT',
+    RIGHT: 'LEFT',
+  };
+  if (directionRef.current !== opposite[newDir]) {
+    directionRef.current = newDir;
+    if (gameEngine) {
+      gameEngine.dispatch({ type: 'change_direction', direction: newDir });
     }
   }
+}
 
   return (
     <ThemedView style={styles.container} {...(Platform.OS !== 'web' ? panResponder.panHandlers : {})} >
