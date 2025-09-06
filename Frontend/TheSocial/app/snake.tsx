@@ -98,7 +98,7 @@ export default function App() {
     function handleKeyDown(e: KeyboardEvent) {
       switch (e.key) {
         case 'ArrowUp':
-          changeDirection('UP');
+          changeDirection('UP'); console.log('ArrowUp pressed');
           break;
         case 'ArrowDown':
           changeDirection('DOWN');
@@ -127,9 +127,11 @@ export default function App() {
     };
     if (directionRef.current !== opposite[newDir]) {
       directionRef.current = newDir;
-      // console.log('Direction ref updated to:', newDir);
-      gameEngine.dispatch({ type: 'change_direction', direction: newDir });
-      // console.log('Direction changed to:', newDir);
+      console.log('Direction ref updated to:', newDir);
+      if (gameEngine) {
+        gameEngine.dispatch({ type: 'change_direction', direction: newDir });
+        console.log('Direction changed to:', newDir);
+      }
     }
   }
 
