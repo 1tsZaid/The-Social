@@ -15,3 +15,7 @@ export const getPipeSizePosPair = (addToPosX = 0) => {
     return { pipeTop, pipeBottom }
 
 }
+
+export function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
