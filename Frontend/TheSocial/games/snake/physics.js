@@ -36,6 +36,8 @@ export default function Physics(entities, { time, dispatch, events }) {
   const snake = entities.snake;
   const food = entities.food;
 
+  // console.log('Physics tick', time.current, snake.position[0], snake.direction);
+
   if (events && events.length) {
     events.forEach(e => {
       if (e.type === 'change_direction') {
@@ -44,6 +46,7 @@ export default function Physics(entities, { time, dispatch, events }) {
         if (snake.direction !== opposite[e.direction]) {
           snake.direction = e.direction;
         }
+        // console.log('Direction changed to', snake.direction);
       }
     });
   }

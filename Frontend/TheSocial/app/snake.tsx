@@ -119,49 +119,51 @@ export default function App() {
 
   // Change direction logic (prevent reverse)
   function changeDirection(newDir: string) {
-  const opposite = {
-    UP: 'DOWN',
-    DOWN: 'UP',
-    LEFT: 'RIGHT',
-    RIGHT: 'LEFT',
-  };
-  if (directionRef.current !== opposite[newDir]) {
-    directionRef.current = newDir;
-    if (gameEngine) {
+    const opposite = {
+      UP: 'DOWN',
+      DOWN: 'UP',
+      LEFT: 'RIGHT',
+      RIGHT: 'LEFT',
+    };
+    if (directionRef.current !== opposite[newDir]) {
+      directionRef.current = newDir;
+      // console.log('Direction ref updated to:', newDir);
       gameEngine.dispatch({ type: 'change_direction', direction: newDir });
+      // console.log('Direction changed to:', newDir);
     }
   }
-}
 
   return (
     <ThemedView style={styles.container} {...(Platform.OS !== 'web' ? panResponder.panHandlers : {})} >
       <ThemedText style={styles.inGameScore}>{currentPoints}</ThemedText>
-      <GameEngine
-        ref={(ref) => setGameEngine(ref)}
-        systems={[Physics]}
-        entities={entities()}
-        running={running}
-        onEvent={(e) => {
-          switch (e.type) {
-            case 'game_over':
-              setRunning(false);
-              gameEngine.stop();
-              setShowHighScoreBanner(false);
-              if (currentPoints > highestPoints) {
-                setHighestPoints(currentPoints);
-                // updateScore(game, communityId, username, currentPoints);
-                setShowHighScoreBanner(true);
-              }
-              break;
-            case 'new_point':
-              setCurrentPoints((prev) => prev + 1);
-              break;
-          }
-        }}
-        style={styles.gameEngine}
-      >
-        <StatusBar style="auto" hidden />
-      </GameEngine>
+      <ThemedView style={styles.gameWrapper}>
+        <GameEngine
+          ref={(ref) => setGameEngine(ref)}
+          systems={[Physics]}
+          entities={entities()}
+          running={running}
+          onEvent={(e) => {
+            switch (e.type) {
+              case 'game_over':
+                setRunning(false);
+                gameEngine.stop();
+                setShowHighScoreBanner(false);
+                if (currentPoints > highestPoints) {
+                  setHighestPoints(currentPoints);
+                  // updateScore(game, communityId, username, currentPoints);
+                  setShowHighScoreBanner(true);
+                }
+                break;
+              case 'new_point':
+                setCurrentPoints((prev) => prev + 1);
+                break;
+            }
+          }}
+          style={styles.gameEngine}
+        >
+          <StatusBar style="auto" hidden />
+        </GameEngine>
+      </ThemedView>
       {!running && (
         <ThemedView style={styles.overlay}>
           <NewHighScoreBanner
@@ -201,58 +203,62 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",  // vertically center children
+    alignItems: "center",      // horizontally center children
   },
   inGameScore: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 40,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     padding: 20,
   },
+  gameWrapper: {
+    width: 400,
+    height: 400,
+    overflow: "hidden",       // clip anything outside
+    borderRadius: 12,
+    backgroundColor: "pink",
+  },
   gameEngine: {
-    position: 'absolute',
-    backgroundColor: 'pink',
-    top: 60, left: 0, right: 0, bottom: 0,
-    width: 400, height: 400,
+    flex: 1,                  // fill wrapper
   },
   overlay: {
-    flex: 1,
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 40,
     paddingHorizontal: 20,
   },
   scoreRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
   scoreBox: {
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
     minWidth: 120,
   },
   scoreLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     opacity: 0.8,
     marginBottom: 6,
   },
   currentScore: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   highestScore: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   buttonGroup: {
-    width: '100%',
+    width: "100%",
     gap: 16,
     paddingHorizontal: 30,
   },
 });
+
