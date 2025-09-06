@@ -20,6 +20,7 @@ import CustomBackButton from '@/components/CustomBackButton';
 
 import { ModalProvider, useModal } from '@/components/ModalContext';
 import { LeaderboardProvider } from '@/components/LeaderboardContext';
+import { CommunitiesProvider } from '@/components/CommunitiesContext';
 
 import CreateCommunityScreen from './createCommunity';
 import DiscoverScreen from './discover';
@@ -58,34 +59,36 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <LeaderboardProvider>
-          <ModalProvider>
+        <CommunitiesProvider>
+          <LeaderboardProvider>
+            <ModalProvider>
 
-            <Stack 
-              initialRouteName="home"
-              screenOptions={{ 
-                headerShown: false,
-              }}
-            >
-              <Stack.Screen 
-                name="profile" 
-                options={{ 
-                  headerShown: true,
-                  title: '',
-                  headerTransparent: true,
-                  headerLeft: () => <CustomBackButton />,
-                  headerTitleStyle: {
-                    fontWeight: '600',
-                  },
-                }} 
-              />
-              
-            </Stack>
-            <ModalRoot />
+              <Stack 
+                initialRouteName="home"
+                screenOptions={{ 
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen 
+                  name="profile" 
+                  options={{ 
+                    headerShown: true,
+                    title: '',
+                    headerTransparent: true,
+                    headerLeft: () => <CustomBackButton />,
+                    headerTitleStyle: {
+                      fontWeight: '600',
+                    },
+                  }} 
+                />
+                
+              </Stack>
+              <ModalRoot />
 
-          </ModalProvider>
-          <StatusBar style="auto" />
-        </LeaderboardProvider>
+            </ModalProvider>
+            <StatusBar style="auto" />
+          </LeaderboardProvider>
+        </CommunitiesProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

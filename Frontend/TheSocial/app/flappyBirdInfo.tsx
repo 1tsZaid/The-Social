@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 
@@ -10,20 +10,26 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 import { useModal } from '@/components/ModalContext';
 import { useLeaderboard } from '@/components/LeaderboardContext';
+import { useCommunities } from '@/components/CommunitiesContext';
 
+import { getProfile } from '@/services/profile';
+import { GAME_FLAPPY_BIRD } from '@/services/game';
 import { Colors } from '@/constants/Colors';
 
 const GameInfoScreen: React.FC = () => {
   const { closeModal } = useModal();
-  const accentColor = useThemeColor({}, 'accent');
 
   const { leaderboard } = useLeaderboard();
+  const { selectedCommunityId } = useCommunities();
   
   const handlePlayPress = () => {
     console.log('Play button pressed');
 
     closeModal();
-    router.push('/flappyBird');
+    router.push({
+      pathname: "/flappyBird",
+      params: { game: GAME_FLAPPY_BIRD, communityId: selectedCommunityId },
+    })
     // Add your game launch logic here
   };
   
@@ -58,11 +64,11 @@ const GameInfoScreen: React.FC = () => {
                 const currentUser = leaderboard.currentUser;
                 // Check if current user is already in topPlayers
                 const isCurrentUserInTop = currentUser
-                  ? topPlayers.some((p) => p.userId === currentUser.userId)
+                  ? topPlayers.some((p) => p.username === currentUser.username)
                   : false;
                 // Mark current user in topPlayers if present
                 const playersWithFlag = topPlayers.map((p) =>
-                  currentUser && p.userId === currentUser.userId
+                  currentUser && p.username === currentUser.username
                     ? { ...p, isCurrentUser: true }
                     : p
                 );

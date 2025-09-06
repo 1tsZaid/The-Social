@@ -14,6 +14,7 @@ interface CommunitiesContextType {
   selectedCommunityId: string | null;
   refreshCommunities: () => Promise<void>;
   setSelectedCommunity: (communityId: string | null) => void;
+  resetCommunities: () => void;
 }
 
 const CommunitiesContext = createContext<CommunitiesContextType | undefined>(undefined);
@@ -101,6 +102,12 @@ export function CommunitiesProvider({ children }: CommunitiesProviderProps) {
     setSelectedCommunityId(communityId);
   };
 
+  // Reset communities
+  const resetCommunities = () => {
+    setCommunities([]);
+    setSelectedCommunityId(null);
+  };
+
   // Initial load
   useEffect(() => {
     fetchCommunities();
@@ -113,6 +120,7 @@ export function CommunitiesProvider({ children }: CommunitiesProviderProps) {
     selectedCommunityId,
     refreshCommunities,
     setSelectedCommunity,
+    resetCommunities,
   };
 
   return (

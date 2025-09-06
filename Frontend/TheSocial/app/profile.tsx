@@ -7,7 +7,10 @@ import { useIsFocused } from '@react-navigation/native';
 import { ProfileHeader } from '@/components/ProfileHeader';
 import { SettingsList } from '@/components/SettingsList';
 import { LogoutButton } from '@/components/LogoutButton';
+
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useCommunities } from '@/components/CommunitiesContext';
+import { useLeaderboard } from '@/components/LeaderboardContext';
 
 import { deleteTokens, getTokens } from '@/utils/tokenStorage';
 import { checkTokens } from '@/utils/checkTokens';
@@ -20,6 +23,8 @@ export default function ProfileScreen() {
   const divderColor = useThemeColor({}, 'borderDivider')
   const backgroundColor = useThemeColor({}, 'background');
   const isFocused = useIsFocused();
+  const { resetCommunities } = useCommunities();
+  const { resetLeaderboard } = useLeaderboard();
 
   useEffect(() => {
     if (isFocused) {
@@ -80,33 +85,18 @@ export default function ProfileScreen() {
   };
 
   const handleLogout = async () => {
-    // Alert.alert(
-    //   'Log Out',
-    //   'Are you sure you want to log out?',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       style: 'cancel',
-    //     },
-    //     {
-    //       text: 'Log Out',
-    //       style: 'destructive',
-    //       onPress: () => {
-            // Handle logout logic here
-            const tokens = await getTokens();
-            console.log('Tokens before logout:', tokens);
+  // Clear Communities Context
+  resetCommunities();
+  resetLeaderboard();    
 
-            socket.disconnect('/chat');
-
-            console.log('User logged out');
-            await deleteTokens();
-            console.log('Tokens after logout:', await getTokens());
-            
-            router.replace('/login');
-    //       },
-    //     },
-    //   ]
-    // );
+  // Handle logout logic
+  const tokens = await getTokens();
+  console.log('Tokens before logout:', tokens);
+  socket.disconnect('/chat');
+  console.log('User logged out');
+  await deleteTokens();
+  console.log('Tokens after logout:', await getTokens());
+  router.replace('/login');
   };
   
   const styles = StyleSheet.create({

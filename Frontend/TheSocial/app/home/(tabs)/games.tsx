@@ -20,10 +20,11 @@ import { getProfile } from '@/services/profile';
 
 import { checkTokens } from '@/utils/checkTokens';
 
+import { GAME_FLAPPY_BIRD } from '@/services/game';
 import { Colors } from '@/constants/Colors';
 
 export default function GamesScreen() {
-  const [player, setPlayer] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
 
   const { selectedCommunityId } = useCommunities();
   const { openModal } = useModal();
@@ -82,22 +83,28 @@ export default function GamesScreen() {
 
   const fetchLeaderboardData = async () => {
     if (selectedCommunityId) {
-      if (!player) {
-        fetchProfileData();
+      // check profile data
+      if (!username) {
+        await fetchUsername();
       }
-      await fetchLeaderboard("flappy-bird", selectedCommunityId, "current-user-id", 3);
+      // get leaderboard for that profile
+      if (username) {
+        await fetchLeaderboard(GAME_FLAPPY_BIRD, selectedCommunityId, username, 3);
+      }
     }
   }
 
-  const fetchProfileData = async () => {
+  const fetchUsername = async () => {
     const tokenFlag = await checkTokens();
     if (tokenFlag) {
       const profileData = await getProfile();
-      setPlayer(profileData.username);
+      setUsername(profileData.username);
       console.log('Profile data fetched:', profileData);
+      return profileData.username;
     } else {
       deleteTokens();
       router.replace('/login');
+      return null;
     }
   };
 
@@ -143,15 +150,30 @@ export default function GamesScreen() {
         {/* Leaderboard Section */}
         <View style={styles.section}>
           <ThemedText style={styles.headings} variant="h2" colorType='textPrimary'>LeaderBoard</ThemedText>
-          {leaderboard &&
-            <LeaderboardCard players={leaderboard.topPlayers.map((p) => ({
-              name: p.username,
-              rank: p.rank,
-              userImage: p.userImage,
-              userBanner: p.userBanner,
-              isCurrentUser: player === p.username,
-            }))} gameImage={availableGames[0].icon} gameBanner={availableGames[0].banner}/>
-          }
+          {leaderboard && (
+            <LeaderboardCard
+              players={[
+                ...leaderboard.topPlayers
+                  .filter(p => !leaderboard.currentUser || p.username !== leaderboard.currentUser.username)
+                  .map((p) => ({
+                    name: p.username,
+                    rank: p.rank,
+                    userImage: p.userImage,
+                    userBanner: p.userBanner,
+                    isCurrentUser: username === p.username,
+                  })),
+                ...(leaderboard.currentUser ? [{
+                  name: leaderboard.currentUser.username,
+                  rank: leaderboard.currentUser.rank,
+                  userImage: leaderboard.currentUser.userImage,
+                  userBanner: leaderboard.currentUser.userBanner,
+                  isCurrentUser: true,
+                }] : [])
+              ]}
+              gameImage={availableGames[0].icon}
+              gameBanner={availableGames[0].banner}
+            />
+          )}
         </View>
 
         {/* Playing Section */}

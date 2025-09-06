@@ -6,7 +6,6 @@ import { ThemedText } from '@/components/ThemedText';
 import LeaderboardEntry from '@/components/LeaderboardEntry';
 
 interface LeaderboardData {
-  userId: string;
   username: string;
   userImage?: string;
   userBanner: string;

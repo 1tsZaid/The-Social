@@ -3,6 +3,7 @@ import { API_CONFIG } from '../constants/Api';
 import { getTokens } from '../utils/tokenStorage';
 
 // flappy-bird
+export const GAME_FLAPPY_BIRD = 'flappy-bird';
 
 // create a normializing function
 
