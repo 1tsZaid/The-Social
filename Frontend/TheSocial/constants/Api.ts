@@ -17,7 +17,9 @@ export const API_CONFIG = {
       YOUR_COMMUNITIES: '/communities/yours', // Gets communities created by or joined by the current user
       NEARBY: '/communities/nearby', // Finds communities near a specific location with pagination support
       JOIN: (id: string) => `/communities/join/${id}`, // Joins a community by ID
-      LEAVE: (id: string) => `/communities/leave/${id}` // Leaves
+      LEAVE: (id: string) => `/communities/leave/${id}`, // Leaves
+      MEMBERS: (id: string) => `/communities/members/${id}`, // Gets members of a specific community by ID
+      CHANGE_OWNER: (id: string) => `/communities/change-owner/${id}` // Changes the owner of a specific community by ID
     },
     GAMES: {
       // BASE: '/games', // Gets information about all available games

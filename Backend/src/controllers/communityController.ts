@@ -9,6 +9,45 @@ interface AuthenticatedRequest extends Request {
 }
 
 export class CommunityController {
+    async getCommunityMembers(req: Request, res: Response) {
+    try {
+      const communityId = req.params.communityId;
+      const members = await communityService.getCommunityMembers(communityId);
+      res.status(200).json(members);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    }
+  }
+
+  async changeCommunityOwner(req: AuthenticatedRequest, res: Response) {
+    try {
+      if (!req.user) {
+        res.status(401).json({ error: 'User not authenticated' });
+        return;
+      }
+      const communityId = req.params.communityId;
+      const { newOwnerId } = req.body;
+      if (!newOwnerId) {
+        res.status(400).json({ error: 'New owner ID is required' });
+        return;
+      }
+      await communityService.changeCommunityOwner(req.user.userId, communityId, newOwnerId);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    }
+  }
+
   async createCommunity(req: AuthenticatedRequest, res: Response) {
     try {
       if (!req.user) {

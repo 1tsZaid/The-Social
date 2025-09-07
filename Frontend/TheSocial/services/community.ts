@@ -2,6 +2,15 @@ import api from './api';
 import { API_CONFIG } from '../constants/Api';
 import { getTokens } from '../utils/tokenStorage';
 
+export interface CommunityMember {
+  id: string;
+  username: string;
+  email: string;
+  createdAt: Date;
+  profileImageUrl?: string;
+  banner: string;
+}
+
 interface Location {
   coordinates: [number, number]; // [longitude, latitude]
   name: string;
@@ -30,6 +39,29 @@ interface FindCommunitiesParams {
   page?: number;
 }
 
+export const getCommunityMembers = async (communityId: string): Promise<CommunityMember[]> => {
+  try {
+    const response = await api.get(API_CONFIG.ENDPOINTS.COMMUNITIES.MEMBERS(communityId));
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const changeCommunityOwner = async (communityId: string, newOwnerId: string): Promise<void> => {
+  try {
+    const tokens = await getTokens();
+    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.CHANGE_OWNER(communityId), { newOwnerId }, {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 export const createCommunity = async (payload: CreateCommunityPayload): Promise<Community> => {
   try {

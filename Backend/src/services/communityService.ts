@@ -1,7 +1,15 @@
 import prisma from '../config/database';
 import { createId } from '@paralleldrive/cuid2';
-import { communityUploadService } from '../utils/fileUpload';
+import { communityUploadService, profileUploadService } from '../utils/fileUpload';
 
+export interface CommunityMember {
+  id: string;
+  username: string;
+  email: string;
+  createdAt: Date;
+  profileImageUrl?: string;
+  banner: string;
+}
 
 interface Location {
   coordinates: [number, number]; // [longitude, latitude]
@@ -35,6 +43,69 @@ class CommunityService {
   private readonly DEFAULT_LIMIT = 10;
   private readonly MAX_LIMIT = 100;
   private readonly NEARBY_DISTANCE_M = 5000; // 5000 meters = 5 kilometers and in meters for PostGIS
+
+  async getCommunityMembers(communityId: string): Promise<CommunityMember[]> {
+    try {
+      const community = await prisma.community.findUnique({
+        where: { communityId },
+        include: {
+          members: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              createdAt: true,
+              banner: true
+            }
+          }
+        }
+      });
+      if (!community) {
+        throw new Error('Community not found');
+      }
+      return community.members.map(member => ({
+        id: member.id,
+        username: member.username,
+        email: member.email,
+        createdAt: member.createdAt,
+        banner: member.banner,
+        profileImageUrl: profileUploadService.getFileWithPng(member.id) || undefined,
+      }));
+    } catch (error) {
+      console.error('Error fetching community members:', error);
+      throw new Error('Failed to fetch community members');
+    }
+  }
+
+  async changeCommunityOwner(currentOwnerId: string, communityId: string, newOwnerId: string): Promise<boolean> {
+    try {
+      // Check if the community exists and the current owner is correct
+      const community = await prisma.community.findUnique({
+        where: { communityId },
+        select: { ownerId: true, members: { select: { id: true } } }
+      });
+      if (!community) {
+        throw new Error('Community not found');
+      }
+      if (community.ownerId !== currentOwnerId) {
+        throw new Error('You are not authorized to change the owner');
+      }
+      // Check if newOwnerId is a member of the community
+      const isMember = community.members.some(member => member.id === newOwnerId);
+      if (!isMember) {
+        throw new Error('New owner must be a member of the community');
+      }
+      // Update the ownerId
+      await prisma.community.update({
+        where: { communityId },
+        data: { ownerId: newOwnerId }
+      });
+      return true;
+    } catch (error) {
+      console.error('Error changing community owner:', error);
+      throw new Error('Failed to change community owner');
+    }
+  }
 
   async createCommunity(userId: string, payload: CreateCommunityPayload): Promise<Community> {
     try {
