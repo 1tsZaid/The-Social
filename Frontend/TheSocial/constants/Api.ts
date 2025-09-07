@@ -13,6 +13,7 @@ export const API_CONFIG = {
     },
     COMMUNITIES: {
       CREATE_COMMUNITIES: '/communities/create', // Creates a new community with name, description, location, and images
+      UPDATE: (id: string) => `/communities/update/${id}`, // Updates community details like name, description, location, and images
       GET_ONE: (id: string) => `/communities/${id}`, // Gets details of a specific community by ID
       YOUR_COMMUNITIES: '/communities/yours', // Gets communities created by or joined by the current user
       NEARBY: '/communities/nearby', // Finds communities near a specific location with pagination support

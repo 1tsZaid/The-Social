@@ -16,6 +16,13 @@ interface Location {
   name: string;
 }
 
+interface UpdateCommunityPayload {
+  name?: string;
+  description?: string;
+  communityImageInBase64?: string; // base64 encoded string of the community image
+  banner?: string;
+}
+
 interface CreateCommunityPayload {
   name: string;
   description: string;
@@ -43,6 +50,73 @@ class CommunityService {
   private readonly DEFAULT_LIMIT = 10;
   private readonly MAX_LIMIT = 100;
   private readonly NEARBY_DISTANCE_M = 5000; // 5000 meters = 5 kilometers and in meters for PostGIS
+  
+  async updateCommunity(communityId: string, payload: UpdateCommunityPayload): Promise<Community> {
+    try {
+      // Prepare update data
+      const updateData: any = {};
+      if (payload.name) updateData.name = payload.name;
+      if (payload.description) updateData.description = payload.description;
+      if (payload.banner) updateData.banner = payload.banner;
+      // Update community fields (except image)
+      const updated = await prisma.community.update({
+        where: { communityId },
+        data: updateData,
+      });
+
+      // Handle image update if present
+      let communityImageUrl = communityUploadService.getFileWithPng(updated.communityId) || undefined;
+      if (payload.communityImageInBase64) {
+        try {
+          // Delete old image if exists
+          if (communityImageUrl) {
+            await communityUploadService.deleteImage(communityImageUrl);
+          }
+          console.log("image in base64", payload.communityImageInBase64);
+          // Save new image
+          communityImageUrl = await communityUploadService.saveBase64Image(communityId, payload.communityImageInBase64);
+          console.log("image saved", communityImageUrl);
+        } catch (error) {
+          throw new Error(`Image upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      }
+
+      // Get member count
+      const members = await prisma.user.count({
+        where: {
+          communities: {
+            some: { communityId }
+          }
+        }
+      });
+
+      // Get coordinates
+      const locationData = await prisma.$queryRaw<any[]>`
+        SELECT ST_X(location) as lng, ST_Y(location) as lat, locationName
+        FROM "Community"
+        WHERE "communityId" = ${communityId}
+      `;
+      const coords = locationData[0] || { lng: 0, lat: 0, locationName: updated.locationName };
+
+      return {
+        communityId: updated.communityId,
+        name: updated.name,
+        description: updated.description,
+        location: {
+          coordinates: [coords.lng, coords.lat],
+          name: coords.locationName
+        },
+        banner: updated.banner,
+        communityImageUrl: communityImageUrl,
+        members,
+        nearby: true,
+        owner: true
+      };
+    } catch (error) {
+      console.error('Error updating community:', error);
+      throw new Error('Failed to update community');
+    }
+  }
 
   async getCommunityMembers(communityId: string): Promise<CommunityMember[]> {
     try {

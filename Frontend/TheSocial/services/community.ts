@@ -11,6 +11,13 @@ export interface CommunityMember {
   banner: string;
 }
 
+interface UpdateCommunityPayload {
+  name?: string;
+  description?: string;
+  communityImageInBase64?: string; // base64 encoded string of the community image
+  banner?: string;
+}
+
 interface Location {
   coordinates: [number, number]; // [longitude, latitude]
   name: string;
@@ -38,6 +45,21 @@ interface FindCommunitiesParams {
   limit?: number;
   page?: number;
 }
+
+export const updateCommunity = async (communityId: string, payload: UpdateCommunityPayload): Promise<Community> => {
+  try {
+    const tokens = await getTokens();
+    const response = await api.put(API_CONFIG.ENDPOINTS.COMMUNITIES.UPDATE(communityId), payload, {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
+    return normalizeCommunity(response.data);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 export const getCommunityMembers = async (communityId: string): Promise<CommunityMember[]> => {
   try {

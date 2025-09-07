@@ -6,6 +6,7 @@ const router = Router();
 
 // Community creation and info
 router.post('/create', authenticateToken, communityController.createCommunity.bind(communityController));
+router.put('/update/:communityId', authenticateToken, communityController.updateCommunity.bind(communityController));
 router.get('/yours', authenticateToken,  communityController.getYourCommunities.bind(communityController));
 router.get('/nearby', authenticateToken, communityController.findNearbyCommunities.bind(communityController));
 router.get('/members/:communityId', communityController.getCommunityMembers.bind(communityController));

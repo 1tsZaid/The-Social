@@ -117,7 +117,7 @@ export class ProfileService {
 
     return {
       username,
-      profileImageUrl: profileUploadService.getFileWithPng(id) || undefined,
+      profileImageUrl: profileImageUrl,
       banner: user.banner,
       joinedDate: user.createdAt.toISOString().slice(0, 7),
     };
