@@ -26,7 +26,7 @@ import CreateCommunityScreen from './createCommunity';
 import DiscoverScreen from './discover';
 import FlappyBirdInfo from './flappyBirdInfo';
 import SnakeInfo from './snakeInfo';
-import CommunitySettings from './communitySettings';
+import CommunityInfo from './(communityInfo)';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -38,7 +38,7 @@ function ModalRoot() {
       {modal === 'discover' && <DiscoverScreen />}
       {modal === 'flappyBirdInfo' && <FlappyBirdInfo />}
       {modal === 'snakeInfo' && <SnakeInfo />}
-      {modal === 'communitySettings' && <CommunitySettings />}
+      {modal === 'communityInfo' && <CommunityInfo />}
     </BottomModal>
   );
 }

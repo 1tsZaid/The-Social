@@ -8,6 +8,7 @@ import { CommunityHeader } from '@/components/CommunityHeader';
 import { SettingItem } from '@/components/SettingItem';
 import { DeleteButton } from '@/components/DeleteButton';
 import { CommunityAdditionalInfo } from '@/components/CommunityAdditionalInfo';
+import { CommunityMemberRow } from '@/components/CommunityMemberRow';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useCommunities } from '@/components/CommunitiesContext';
@@ -54,7 +55,7 @@ export default function ProfileScreen() {
 
   const handleEdit = () => {
     // Navigate to edit profile screen
-    router.push('/communityEdit');
+    router.push('/(communityModal)/communityEdit');
   };
 
   const handleDelete = async () => {
@@ -130,7 +131,6 @@ export default function ProfileScreen() {
             <SettingItem
               icon="accessibility"
               color={blueColor}
-              ColorType="textSecondary"
               title="Members"
               chevron={true}
               onPress={() => console.log('Members pressed')}
@@ -139,6 +139,15 @@ export default function ProfileScreen() {
             {/* Logout Button */}
             <DeleteButton onDelete={handleDelete} />
           </View>
+          
+          {/* Community Member Row Example (replace with real data) */}
+          <CommunityMemberRow
+            name={userData.username}
+            imageUrl={userData.profileImageUrl}
+            banner={userData.banner}
+            onPromote={() => console.log('Promote pressed')}
+            onKick={() => console.log('Kick pressed')}
+          />
           
           {/* Bottom spacing */}
           <View style={styles.bottomSpacing} />

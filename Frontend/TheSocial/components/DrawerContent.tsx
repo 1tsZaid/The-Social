@@ -109,7 +109,7 @@ export function DrawerContent() {
                   owner={community.owner}
                   isSelected={selectedCommunityId === community.communityId}
                   onPress={() => handleCommunityPress(community.communityId)}
-                  onAdminPress={() => openModal('communitySettings')}
+                  onAdminPress={() => openModal('communityInfo')}
                   onMemberPress={async () => {await checkTokens(); await leaveCommunity(community.communityId); await refreshCommunities(); setSelectedCommunity(null);} }
                 />
                 ) : null
