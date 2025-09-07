@@ -11,6 +11,8 @@ interface SettingItemProps {
   color: string;
   title: string;
   onPress?: () => void;
+  ColorType?: 'textPrimary' | 'textSecondary';
+  chevron?: boolean;
   children?: React.ReactNode; // for dropdown items
 }
 
@@ -19,6 +21,8 @@ export const SettingItem: React.FC<SettingItemProps> = ({
   color,
   title,
   onPress,
+  chevron = false,
+  ColorType = 'textPrimary',
   children,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -89,12 +93,12 @@ export const SettingItem: React.FC<SettingItemProps> = ({
             />
             <ThemedText
               variant="body"
-              colorType="textPrimary"
+              colorType={ColorType}
               style={styles.title}
             >
               {title}
             </ThemedText>
-            {children && (
+            {(children || chevron) && (
               <View style={styles.chevronContainer}>
                 <Ionicons
                   name="chevron-forward"

@@ -1,0 +1,148 @@
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+import { ThemedText } from '@/components/ThemedText';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import MainButton from '@/components/MainButton';
+
+interface ProfileHeaderProps {
+  communityName: string;
+  communityImage?: string;
+  bannerColor?: string;
+  onEdit: () => void;
+}
+
+export const CommunityHeader: React.FC<ProfileHeaderProps> = ({
+  communityName,
+  communityImage,
+  bannerColor,
+  onEdit,
+}) => {
+  const profileBorderColor = useThemeColor({}, 'background');
+  const profileSurfaceColor = useThemeColor({}, 'textPrimary');
+  const surfaceColor = useThemeColor({}, 'surface');
+  const textSecondaryColor = useThemeColor({}, 'textSecondary');
+  
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: 'transparent',
+    },
+    banner: {
+      height: 144,
+    },
+    content: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingHorizontal: 24,
+      paddingTop: 20,
+      paddingBottom: 20,
+    },
+    profilePictureContainer: {
+      marginRight: 16,
+      position: 'absolute',
+    },
+    profilePicture: {
+      width: 96,
+      height: 96,
+      borderRadius: 20,
+      borderWidth: 4,
+      backgroundColor: profileBorderColor,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: Platform.OS === 'web' ? -70 : -55, // Overlap with banner
+    },
+    profileImagePlaceholder: {
+      width: 96,
+      height: 96,
+      borderRadius: 20,
+      backgroundColor: profileSurfaceColor,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    userSection: {
+      flex: 1,
+      justifyContent: 'space-between',
+      paddingTop: 30,
+    },
+    usernameRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 4,
+    },
+    username: {
+      textAlign: 'center',
+      flex: 1,
+    },
+    notificationButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: surfaceColor,
+    },
+    joinedInfo: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    joinedText: {
+      marginLeft: 4,
+    },
+    editButtonContainer: {
+      marginTop: 16,
+    },
+  });
+
+  return (
+    <View style={styles.container}>
+
+      <View style={[styles.banner, { backgroundColor: bannerColor }]} />
+      
+      <View style={styles.content}>
+        <View style={styles.profilePictureContainer}>
+          <View style={[styles.profilePicture, { borderColor: profileBorderColor }]}>
+            {communityImage ? (
+              <Image
+                source={{ uri: `${communityImage}?cache=${Math.random()}` }} 
+                style={{ width: 96, height: 96, borderRadius: 20 }} 
+              />
+            ) : (
+              <View style={styles.profileImagePlaceholder}>
+                <ThemedText 
+                  variant="h2"
+                  style={{ fontWeight: 'bold', fontSize: 45, color: bannerColor }}
+                >
+                  {communityName?.charAt(0).toUpperCase()}
+                </ThemedText>
+              </View>
+            )}
+          </View>
+        </View>
+        
+        {/* User Info and Button Section */}
+        <View style={styles.userSection}>
+          <View style={styles.usernameRow}>
+              <ThemedText 
+                variant="h3" 
+                colorType="textPrimary"
+                style={styles.username}
+              >
+                {communityName}
+              </ThemedText>
+          </View>
+          
+          {/* Edit Profile Button */}
+          <View style={styles.editButtonContainer}>
+            <MainButton 
+              title="Edit Community" 
+              onPress={onEdit}
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};

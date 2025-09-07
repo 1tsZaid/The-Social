@@ -14,7 +14,8 @@ interface CommunityItemProps {
   isSelected: boolean;
   onPress: () => void;
   owner: boolean;
-  onActionPress?: () => void;
+  onAdminPress?: () => void;
+  onMemberPress?: () => void;
   style?: ViewStyle;
 }
 
@@ -27,7 +28,8 @@ export function CommunityItem({
   isSelected = false,
   owner = false,
   onPress,
-  onActionPress,
+  onAdminPress,
+  onMemberPress,
   style,
 }: CommunityItemProps) {
   const surfaceColor = useThemeColor({}, 'surface');
@@ -101,11 +103,11 @@ export function CommunityItem({
       {/* Right: Action text */}
       {isSelected && (
         <TouchableOpacity
-          onPress={onActionPress}
+          onPress={owner ? onAdminPress : onMemberPress}
           activeOpacity={0.7}
         >
-          <ThemedText variant="bodySmall" colorType="red">
-            {owner ? 'Delete' : 'Leave'}
+          <ThemedText variant="bodySmall" colorType={owner ? "blue" : "red"}>
+            {owner ? 'Settings' : 'Leave'}
           </ThemedText>
         </TouchableOpacity>
       )}
