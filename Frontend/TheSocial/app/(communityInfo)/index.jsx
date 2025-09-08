@@ -16,38 +16,23 @@ export default function CommunityInfoIndex() {
   const renderScreen = () => {
     switch (screen) {
       case SCREENS.EDIT:
-        return <CommunityEdit />;
+        return <CommunityEdit toSettings={() => setScreen(SCREENS.SETTINGS)} />;
       case SCREENS.MEMBERS:
-        return <CommunityMembers />;
+        return <CommunityMembers toSettings={() => setScreen(SCREENS.SETTINGS)} />;
       case SCREENS.SETTINGS:
       default:
-        return <CommunitySettings />;
+        return <CommunitySettings toMembers={() => setScreen(SCREENS.MEMBERS)} toEdit={() => setScreen(SCREENS.EDIT)} />;
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.nav}>
-        <Button title="Settings" onPress={() => setScreen(SCREENS.SETTINGS)} />
-        <Button title="Edit" onPress={() => setScreen(SCREENS.EDIT)} />
-        <Button title="Members" onPress={() => setScreen(SCREENS.MEMBERS)} />
-      </View>
-      <View style={styles.content}>
-        {renderScreen()}
-      </View>
+    <View style={styles.content}>
+      {renderScreen()}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  nav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 10,
-  },
   content: {
     flex: 1,
   },

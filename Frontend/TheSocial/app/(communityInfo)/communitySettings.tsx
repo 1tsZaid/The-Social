@@ -1,78 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
-import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useIsFocused } from '@react-navigation/native';
-
 import { CommunityHeader } from '@/components/CommunityHeader';
 import { SettingItem } from '@/components/SettingItem';
 import { DeleteButton } from '@/components/DeleteButton';
 import { CommunityAdditionalInfo } from '@/components/CommunityAdditionalInfo';
-import { CommunityMemberRow } from '@/components/CommunityMemberRow';
-
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useCommunities } from '@/components/CommunitiesContext';
-import { useLeaderboard } from '@/components/LeaderboardContext';
 
-import { deleteTokens, getTokens } from '@/utils/tokenStorage';
 import { checkTokens } from '@/utils/checkTokens';
+import { leaveCommunity } from '@/services/community';
 
-import socket from '@/services/socket';
-import { getProfile, Profile } from '@/services/profile';
+interface CommunitySettingsProps {
+  toMembers: () => void;
+  toEdit: () => void;
+}
 
-export default function ProfileScreen() {
-  const [userData, setUserData] = useState<Profile | undefined>(undefined);
-  const divderColor = useThemeColor({}, 'borderDivider')
+export default function CommunitySettingScreen({ toMembers, toEdit }: CommunitySettingsProps) {
+  const { communities, selectedCommunityId, loading, refreshCommunities, setSelectedCommunity } = useCommunities();
+  const divderColor = useThemeColor({}, 'borderDivider');
   const backgroundColor = useThemeColor({}, 'background');
   const blueColor = useThemeColor({}, 'blue');
-  const isFocused = useIsFocused();
-  const { resetCommunities } = useCommunities();
-  const { resetLeaderboard } = useLeaderboard();
 
-  useEffect(() => {
-    if (isFocused) {
-      fetchProfileData();
-    } else {
-      console.log('Profile Screen ❌');
-    }
-  }, [isFocused]);
+  const community = communities.find(c => c.communityId === selectedCommunityId);
 
-  const fetchProfileData = async () => {
-    const tokenFlag = await checkTokens();
-    if (tokenFlag) {
-      const profileData = await getProfile();
-      setUserData(profileData);
-      console.log('Profile data fetched:', profileData);
-    } else {
-      deleteTokens();
-      router.replace('/login');
-    }
-  };
-
-  if (!userData) {
+  if (loading || !community) {
     return <ActivityIndicator />;
   }
 
-  const handleEdit = () => {
-    // Navigate to edit profile screen
-    router.push('/(communityModal)/communityEdit');
-  };
-
-  const handleDelete = async () => {
-    // Clear Communities Context
-    resetCommunities();
-    resetLeaderboard();    
-
-    // Handle logout logic
-    const tokens = await getTokens();
-    console.log('Tokens before logout:', tokens);
-    socket.disconnect('/chat');
-    console.log('User logged out');
-    await deleteTokens();
-    console.log('Tokens after logout:', await getTokens());
-    router.replace('/login');
-  };
-  
   const styles = StyleSheet.create({
     safeArea: {
       flex: 1,
@@ -96,7 +51,7 @@ export default function ProfileScreen() {
       height: 1,
       backgroundColor: divderColor,
       marginHorizontal: 25,
-      marginTop: 20, 
+      marginTop: 20,
     },
     bottomSpacing: {
       height: 40,
@@ -104,52 +59,40 @@ export default function ProfileScreen() {
   });
 
   return (
-    <SafeAreaView style={styles.safeArea} >
-      <ScrollView 
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View>
-          {/* Profile Header */}
+          {/* Community Header */}
           <CommunityHeader
-            communityName={userData.username}
-            communityImage={userData.profileImageUrl}
-            bannerColor={userData.banner}
-            onEdit={handleEdit}
+            communityName={community.name}
+            communityImage={community.communityImageUrl}
+            bannerColor={community.banner}
+            onEdit={toEdit}
           />
-          
-          {/* Divider */}
+
           {/* <View style={styles.divider} /> */}
-          
-          <View style={styles.bodyContainer} >
-            <CommunityAdditionalInfo 
-              description={'No description provided.'}
-              location={'Earth'}
+
+          <View style={styles.bodyContainer}>
+            <CommunityAdditionalInfo
+              description={community.description || 'No description provided.'}
+              location={community.location.name || 'Earth'}
             />
-            {/* Member Surface */}
             <SettingItem
               icon="accessibility"
               color={blueColor}
               title="Members"
               chevron={true}
-              onPress={() => console.log('Members pressed')}
+              onPress={toMembers}
             />
             
             {/* Logout Button */}
-            <DeleteButton onDelete={handleDelete} />
+            <DeleteButton onDelete={async () => {await checkTokens(); await leaveCommunity(community.communityId); await refreshCommunities(); setSelectedCommunity(null);}} />
           </View>
-          
-          {/* Community Member Row Example (replace with real data) */}
-          <CommunityMemberRow
-            name={userData.username}
-            imageUrl={userData.profileImageUrl}
-            banner={userData.banner}
-            onPromote={() => console.log('Promote pressed')}
-            onKick={() => console.log('Kick pressed')}
-          />
-          
-          {/* Bottom spacing */}
+
           <View style={styles.bottomSpacing} />
         </View>
       </ScrollView>

@@ -48,7 +48,7 @@ export const SettingItem: React.FC<SettingItemProps> = ({
       textAlign: 'center',
       width: 43,
       height: 43,
-      backgroundColor: iconBackgroundColor,
+      backgroundColor: color + '40',
       borderRadius: 100,
       padding: 5,
       paddingTop: 8,

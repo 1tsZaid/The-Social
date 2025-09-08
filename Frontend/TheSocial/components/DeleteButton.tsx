@@ -12,7 +12,7 @@ interface LogoutButtonProps {
 
 export const DeleteButton: React.FC<LogoutButtonProps> = ({ onDelete }) => {
   const redColor = useThemeColor({}, 'red');
-  const iconBackgroundColor = useThemeColor({}, 'background');
+  const iconBackgroundColor = useThemeColor({}, 'red');
   
   const styles = StyleSheet.create({
     container: {
@@ -32,7 +32,7 @@ export const DeleteButton: React.FC<LogoutButtonProps> = ({ onDelete }) => {
       textAlign: 'center',
       width: 43,
       height: 43,
-      backgroundColor: iconBackgroundColor,
+      backgroundColor: iconBackgroundColor + '40',
       borderRadius: 100,
       padding: 5,
       paddingTop: 9,

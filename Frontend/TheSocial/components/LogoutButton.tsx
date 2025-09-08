@@ -35,7 +35,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
       textAlign: 'center',
       width: 43,
       height: 43,
-      backgroundColor: iconBackgroundColor,
+      backgroundColor: redColor + '40',
       borderRadius: 100,
       padding: 5,
       paddingTop: 9,
