@@ -15,6 +15,7 @@ router.post('/change-owner/:communityId', authenticateToken, communityController
 // Membership actions
 router.post('/join/:communityId', authenticateToken, communityController.joinCommunity.bind(communityController));
 router.post('/leave/:communityId', authenticateToken, communityController.leaveCommunity.bind(communityController));
+router.post('/kick/:communityId', authenticateToken, communityController.kickFromCommunity.bind(communityController));
 
 // Get single community
 router.get('/:communityId', communityController.getCommunity.bind(communityController));

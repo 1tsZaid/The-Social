@@ -4,8 +4,15 @@ import { View, ScrollView, ActivityIndicator, Text, StyleSheet, Button } from 'r
 import MainButton from '@/components/MainButton';
 import { CommunityMemberRow } from '@/components/CommunityMemberRow';
 import { useCommunities } from '@/components/CommunitiesContext';
+import { useModal } from '@/components/ModalContext';
 
-import { getCommunityMembers, CommunityMember } from '@/services/community';
+
+
+import type { CommunityMember } from '@/services/community';
+import { getCommunityMembers, changeCommunityOwner, leaveCommunity, kickFromCommunity } from '@/services/community';
+import { getProfile } from '@/services/profile';
+import { checkTokens } from '@/utils/checkTokens';
+import { ThemedText } from '@/components/ThemedText';
 
 
 interface CommunityMemberProps {
@@ -18,6 +25,8 @@ export default function CommunityMembers({ toSettings }: CommunityMemberProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const community = communities.find(c => c.communityId === selectedCommunityId);
+  
+  const { closeModal } = useModal();
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -25,8 +34,15 @@ export default function CommunityMembers({ toSettings }: CommunityMemberProps) {
       setLoading(true);
       setError(null);
       try {
-        const data = await getCommunityMembers(selectedCommunityId);
-        setMembers(data);
+        await checkTokens();
+        const [profile, data] = await Promise.all([
+          getProfile(),
+          getCommunityMembers(selectedCommunityId),
+        ]);
+        // Filter out the current user from the members list
+        const filtered = data.filter((member: CommunityMember) => member.username !== profile.username);
+        console.log('Community members fetched:', filtered);
+        setMembers(filtered);
       } catch (e) {
         setError('Failed to load members');
       } finally {
@@ -47,18 +63,38 @@ export default function CommunityMembers({ toSettings }: CommunityMemberProps) {
       </View>
       <ScrollView>
         {members.length === 0 ? (   
-          <Text style={styles.emptyText}>No members found.</Text>
+          <ThemedText style={styles.emptyText}>No members found.</ThemedText>
         ) : (
-          members.map(member => (
-            <CommunityMemberRow
-              key={member.id}
-              name={member.username}
-              imageUrl={member.profileImageUrl}
-              banner={member.banner}
-              onPromote={() => console.log('Promote pressed', member.id)}
-              onKick={() => console.log('Kick pressed', member.id)}
-            />
-          ))
+          members.map(member => {
+            const handlePromote = async () => {
+              if (!selectedCommunityId) return;
+              try {
+                await changeCommunityOwner(selectedCommunityId, member.id);
+                closeModal();
+              } catch (e) {
+                console.log('Failed to promote member', e);
+              }
+            };
+            const handleKick = async () => {
+              if (!selectedCommunityId) return;
+              try {
+                await kickFromCommunity(selectedCommunityId, member.id);
+                // Optionally refresh members list or show feedback
+              } catch (e) {
+                console.log('Failed to kick member', e);
+              }
+            };
+            return (
+              <CommunityMemberRow
+                key={member.id}
+                name={member.username}
+                imageUrl={member.profileImageUrl}
+                banner={member.banner}
+                onPromote={handlePromote}
+                onKick={handleKick}
+              />
+            );
+          })
         )}
       </ScrollView>
     </View>
@@ -72,6 +108,5 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
     marginTop: 20,
-    color: '#888',
   },
 });

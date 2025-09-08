@@ -187,6 +187,21 @@ export const leaveCommunity = async (communityId: string): Promise<void> => {
     throw error;
   }
 };
+export const kickFromCommunity = async (communityId: string, memberId: string): Promise<void> => {
+  try {
+    const tokens = await getTokens();
+    await api.post(API_CONFIG.ENDPOINTS.COMMUNITIES.KICK(communityId), 
+    {memberId: memberId},
+    {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 const normalizeCommunity = (data: any): Community => ({
   communityId: data.communityId,

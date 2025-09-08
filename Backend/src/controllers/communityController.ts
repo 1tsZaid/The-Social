@@ -233,6 +233,42 @@ export class CommunityController {
       }
     }
   }
+  async kickFromCommunity(req: AuthenticatedRequest, res: Response) {
+    try {
+      if (!req.user) {
+        res.status(401).json({ error: 'User not authenticated' });
+        return;
+      }
+
+      const communityId: string = req.params.communityId;
+      const { memberId } = req.body;
+      if (!memberId) {
+        res.status(400).json({ error: 'Member ID is required' });
+        return;
+      }
+      console.log(communityId);
+
+      const community = await communityService.getCommunity(communityId);
+
+      if (community === null) {
+        res.status(404).json({ error: 'Community not found' });
+        return;
+      }
+
+      let result = false;
+      if (req.user.userId === community.ownerId) {
+        result = await communityService.leaveCommunity(memberId, communityId);
+      } 
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    }
+  }
 };
 
 export const communityController = new CommunityController();
