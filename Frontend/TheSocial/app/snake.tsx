@@ -25,7 +25,7 @@ export default function App() {
   const [username, setUsername] = useState('');
   const { game, communityId } = useLocalSearchParams();
   const [running, setRunning] = useState(false);
-  const [gameEngine, setGameEngine] = useState(null);
+  const gameEngineRef = useRef<GameEngine | null>(null);
   const [currentPoints, setCurrentPoints] = useState(0);
   const [highestPoints, setHighestPoints] = useState(0);
   const [showHighScoreBanner, setShowHighScoreBanner] = useState(false);
@@ -96,6 +96,9 @@ export default function App() {
   // Handle arrow keys (web/desktop)
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+        e.preventDefault(); // stop scrolling
+      }
       switch (e.key) {
         case 'ArrowUp':
           changeDirection('UP'); console.log('ArrowUp pressed');
@@ -128,9 +131,8 @@ export default function App() {
     if (directionRef.current !== opposite[newDir]) {
       directionRef.current = newDir;
       console.log('Direction ref updated to:', newDir);
-      if (gameEngine) {
-        gameEngine.dispatch({ type: 'change_direction', direction: newDir });
-        console.log('Direction changed to:', newDir);
+      if (gameEngineRef.current) {
+        gameEngineRef.current.dispatch({ type: 'change_direction', direction: newDir });
       }
     }
   }
@@ -140,7 +142,7 @@ export default function App() {
       <ThemedText style={styles.inGameScore}>{currentPoints}</ThemedText>
       <ThemedView style={styles.gameWrapper}>
         <GameEngine
-          ref={(ref) => setGameEngine(ref)}
+          ref={(ref) => (gameEngineRef.current = ref)}
           systems={[Physics]}
           entities={entities()}
           running={running}
@@ -148,7 +150,7 @@ export default function App() {
             switch (e.type) {
               case 'game_over':
                 setRunning(false);
-                gameEngine.stop();
+                gameEngineRef.current?.stop(); 
                 setShowHighScoreBanner(false);
                 if (currentPoints > highestPoints) {
                   setHighestPoints(currentPoints);
@@ -188,7 +190,7 @@ export default function App() {
               onPress={() => {
                 setCurrentPoints(0);
                 setRunning(true);
-                gameEngine.swap(entities());
+                gameEngineRef.current?.swap(entities());
               }}
             />
             <MainButton
