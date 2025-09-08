@@ -12,14 +12,17 @@ import { ThemedText } from '@/components/ThemedText';
 import MainButton from '@/components/MainButton';
 import NewHighScoreBanner from '@/components/NewHighScoreBanner';
 
-// import { getProfile } from '@/services/profile';
+import { getProfile } from '@/services/profile';
 import { checkTokens } from '@/utils/checkTokens';
 import { deleteTokens } from '@/utils/tokenStorage';
 
-// import { useLeaderboard } from '@/components/LeaderboardContext';
+import { useLeaderboard } from '@/components/LeaderboardContext';
 
 import entities from '@/games/snake/entities';
 import Physics from '@/games/snake/physics';
+
+import { GAME_SNAKE } from '@/services/game';
+
 
 export default function App() {
   const [username, setUsername] = useState('');
@@ -29,48 +32,56 @@ export default function App() {
   const [currentPoints, setCurrentPoints] = useState(0);
   const [highestPoints, setHighestPoints] = useState(0);
   const [showHighScoreBanner, setShowHighScoreBanner] = useState(false);
-//   const { leaderboard, updateScore, fetchLeaderboard } = useLeaderboard();
+  const { leaderboards, updateScore, fetchLeaderboard } = useLeaderboard();
 
   useEffect(() => {
+    // Lock to portrait when this screen mounts
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
-    // leaderboardUpdate();
+
+    leaderboardUpdate();
     setRunning(false);
     return () => {
+      // Optional: unlock when leaving screen
       ScreenOrientation.unlockAsync();
+      // Or reset to default, e.g. allow all:
+      // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT);
     };
   }, []);
 
-//   useEffect(() => {
-//     if (!username || !leaderboard) return;
-//     if (leaderboard.currentUser) {
-//       setHighestPoints(leaderboard.currentUser.score);
-//     } else if (leaderboard.topPlayers) {
-//       const userInTop = leaderboard.topPlayers.find(p => p.username === username);
-//       if (userInTop) {
-//         setHighestPoints(userInTop.score);
-//       }
-//     }
-//   }, [leaderboard, username]);
+  useEffect(() => {
+    if (!username || !leaderboards[GAME_SNAKE]) return;
+    // Prefer currentUser if available, else check topPlayers
+    if (leaderboards[GAME_SNAKE].currentUser) {
+      setHighestPoints(leaderboards[GAME_SNAKE].currentUser.score);
+    } else if (leaderboards[GAME_SNAKE].topPlayers) {
+      const userInTop = leaderboards[GAME_SNAKE].topPlayers.find(p => p.username === username);
+      if (userInTop) {
+        setHighestPoints(userInTop.score);
+      }
+    }
+  }, [leaderboards[GAME_SNAKE], username]);
 
-//   async function leaderboardUpdate() {
-//     const username = await fetchUsername();
-//     if (username && communityId && game) {
-//       await fetchLeaderboard(game as string, communityId as string, username as string);
-//     }
-//   }
+  async function leaderboardUpdate() {
+    const username = await fetchUsername();
 
-//   async function fetchUsername() {
-//     const tokenFlag = await checkTokens();
-//     if (tokenFlag) {
-//       const profileData = await getProfile();
-//       setUsername(profileData.username);
-//       return profileData.username;
-//     } else {
-//       deleteTokens();
-//       router.replace('/login');
-//       return null;
-//     }
-//   }
+    if (username && communityId && game) {
+      await fetchLeaderboard(game as string, communityId as string, username as string);
+    }
+  }
+
+  async function fetchUsername() {
+    const tokenFlag = await checkTokens();
+    if (tokenFlag) {
+      const profileData = await getProfile();
+      setUsername(profileData.username);
+      console.log('Profile data fetched:', profileData);
+      return profileData.username;
+    } else {
+      deleteTokens();
+      router.replace('/login');
+      return null;
+    }
+  }
 
 // Store direction in a ref to avoid stale closures
   const directionRef = useRef('RIGHT');
@@ -154,7 +165,8 @@ export default function App() {
                 setShowHighScoreBanner(false);
                 if (currentPoints > highestPoints) {
                   setHighestPoints(currentPoints);
-                  // updateScore(game, communityId, username, currentPoints);
+                // check tokens ------------------------------------------
+                  updateScore(game, communityId, username, currentPoints);
                   setShowHighScoreBanner(true);
                 }
                 break;
