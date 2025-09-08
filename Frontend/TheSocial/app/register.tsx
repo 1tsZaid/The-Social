@@ -15,6 +15,8 @@ import { Colors } from '@/constants/Colors';
 import { register } from '@/services/auth';
 import { saveTokens } from '@/utils/tokenStorage';
 
+import { useModal } from '@/components/ModalContext';
+
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,6 +24,8 @@ const RegisterScreen = () => {
   const [rePassword, setRePassword] = useState('');
   const [showRePassword, setShowRePassword] = useState(false);
   const [username, setUsername] = useState('');
+
+  const { openModal } = useModal();
   
   const backgroundColor = useThemeColor({}, 'background')
 
@@ -50,6 +54,7 @@ const RegisterScreen = () => {
       // Handle the response
       console.log(response);
       router.replace('/home/messages');
+      openModal('discover');
     } catch (error: unknown) {
         console.error(error);
 
