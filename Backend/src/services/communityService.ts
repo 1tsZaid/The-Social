@@ -92,7 +92,7 @@ class CommunityService {
 
       // Get coordinates
       const locationData = await prisma.$queryRaw<any[]>`
-        SELECT ST_X(location) as lng, ST_Y(location) as lat, locationName
+        SELECT ST_X(location) as lng, ST_Y(location) as lat, "locationName"
         FROM "Community"
         WHERE "communityId" = ${communityId}
       `;
@@ -114,7 +114,7 @@ class CommunityService {
       };
     } catch (error) {
       console.error('Error updating community:', error);
-      throw new Error('Failed to update community');
+      throw new Error(error instanceof Error ? error.message : 'Failed to update community');
     }
   }
 

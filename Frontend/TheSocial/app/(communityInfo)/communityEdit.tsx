@@ -67,7 +67,7 @@ export default function CommunityEditScreen({toSettings}: CommunityEditProps) {
       });
       await refreshCommunities();
       Alert.alert('Success', 'Community updated successfully!');
-      // You may want to navigate back or to the settings screen
+      toSettings();
     } catch (e) {
       Alert.alert('Error', 'Failed to update community.');
     } finally {
