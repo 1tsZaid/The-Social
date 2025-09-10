@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ImageBackground } from 'react-native';
+const BACKGROUND_IMAGE = require('@/assets/images/background-day.png');
 import { router } from 'expo-router';
 import { GameEngine } from 'react-native-game-engine';
 import { useLocalSearchParams } from "expo-router";
@@ -82,83 +83,89 @@ export default function App() {
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ImageBackground source={BACKGROUND_IMAGE} style={styles.background} resizeMode="stretch">
+      <ThemedView style={styles.container}>
+        {/* In-game points display */}
+        <ThemedText style={styles.inGameScore}>{currentPoints}</ThemedText>
 
-      {/* In-game points display */}
-      <ThemedText style={styles.inGameScore}>{currentPoints}</ThemedText>
+        <GameEngine
+          ref={(ref) => setGameEngine(ref)}
+          systems={[Physics]}
+          entities={entities()}
+          running={running}
+          onEvent={(e) => {
+            switch (e.type) {
+              case 'game_over':
+                setRunning(false);
+                gameEngine.stop();
+                setShowHighScoreBanner(false);
+                if (currentPoints > highestPoints) {
+                  setHighestPoints(currentPoints);
+                  updateScore(game, communityId, username, currentPoints);
+                  setShowHighScoreBanner(true);
+                }
+                break;
+              case 'new_point':
+                setCurrentPoints((prev) => prev + 1);
+                break;
+            }
+          }}
+          style={styles.gameEngine}
+        >
+          <StatusBar style="auto" hidden />
+        </GameEngine>
 
-      <GameEngine
-        ref={(ref) => setGameEngine(ref)}
-        systems={[Physics]}
-        entities={entities()}
-        running={running}
-        onEvent={(e) => {
-          switch (e.type) {
-            case 'game_over':
-              setRunning(false);
-              gameEngine.stop();
-              setShowHighScoreBanner(false);
-              if (currentPoints > highestPoints) {
-                setHighestPoints(currentPoints);
-                // check tokens ------------------------------------------
-                updateScore(game, communityId, username, currentPoints);
-                setShowHighScoreBanner(true);
-              }
-              break;
-            case 'new_point':
-              setCurrentPoints((prev) => prev + 1);
-              break;
-          }
-        }}
-        style={styles.gameEngine}
-      >
-        <StatusBar style="auto" hidden />
-      </GameEngine>
+        {/* Not running UI */}
+        {!running && (
+          <ThemedView style={styles.overlay}>
+            <NewHighScoreBanner
+              newScore={currentPoints}
+              visible={showHighScoreBanner}
+            />
 
-      {/* Not running UI */}
-      {!running && (
-        <ThemedView style={styles.overlay}>
-          <NewHighScoreBanner
-            newScore={currentPoints}
-            visible={showHighScoreBanner}
-          />
-
-          {/* Scores row */}
-          <ThemedView style={styles.scoreRow}>
-            <ThemedView style={styles.scoreBox}>
-              <ThemedText style={styles.scoreLabel}>SCORE</ThemedText>
-              <ThemedText style={styles.currentScore}>{currentPoints}</ThemedText>
+            {/* Scores row */}
+            <ThemedView style={styles.scoreRow}>
+              <ThemedView style={styles.scoreBox}>
+                <ThemedText style={styles.scoreLabel}>SCORE</ThemedText>
+                <ThemedText style={styles.currentScore}>{currentPoints}</ThemedText>
+              </ThemedView>
+              <ThemedView style={styles.scoreBox}>
+                <ThemedText style={styles.scoreLabel}>HIGHEST SCORE</ThemedText>
+                <ThemedText style={styles.highestScore}>{highestPoints}</ThemedText>
+              </ThemedView>
             </ThemedView>
-            <ThemedView style={styles.scoreBox}>
-              <ThemedText style={styles.scoreLabel}>HIGHEST SCORE</ThemedText>
-              <ThemedText style={styles.highestScore}>{highestPoints}</ThemedText>
+
+            {/* Buttons */}
+            <ThemedView style={styles.buttonGroup}>
+              <MainButton
+                title="START GAME"
+                onPress={() => {
+                  setCurrentPoints(0);
+                  setRunning(true);
+                  gameEngine.swap(entities());
+                }}
+              />
+              <MainButton
+                title="EXIT"
+                onPress={() => router.back()}
+              />
             </ThemedView>
           </ThemedView>
-
-          {/* Buttons */}
-          <ThemedView style={styles.buttonGroup}>
-            <MainButton
-              title="START GAME"
-              onPress={() => {
-                setCurrentPoints(0);
-                setRunning(true);
-                gameEngine.swap(entities());
-              }}
-            />
-            <MainButton
-              title="EXIT"
-              onPress={() => router.back()}
-            />
-          </ThemedView>
-        </ThemedView>
-      )}
-    </ThemedView>
+        )}
+      </ThemedView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   inGameScore: {
     textAlign: 'center',
