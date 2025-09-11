@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Video, ResizeMode } from "expo-av";
+import Toast from "react-native-toast-message";
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -111,6 +112,8 @@ export default function MessagesScreen() {
           />
         )) : null}
       </ScrollView>
+
+      <Toast position='bottom'  />
 
       <MessageInput onSendMessage={handleSendMessage} />
     </ThemedView>

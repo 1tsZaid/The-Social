@@ -15,6 +15,7 @@ interface CommunityCardProps {
   bannerColor: string;
   imageUrl?: string;
   iconName: string;
+  distance?: string; // distance in meters, optional
   onJoinPress?: () => void;
 }
 
@@ -26,6 +27,7 @@ export function CommunityCard({
   bannerColor,
   imageUrl,
   iconName,
+  distance,
   onJoinPress,
 }: CommunityCardProps) {
   const backgroundColor = useThemeColor({}, 'surface');
@@ -136,7 +138,7 @@ export function CommunityCard({
           <View style={styles.metaItem}>
             <Ionicons name="location" size={14} color={iconColor} />
             <ThemedText style={styles.metaText} variant="bodySmall" colorType="textSecondary">
-              Near
+              {distance ? `${distance}m` : 'Nearby'}
             </ThemedText>
           </View>
           <View style={styles.metaItem}>

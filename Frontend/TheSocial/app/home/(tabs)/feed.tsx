@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Alert, RefreshControl, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Video, ResizeMode } from "expo-av";
+import Toast from "react-native-toast-message";
 
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -131,6 +132,9 @@ export default function FeedScreen() {
         ))}
       </ScrollView>
       <AddToPhotoIcon onPress={handleAddToPhotoPress} />
+
+      <Toast position='bottom'  />
+
     </ThemedView>
   );
 }

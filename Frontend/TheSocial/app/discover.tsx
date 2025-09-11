@@ -281,6 +281,7 @@ export default function DiscoverScreen() {
                   location={community.location.name}
                   bannerColor={community.banner}
                   imageUrl={community.communityImageUrl}
+                  distance={community.distance?.toFixed(0)} // Display distance in meters, rounded
                   iconName="people" // Default icon, you might want to add an icon field to your Community interface
                   onJoinPress={() => handleJoinCommunity(community.communityId)}
                 />

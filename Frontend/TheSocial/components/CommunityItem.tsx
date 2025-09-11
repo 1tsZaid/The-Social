@@ -13,6 +13,7 @@ interface CommunityItemProps {
   memberCount: number;
   isSelected: boolean;
   onPress: () => void;
+  distance?: string; // distance in meters, optional
   owner: boolean;
   onAdminPress?: () => void;
   onMemberPress?: () => void;
@@ -27,6 +28,7 @@ export function CommunityItem({
   memberCount,
   isSelected = false,
   owner = false,
+  distance,
   onPress,
   onAdminPress,
   onMemberPress,
@@ -36,6 +38,7 @@ export function CommunityItem({
   const backgroundColor = useThemeColor({}, 'background');
 
   const iconBackgroundColor = useThemeColor({}, 'background');
+  const iconColor = useThemeColor({}, 'textSecondary');
 
   return (
     <TouchableOpacity
@@ -97,6 +100,13 @@ export function CommunityItem({
             colorType="textSecondary"
           >
             {memberCount} members
+          </ThemedText>
+          <Ionicons name="location" style={{ marginLeft: 6, marginRight: 2 }} size={14} color={iconColor} />
+          <ThemedText
+            variant="caption"
+            colorType="textSecondary"
+          >
+            {distance ? `${distance}m` : 'Nearby'}
           </ThemedText>
         </View>
 

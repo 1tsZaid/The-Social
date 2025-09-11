@@ -37,6 +37,7 @@ export interface Community extends Omit<CreateCommunityPayload, 'communityImageI
   members: number;
   owner: boolean;
   nearby: boolean;
+  distance?: number; // distance in meters, optional
 }
 
 interface FindCommunitiesParams {
@@ -116,6 +117,7 @@ export const getYourCommunities = async (param: FindCommunitiesParams): Promise<
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
+    console.log('Your communities distance:', response.data[0].distance);
     return response.data.map((c: any) => normalizeCommunity(c));
   } catch (error) {
     console.error(error);
@@ -138,6 +140,7 @@ export const findNearbyCommunities = async (params: FindCommunitiesParams): Prom
         Authorization: `Bearer ${tokens.accessToken}`,
       },
     });
+    console.log('Your communities distance:', response.data[0].distance);
     return response.data.map((c: any) => normalizeCommunity(c));
   } catch (error) {
     console.error(error);
@@ -214,6 +217,7 @@ const normalizeCommunity = (data: any): Community => ({
     ? `${API_CONFIG.STATIC_BASE_URL}${data.communityImageUrl}`
     : undefined,
   nearby: data.nearby,
+  distance: data.distance,
   owner: data.owner
 });
 
@@ -228,5 +232,6 @@ const normalizeGetCommunity = (data: any): (Omit<Community, 'owner'> & { ownerId
     ? `${API_CONFIG.STATIC_BASE_URL}${data.communityImageUrl}`
     : undefined,
   nearby: data.nearby,
+  distance: data.distance,
   ownerId: data.ownerId
 });

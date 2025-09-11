@@ -36,6 +36,7 @@ interface Community extends Omit<CreateCommunityPayload, 'communityImageInBase64
   communityImageUrl?: string; // URL to the community image
   members: number;
   nearby: boolean;
+  distance?: number; // distance in meters, optional
   owner: boolean;
 }
 
@@ -361,6 +362,7 @@ class CommunityService {
         communityImageUrl: communityUploadService.getFileWithPng(community.communityId) || undefined,
         members: parseInt(community.member_count) || 0,
         nearby: true,
+        distance: community.distance_meters,
         owner: userId === community.ownerId
       }));
     } catch (error) {
@@ -543,6 +545,7 @@ class CommunityService {
           communityImageUrl: communityUploadService.getFileWithPng(community.communityId) || undefined,
           members: memberCount,
           nearby,
+          distance: distance,
           owner: userId === community.ownerId
         });
       }

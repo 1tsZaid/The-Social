@@ -107,6 +107,7 @@ export function DrawerContent() {
                   location={community.location.name}
                   memberCount={community.members}
                   owner={community.owner}
+                  distance={community.distance?.toFixed(0)} // Display distance in meters, rounded
                   isSelected={selectedCommunityId === community.communityId}
                   onPress={() => handleCommunityPress(community.communityId)}
                   onAdminPress={() => openModal('communityInfo')}
