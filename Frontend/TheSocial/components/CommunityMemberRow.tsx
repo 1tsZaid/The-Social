@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { API_CONFIG } from '@/constants/Api'
 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -64,7 +65,7 @@ export const CommunityMemberRow: React.FC<CommunityMemberRowProps> = ({ name, im
     <View style={styles.container}>
       {imageUrl ? (
         <Image
-          source={{ uri: imageUrl }}
+          source={{ uri: API_CONFIG.STATIC_BASE_URL + imageUrl }}
           style={styles.avatar}
         />
       ) : (

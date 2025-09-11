@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -57,9 +57,7 @@ export function GameCard({ title, subtitle, icon, banner, onPress }: GameCardPro
       >
         <View style={styles.iconContainer}>
           <ThemedView style={styles.iconBackground}>
-            <ThemedText style={styles.icon}>
-              {icon}
-            </ThemedText>
+            <Image source={title === 'Snake' ? require('@/assets/images/snake.png') : require('@/assets/images/bluebird-upflap.png')} style={{ height: 54, width: 54 }} resizeMode='contain' />
           </ThemedView>
         </View>
         

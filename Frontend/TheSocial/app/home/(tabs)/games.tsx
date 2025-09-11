@@ -41,8 +41,8 @@ export default function GamesScreen() {
 
   // Mock data for recent games
   const featuredGames = [
-    { title: 'Flappy Bird', subtitle: '20sec avg', icon: '🚀' },
-    { title: 'Snake', subtitle: '1min avg', icon: '⚔️' },
+    { title: 'Flappy Bird', subtitle: '20sec avg', icon: '@/assets/images/bluebird-upflap.png' },
+    { title: 'Snake', subtitle: '1min avg', icon: '@/assets/images/snake.png', },
   ];
 
   // Mock data for recent games
@@ -58,7 +58,7 @@ export default function GamesScreen() {
       description: 'One-tap arcade game where the player controls a bird to fly through gaps in green pipes, scoring a point for each successful passage',
       subtitle: '20sec avg',
       banner: Colors.games.flappyBird,
-      icon: '🚀',
+      icon: '@/assets/images/bluebird-upflap.png',
       handleGamePress: () => openModal('flappyBirdInfo'),
     },
     {
@@ -66,7 +66,7 @@ export default function GamesScreen() {
       description: 'A classic video game where the player controls a line that grows longer by consuming food items while avoiding collisions with the boundaries of the game area or its own body',
       subtitle: '1min avg',
       banner: Colors.games.snake,
-      icon: '⚔️',
+      icon: '@/assets/images/snake.png',
       handleGamePress: () => openModal('snakeInfo'),
     },
   ];
@@ -185,6 +185,7 @@ export default function GamesScreen() {
                   isCurrentUser: true,
                 }] : [])
               ]}
+              gameTitle={availableGames.find(g => g.title === currentLeaderboardGame)?.title}
               gameImage={availableGames.find(g => g.title === currentLeaderboardGame)?.icon}
               gameBanner={availableGames.find(g => g.title === currentLeaderboardGame)?.banner}
             />

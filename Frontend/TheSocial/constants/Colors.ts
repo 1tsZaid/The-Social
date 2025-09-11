@@ -66,6 +66,12 @@ export const Colors = {
   },
   // Community banner colors
   community: {
+    pink: '#F9A8D4',
+    mint: '#99F6E4',
+    sky: '#BAE6FD',
+    lemon: '#FEF9C3',
+    lavender: '#DDD6FE',
+    sage: '#D9F99D',
     teal: '#20B2AA',
     blue: '#87CEEB',
     beige: '#F5DEB3',
@@ -74,8 +80,12 @@ export const Colors = {
   
   // profile banner Colors
   profile: {
-    blue: '#2196F3',
-    red: '#CE2029',
+    blue: '#3B82F6',
+    green: '#22C55E',
+    purple: '#8B5CF6',
+    orange: '#F97316',
+    red: '#EF4444',
+    yellow: '#EAB308',
   },
 
   games: {

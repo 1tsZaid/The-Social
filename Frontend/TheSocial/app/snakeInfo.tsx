@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import { router } from 'expo-router';
 
 import GameLogo from '@/components/GameLogo';
@@ -39,7 +39,7 @@ const GameInfoScreen: React.FC = () => {
         {/* Banner */}
         <View style={[styles.banner, { backgroundColor: Colors.games.snake }]}>
             <View style={styles.bannerContent}>
-              <GameLogo size="medium" />
+              <Image source={require('../assets/images/snake.png')} style={{ height: 70, width: 70 }} resizeMode='contain' />
             </View>
         </View>
         

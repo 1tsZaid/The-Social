@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image, Text } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import { PlayerRow } from './PlayerRow';
@@ -15,11 +15,12 @@ export type Player = {
 
 export type LeaderboardCardProps = {
   players: Player[];
+  gameTitle?: string;
   gameImage?: string;
   gameBanner?: string;
 };
 
-export function LeaderboardCard({ players, gameImage, gameBanner }: LeaderboardCardProps,) {
+export function LeaderboardCard({ players, gameImage, gameTitle, gameBanner }: LeaderboardCardProps,) {
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
   
@@ -73,9 +74,7 @@ export function LeaderboardCard({ players, gameImage, gameBanner }: LeaderboardC
         
         <View style={styles.controllerContainer}>
           <ThemedView style={styles.controllerBackground}>
-            <ThemedText style={[styles.controllerIcon, { color: textSecondaryColor }]}>
-              {gameImage}
-            </ThemedText>
+            <Image source={gameTitle === 'Snake' ? require('@/assets/images/snake.png') : require('@/assets/images/bluebird-upflap.png')} style={{ height: 70, width: 70 }} resizeMode='contain' />
           </ThemedView>
         </View>
       </View>

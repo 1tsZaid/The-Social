@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -17,6 +17,8 @@ export type GameListItemProps = {
 export function GameListItem({ title, description, icon, banner, onPress }: GameListItemProps) {
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
+
+  console.log('icon: ', icon);
   
   const styles = StyleSheet.create({
     container: {
@@ -63,9 +65,7 @@ export function GameListItem({ title, description, icon, banner, onPress }: Game
       >
         <View style={styles.iconContainer}>
           <ThemedView style={styles.iconBackground}>
-            <ThemedText style={styles.icon}>
-              {icon}
-            </ThemedText>
+            <Image source={title === 'Snake' ? require('@/assets/images/snake.png') : require('@/assets/images/bluebird-upflap.png')} style={{ height: 38, width: 38 }} resizeMode='contain' />
           </ThemedView>
         </View>
         
