@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Toast from "react-native-toast-message";
 import 'react-native-reanimated';
 import {
   Montserrat_400Regular,
@@ -88,6 +89,7 @@ export default function RootLayout() {
                 
               </Stack>
               <ModalRoot />
+              <Toast />
 
             </ModalProvider>
             <StatusBar style="auto" />

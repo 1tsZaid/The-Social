@@ -1,6 +1,7 @@
 // import api from './api';
 // import { API_CONFIG } from '../constants/Api';
 import socket from './socket';
+import Toast from "react-native-toast-message";
 
 
 interface Message {
@@ -132,6 +133,20 @@ export const subscribeToMessages = async (
 
   // listen for messages
   socket.on('message_received', callback, '/chat');
+
+  socket.on(
+    "message_blocked",
+    (data: { communityId: string; reason: string }) => {
+      if (data.communityId === communityId) {
+        Toast.show({
+          type: "error",
+          text1: "Message Blocked 🚫",
+          text2: `Community Violation. Reason: ${data.reason}`,
+        });
+      }
+    },
+    "/chat"
+  );
 };
 
 export const unsubscribeFromMessages = (communityId: string) => {

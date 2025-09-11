@@ -64,7 +64,10 @@ export const setupChatSocket = (io: Server) => {
         const moderationResult = await moderateText(messageData.content);
         if (!moderationResult.allowed) {
           console.log(`🚫 Blocked message due to moderation: ${moderationResult.category}`);
-          // socket.emit('error', { message: 'Message violates community guidelines', category: moderationResult.category });
+          socket.emit('message_blocked', {
+            communityId: messageData.communityId,
+            reason: moderationResult.category,
+          });
           return;
         }
 

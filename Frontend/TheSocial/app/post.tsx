@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import Toast from "react-native-toast-message";
 
 import { ThemedView } from '@/components/ThemedView';
 import { Typography } from '@/constants/Typography';
@@ -58,34 +59,50 @@ const PostScreen = () => {
 
   // Handle post creation
   const handleSend = async () => {
-    if (!text.trim()) {
-      Alert.alert('Empty Post', 'Please type something before sending.');
-      return;
-    }
 
     try {
       setLoading(true);
 
-      // Example: you’ll need to pass the current communityId from props/context
       const payload = {
         communityId: selectedCommunityId!,
         content: text,
-        attachImage: await imageUriToBase64(imageUri), // <-- send image URI (or base64 if backend requires)
+        attachImage: await imageUriToBase64(imageUri),
       };
 
-      const tokenFlag = await checkTokens()
+      const tokenFlag = await checkTokens();
       if (!tokenFlag) {
         deleteTokens();
-        router.replace('/login');
+        router.replace("/login");
       }
-      await createPost(payload);
 
-      Alert.alert('Success', 'Your post has been created!');
-      setText('');
+      const data = await createPost(payload);
+
+      if (!data?.id) {
+        // ❌ Show error toast
+        Toast.show({
+          type: "error",
+          text1: "Failed to create post",
+          text2: "The Social Community Violation Filter has blocked this post.",
+        });
+      } else {
+        // ✅ Success toast
+        Toast.show({
+          type: "success",
+          text1: "Success!",
+          text2: "Your post has been created 🎉",
+        });
+      }
+
+
+      setText("");
       setImageUri(undefined);
       router.back();
     } catch (error) {
-      Alert.alert('Error', 'Failed to create post.');
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to create post.",
+      });
     } finally {
       setLoading(false);
     }
