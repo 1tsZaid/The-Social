@@ -17,8 +17,6 @@ export type GameListItemProps = {
 export function GameListItem({ title, description, icon, banner, onPress }: GameListItemProps) {
   const surfaceColor = useThemeColor({}, 'surface');
   const textSecondaryColor = useThemeColor({}, 'textSecondary');
-
-  console.log('icon: ', icon);
   
   const styles = StyleSheet.create({
     container: {

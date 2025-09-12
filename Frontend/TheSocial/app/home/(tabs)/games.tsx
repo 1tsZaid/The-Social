@@ -184,7 +184,7 @@ export default function GamesScreen() {
                   userBanner: leaderboard.currentUser.userBanner,
                   isCurrentUser: true,
                 }] : [])
-              ]}
+              ].sort((a, b) => a.rank - b.rank)}
               gameTitle={availableGames.find(g => g.title === currentLeaderboardGame)?.title}
               gameImage={availableGames.find(g => g.title === currentLeaderboardGame)?.icon}
               gameBanner={availableGames.find(g => g.title === currentLeaderboardGame)?.banner}
