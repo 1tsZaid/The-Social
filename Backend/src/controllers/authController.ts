@@ -30,6 +30,19 @@ export class AuthController {
     }
   }
 
+  async changePassword(req: Request, res: Response): Promise<void> {
+    try {
+      await authService.changePassword(req.body);
+      res.status(200).json(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    }
+  }
+
   async refreshToken(req: Request, res: Response): Promise<void> {
     try {
       const accessToken = await authService.refreshAccessToken(req.body);

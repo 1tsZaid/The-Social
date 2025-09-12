@@ -2,6 +2,12 @@ import bcrypt from 'bcryptjs';
 import prisma from '../config/database';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken, verifyAccessToken } from '../utils/jwt';
 
+export interface ChangePasswordRequest {
+  email: string;
+  password: string;
+  newPassword: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -93,8 +99,31 @@ export class AuthService {
     // Generate tokens
     const accessToken = generateAccessToken({ userId: user.id });
     const refreshToken = generateRefreshToken({ userId: user.id });
-
+    
     return { accessToken, refreshToken };
+  }
+  
+
+  async changePassword({ email, password, newPassword }: ChangePasswordRequest): Promise<void> {
+    // Find user
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Invalid current password');
+    }
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+    // Update password
+    await prisma.user.update({
+      where: { email },
+      data: { password: hashedNewPassword },
+    });
   }
 
   async refreshAccessToken(token: RefreshTokenRequest): Promise<string> {

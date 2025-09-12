@@ -85,7 +85,7 @@ export default function ProfileScreen() {
   };
 
   const handleChangePassword = () => {
-    console.log('Change Password pressed');
+    router.replace('/changePassword');
   };
 
   const handleAppearance = () => {

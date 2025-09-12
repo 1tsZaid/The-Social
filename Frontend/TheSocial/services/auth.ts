@@ -5,6 +5,12 @@ import { API_CONFIG } from '../constants/Api';
 // use refresh token to get new access token
 // check the validation of access token and refresh token before making API calls
 
+interface ChangePasswordPayload {
+  email: string;
+  password: string;
+  newPassword: string;
+}
+
 interface TokenResponse {
   accessToken: string;
   refreshToken: string;
@@ -45,6 +51,15 @@ export const register = async ({ email, password, username, banner }: RegisterPa
   }
 };
 
+export const changePassword = async ({ email, password, newPassword }: ChangePasswordPayload): Promise<boolean> => {
+  try {
+    const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.CHANGE_PASSWORD, { email, password, newPassword });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 export const refreshAccessToken = async (refreshToken: string): Promise<string> => {
   try {

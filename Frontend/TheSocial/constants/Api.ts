@@ -17,7 +17,8 @@ export const API_CONFIG = {
       // LOGOUT: '/auth/logout', // Logs out the current user and invalidates their tokens
       REFRESH_TOKEN: '/auth/refresh-token', // Gets new access token using refresh token
       VERIFY_ACCESS_TOKEN: '/auth/verify-access-token', // Verifies if the provided access token is valid
-      VERIFY_REFRESH_TOKEN: '/auth/verify-refresh-token' // Verifies if the provided refresh
+      VERIFY_REFRESH_TOKEN: '/auth/verify-refresh-token', // Verifies if the provided refresh
+      CHANGE_PASSWORD: '/auth/change-password' // Changes user password
     },
     COMMUNITIES: {
       CREATE_COMMUNITIES: '/communities/create', // Creates a new community with name, description, location, and images
