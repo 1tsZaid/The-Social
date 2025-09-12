@@ -248,6 +248,38 @@ export class PostService {
     };
   }
 
+  async deletePost(postId: string): Promise<void> {
+    // First fetch the post so we can check if it exists and handle image cleanup
+    const post = await prisma.post.findUnique({
+      where: { postId },
+      include: { likes: true },
+    });
+
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    // Delete the post attachment (if exists)
+    const postImageUrl = postUploadService.getFileWithPng(post.postId);
+    if (postImageUrl) {
+      try {
+        await postUploadService.deleteImage(postImageUrl);
+      } catch (error) {
+        console.error(`Failed to delete post image: ${error}`);
+      }
+    }
+
+    // Delete likes first
+    await prisma.like.deleteMany({
+      where: { postId },
+    });
+
+    // Finally delete the post
+    await prisma.post.delete({
+      where: { postId },
+    });
+  }
+
 }
 
 export const postService = new PostService();

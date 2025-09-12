@@ -1,31 +1,50 @@
 import { Request, Response } from 'express';
 import { postService } from '../services/postService';
 
-interface AuthenticatedRequest extends Request {
-  user?: {
-    userId: string;
-  };
+
+export interface AuthenticatedRequest extends Request {
+    user?: {
+        userId: string;
+    };
 }
 
 export class PostController {
     async createPost (req: AuthenticatedRequest, res: Response): Promise<void> {
-    try {
-        if (!req.user) {
-            res.status(401).json({ error: 'User not authenticated' });
-            return;
+        try {
+            if (!req.user) {
+                res.status(401).json({ error: 'User not authenticated' });
+                return;
+            }
+            const userId = req.user.userId; // from middleware
+            const post = await postService.createPost(userId, req.body);
+            res.status(201).json(post);
+        } catch (err) {
+            if (err instanceof Error) {
+                res.status(404).json({ error: err.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+            res.status(500).json({ error: 'Failed to create post' });
         }
-        const userId = req.user.userId; // from middleware
-        const post = await postService.createPost(userId, req.body);
-        res.status(201).json(post);
-    } catch (err) {
-        if (err instanceof Error) {
-            res.status(404).json({ error: err.message });
-        } else {
-            res.status(500).json({ error: 'Internal server error' });
-        }
-        res.status(500).json({ error: 'Failed to create post' });
     }
-    };
+    
+    async deletePost(req: AuthenticatedRequest, res: Response): Promise<void> {
+        try {
+            if (!req.user) {
+                res.status(401).json({ error: 'User not authenticated' });
+                return;
+            }
+            const { postId } = req.params;
+            await postService.deletePost(postId);
+            res.status(200).json({ message: 'Post deleted' });
+        } catch (err) {
+            if (err instanceof Error) {
+                res.status(404).json({ error: err.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+    }
 
     async likePost (req: AuthenticatedRequest, res: Response): Promise<void> {
     try {

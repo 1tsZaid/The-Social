@@ -123,6 +123,20 @@ export const getCommunityPostsBeforeId = async (
   }
 };
 
+export const deletePost = async (postId: string): Promise<void> => {
+  try {
+    const tokens = await getTokens();
+    await api.delete(API_CONFIG.ENDPOINTS.POSTS.DELETE(postId), {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 // export const getUserPosts = async (
 //   userId: string,
 //   params: Omit<GetPostsParams, 'userId'> = {}

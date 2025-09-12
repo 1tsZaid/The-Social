@@ -39,6 +39,7 @@ export const API_CONFIG = {
       BY_COMMUNITY_POST_BEFORE: (communityId: string) => `/posts/before/${communityId}`, // Gets posts before a specific post ID
       // BY_USER: (userId: string) => `/posts/user/${userId}`, // Gets all posts by a specific user (currently commented out in implementation)
       LIKE: (postId: string) => `/posts/like/${postId}`, 
+      DELETE: (postId: string) => `/posts/delete/${postId}`
     },
     PROFILE: {
       BASE: '/profile', // Gets current user's profile information
