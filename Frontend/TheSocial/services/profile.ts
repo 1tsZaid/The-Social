@@ -75,3 +75,19 @@ export const getProfileByUsername = async (username: string): Promise<Profile> =
     throw error;
   }
 };
+
+// Delete current user's account
+export const deleteAccount = async (): Promise<boolean> => {
+  try {
+    const tokens = await getTokens();
+    const response = await api.delete(API_CONFIG.ENDPOINTS.PROFILE.DELETE, {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

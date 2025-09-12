@@ -17,7 +17,7 @@ import { checkTokens } from '@/utils/checkTokens';
 import { clearMessages } from '@/utils/messageStorage'
 
 import socket from '@/services/socket';
-import { getProfile, Profile } from '@/services/profile';
+import { getProfile, Profile, deleteAccount } from '@/services/profile';
 
 export default function ProfileScreen() {
   const [userData, setUserData] = useState<Profile | undefined>(undefined);
@@ -65,6 +65,29 @@ export default function ProfileScreen() {
     console.log('My Account pressed');
   };
 
+  const handleAccountDelete = async () => {
+    // Clear Communities Context
+    clearMessages();
+    resetCommunities();
+    resetLeaderboard();    
+
+    // Handle delete Account logic
+    const tokens = await getTokens();
+    console.log('Tokens before logout:', tokens);
+    socket.disconnect('/chat');
+
+    await deleteAccount();
+
+    console.log('User delete');
+    await deleteTokens();
+    console.log('Tokens after user delete:', await getTokens());
+    router.replace('/login');
+  };
+
+  const handleChangePassword = () => {
+    console.log('Change Password pressed');
+  };
+
   const handleAppearance = () => {
     console.log('Appearance pressed');
   };
@@ -86,19 +109,19 @@ export default function ProfileScreen() {
   };
 
   const handleLogout = async () => {
-  // Clear Communities Context
-  clearMessages();
-  resetCommunities();
-  resetLeaderboard();    
+    // Clear Communities Context
+    clearMessages();
+    resetCommunities();
+    resetLeaderboard();    
 
-  // Handle logout logic
-  const tokens = await getTokens();
-  console.log('Tokens before logout:', tokens);
-  socket.disconnect('/chat');
-  console.log('User logged out');
-  await deleteTokens();
-  console.log('Tokens after logout:', await getTokens());
-  router.replace('/login');
+    // Handle logout logic
+    const tokens = await getTokens();
+    console.log('Tokens before logout:', tokens);
+    socket.disconnect('/chat');
+    console.log('User logged out');
+    await deleteTokens();
+    console.log('Tokens after logout:', await getTokens());
+    router.replace('/login');
   };
   
   const styles = StyleSheet.create({
@@ -150,6 +173,8 @@ export default function ProfileScreen() {
           {/* Settings List */}
           <SettingsList
             onMyAccount={handleMyAccount}
+            onAccountDelete={handleAccountDelete}
+            onChangePassword={handleChangePassword}
             onAppearance={handleAppearance}
             onPermissions={handlePermissions}
             onPrivacySafety={handlePrivacySafety}

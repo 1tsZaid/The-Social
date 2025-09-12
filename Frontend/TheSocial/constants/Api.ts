@@ -43,6 +43,7 @@ export const API_CONFIG = {
     PROFILE: {
       BASE: '/profile', // Gets current user's profile information
       UPDATE: '/profile/update', // Updates user's profile information (username, profile image, banner)
+      DELETE: '/profile/delete', // Deletes current user's account
       GET_BY_USERNAME: (username: string) => `/profile/${username}` // Gets profile information for a specific user by username
     }
   }

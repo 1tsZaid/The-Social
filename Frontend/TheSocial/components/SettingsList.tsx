@@ -5,6 +5,8 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface SettingsListProps {
   onMyAccount: () => void;
+  onAccountDelete: () => void;
+  onChangePassword: () => void;
   onAppearance: () => void;
   onPermissions: () => void;
   onPrivacySafety: () => void;
@@ -14,6 +16,8 @@ interface SettingsListProps {
 
 export const SettingsList: React.FC<SettingsListProps> = ({
   onMyAccount,
+  onAccountDelete,
+  onChangePassword,
   onAppearance,
   onPermissions,
   onPrivacySafety,
@@ -39,13 +43,13 @@ export const SettingsList: React.FC<SettingsListProps> = ({
           icon="key"
           color={blueColor}
           title="Change Password"
-          onPress={() => console.log('Change Password pressed')}
+          onPress={onChangePassword}
         />
         <SettingItem
           icon="trash"
           color={blueColor}
           title="Delete Account"
-          onPress={() => console.log('Delete Account pressed')}
+          onPress={onAccountDelete}
         />
       </SettingItem>
 

@@ -7,6 +7,8 @@ const router = Router();
 // Get current user's profile (authenticated)
 router.get('/', authenticateToken, profileController.getCurrentProfile.bind(profileController));
 
+// Delete current user's account (authenticated)
+router.delete('/delete', authenticateToken, profileController.deleteAccount.bind(profileController));
 // Update current user's profile (authenticated)
 router.put('/update', authenticateToken, profileController.updateProfile.bind(profileController));
 
