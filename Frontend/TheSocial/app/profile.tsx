@@ -14,6 +14,7 @@ import { useLeaderboard } from '@/components/LeaderboardContext';
 
 import { deleteTokens, getTokens } from '@/utils/tokenStorage';
 import { checkTokens } from '@/utils/checkTokens';
+import { clearMessages } from '@/utils/messageStorage'
 
 import socket from '@/services/socket';
 import { getProfile, Profile } from '@/services/profile';
@@ -86,6 +87,7 @@ export default function ProfileScreen() {
 
   const handleLogout = async () => {
   // Clear Communities Context
+  clearMessages();
   resetCommunities();
   resetLeaderboard();    
 

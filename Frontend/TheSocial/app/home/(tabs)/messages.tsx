@@ -15,6 +15,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 
 import { subscribeToMessages, unsubscribeFromMessages, sendMessage, RecieveMessagePayload } from '@/services/message';
 
+import { saveMessages, loadMessages } from '@/utils/messageStorage';
 
 export default function MessagesScreen() {
   const [messagesByCommunity, setMessagesByCommunity] = useState<Record<string, RecieveMessagePayload[]>>({});
@@ -22,6 +23,17 @@ export default function MessagesScreen() {
   const { selectedCommunityId } = useCommunities();
   const { onScroll } = useScrollHandler();
   const theme = useColorScheme() ?? 'light';
+
+  useEffect(() => {
+    (async () => {
+      const saved = await loadMessages();
+      setMessagesByCommunity(saved);
+    })();
+  }, []);
+
+  useEffect(() => {
+    saveMessages(messagesByCommunity);
+  }, [messagesByCommunity]);
 
   useEffect(() => {
     console.log('from useEffect of messages for community:', selectedCommunityId);
