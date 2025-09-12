@@ -13,7 +13,8 @@ import { useCommunities } from '@/components/CommunitiesContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useScrollHandler } from '@/hooks/useScrollHandler';
 
-import { getCommunityPosts, likePostHandler } from '@/services/post';
+import { getCommunityPosts, likePostHandler, deletePost } from '@/services/post';
+import { getProfile } from '@/services/profile';
 
 import { checkTokens } from '@/utils/checkTokens';
 import { deleteTokens } from '@/utils/tokenStorage';
@@ -24,7 +25,7 @@ import { RecieveMessagePayload } from '@/services/post';
 export default function FeedScreen() {
   const router = useRouter();
   const { onScroll } = useScrollHandler();
-  const { selectedCommunityId } = useCommunities();
+  const { selectedCommunityId, communities } = useCommunities();
 
   const [posts, setPosts] = useState<Record<string, RecieveMessagePayload[]>>({});
   const [loading, setLoading] = useState(false);
@@ -81,6 +82,24 @@ export default function FeedScreen() {
     });
   };
 
+  const canDelete = async (postUsername: string): Promise<boolean> => {
+    if (communities.find(c => c.communityId === selectedCommunityId)?.owner) {
+      return true;
+    }
+
+    const { username } = await getProfile();
+
+    if (postUsername === username) {
+      return true;
+    }
+
+    return false;
+  }
+
+  const handleDelete = async (postId: string) => {
+    await deletePost(postId);
+  }
+
   if (!selectedCommunityId) {  
     const videoSource =
       theme === "dark"
@@ -128,6 +147,8 @@ export default function FeedScreen() {
             contentImageUrl={post.attachImage}
             likes={post.stats.likes}
             onLike={() => handleLike(post.id)}
+            canDelete={() => canDelete(post.author.username)}
+            onDelete={() => handleDelete(post.id)}
           />
         ))}
       </ScrollView>

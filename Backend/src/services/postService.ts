@@ -263,7 +263,7 @@ export class PostService {
     const postImageUrl = postUploadService.getFileWithPng(post.postId);
     if (postImageUrl) {
       try {
-        await postUploadService.deleteImage(postImageUrl);
+        await postUploadService.deleteImage(post.postId);
       } catch (error) {
         console.error(`Failed to delete post image: ${error}`);
       }

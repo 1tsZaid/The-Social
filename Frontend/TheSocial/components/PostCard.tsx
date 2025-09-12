@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import { View, StyleSheet } from 'react-native';
+import { Modal, TouchableOpacity, Text } from 'react-native';
 import { ThemedView } from './ThemedView';
 import { PostHeader } from './PostHeader';
 import { PostContent } from './PostContent';
 import { PostFooter } from './PostFooter';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { ThemedText } from './ThemedText';
 
 interface PostCardProps {
   username: string;
@@ -15,6 +17,8 @@ interface PostCardProps {
   contentImageUrl?: string;
   likes: number;
   onLike: () => void;
+  canDelete: () => Promise<boolean>;
+  onDelete: () => void;
   // onComment?: (postId: string) => void;
   // onShare?: (postId: string) => void;
   // onBookmark?: (postId: string) => void;
@@ -30,8 +34,27 @@ export function PostCard({
   contentImageUrl,
   likes,
   onLike,
+  canDelete,
+  onDelete,
 }: PostCardProps) {
   const [isLike, setIsLike] = useState(false);
+  const [optionsVisible, setOptionsVisible] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const handleOptions = async () => {
+    setOptionsVisible(true);
+    try {
+      const can = await canDelete();
+      setShowDelete(!!can);
+    } catch {
+      setShowDelete(false);
+    }
+  };
+
+  const handleDelete = () => {
+    setOptionsVisible(false);
+    onDelete();
+  };
 
   return (
     <ThemedView
@@ -49,14 +72,39 @@ export function PostCard({
         imageUrl={imageUrl}
         banner={banner}
         timestamp={timestamp}
-        onOptions={() => {console.log('Options pressed for post');}}
+        onOptions={handleOptions}
       />
       <PostContent content={content} imageUrl={contentImageUrl} />
       <PostFooter
         likes={likes}
         isLike={isLike}
-        onLike={() => {console.log('Like pressed for post'); onLike(); setIsLike(true)}}
+        onLike={() => { onLike(); setIsLike(true); }}
       />
+      <Modal
+        visible={optionsVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setOptionsVisible(false)}
+      >
+        <TouchableOpacity
+          style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)' }}
+          activeOpacity={1}
+          onPressOut={() => setOptionsVisible(false)}
+        >
+          <ThemedView backgroundType="surface" style={{ position: 'absolute', right: 20, top: 60, borderRadius: 10, padding: 10, minWidth: 120, elevation: 5 }}>
+            {showDelete ? (
+              <TouchableOpacity onPress={handleDelete} style={{ paddingVertical: 10 }}>
+                <ThemedText variant='button' colorType='red'>Delete</ThemedText>
+              </TouchableOpacity>
+            ) : (
+              <View style={{ paddingVertical: 10 }}>
+                <ThemedText variant='body' colorType='textSecondary'>no options available</ThemedText>
+              </View>
+            )}
+            {/* Add more options here if needed */}
+          </ThemedView>
+        </TouchableOpacity>
+      </Modal>
     </ThemedView>
   );
 }
