@@ -59,7 +59,7 @@ export function PlayerRow({ name, userImage, rank, isCurrentUser = false, rankCo
       width: 24,
       height: 24,
       borderRadius: 12,
-      justifyContent: 'center',
+      // justifyContent: 'center',
       alignItems: 'center',
     },
     contentContainer: {
@@ -85,7 +85,7 @@ export function PlayerRow({ name, userImage, rank, isCurrentUser = false, rankCo
             <ThemedView style={[styles.avatar, { backgroundColor: textPrimaryColor }]}>
               <ThemedText 
                 variant="h2"
-                style={{ fontWeight: 'bold', fontSize: 15, color: userBanner }}
+                style={{ fontWeight: 'bold', fontSize: 15, color: userBanner, bottom: 6, }}
               >
                 {name?.charAt(0).toUpperCase()}
               </ThemedText>

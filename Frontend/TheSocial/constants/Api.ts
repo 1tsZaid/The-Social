@@ -1,7 +1,15 @@
+import { Platform } from "react-native";
+
+const isWeb = Platform.OS === 'web';
+
+const BASE_URL = isWeb ? 'http://localhost:3000/api' : 'http://192.168.18.250:3000/api';
+const SOCKET_BASE_URL = isWeb ? 'http://localhost:3000' : 'http://192.168.18.250:3000';
+const STATIC_BASE_URL = isWeb ? 'http://localhost:3000/uploads/' : 'http://192.168.18.250:3000/uploads/';
+
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:3000/api',
-  SOCKET_BASE_URL: 'http://localhost:3000',
-  STATIC_BASE_URL: 'http://localhost:3000/uploads/',
+  BASE_URL,
+  SOCKET_BASE_URL,
+  STATIC_BASE_URL,
   ENDPOINTS: {
     AUTH: {
       LOGIN: '/auth/login', // Authenticates user with email and password, returns access and refresh tokens

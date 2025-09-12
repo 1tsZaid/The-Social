@@ -31,7 +31,7 @@ export const CommunityAdditionalInfo: React.FC<CommunityAdditionalInfoProps> = (
       paddingHorizontal: 16,
       paddingTop: 5,
       paddingBottom: 5,
-      height: '100%',
+      // height: '100%',
     },
     title: {
       flex: 1,
