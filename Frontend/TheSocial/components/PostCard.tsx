@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Modal, TouchableOpacity, Text } from 'react-native';
 import { ThemedView } from './ThemedView';
@@ -37,11 +37,25 @@ export function PostCard({
   canDelete,
   onDelete,
 }: PostCardProps) {
+
   const [isLike, setIsLike] = useState(false);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  // Only set left or right, not both, to avoid type errors
+  const [optionsPosition, setOptionsPosition] = useState<{ top: number; left?: number; right?: number }>({ top: 60, right: 20 });
+  const headerRef = useRef<View>(null);
 
   const handleOptions = async () => {
+    if (headerRef.current) {
+      headerRef.current.measureInWindow((x, y, width, height) => {
+        setOptionsPosition({
+          top: y + height,
+          right: x,
+        });
+      });
+    } else {
+      setOptionsPosition({ top: 60, right: 20 });
+    }
     setOptionsVisible(true);
     try {
       const can = await canDelete();
@@ -67,13 +81,15 @@ export function PostCard({
       ]}
       backgroundType="surface"
     >
-      <PostHeader
-        name={username}
-        imageUrl={imageUrl}
-        banner={banner}
-        timestamp={timestamp}
-        onOptions={handleOptions}
-      />
+      <View ref={headerRef} collapsable={false}>
+        <PostHeader
+          name={username}
+          imageUrl={imageUrl}
+          banner={banner}
+          timestamp={timestamp}
+          onOptions={handleOptions}
+        />
+      </View>
       <PostContent content={content} imageUrl={contentImageUrl} />
       <PostFooter
         likes={likes}
@@ -91,7 +107,19 @@ export function PostCard({
           activeOpacity={1}
           onPressOut={() => setOptionsVisible(false)}
         >
-          <ThemedView backgroundType="surface" style={{ position: 'absolute', right: 20, top: 60, borderRadius: 10, padding: 10, minWidth: 120, elevation: 5 }}>
+          <ThemedView
+            backgroundType="surface"
+            style={{
+              position: 'absolute',
+              top: optionsPosition.top,
+              left: optionsPosition.left,
+              right: optionsPosition.right,
+              borderRadius: 10,
+              padding: 10,
+              minWidth: 120,
+              elevation: 5,
+            }}
+          >
             {showDelete ? (
               <TouchableOpacity onPress={handleDelete} style={{ paddingVertical: 10 }}>
                 <ThemedText variant='button' colorType='red'>Delete</ThemedText>
